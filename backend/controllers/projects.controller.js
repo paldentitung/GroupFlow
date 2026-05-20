@@ -58,3 +58,24 @@ export const createProjectController = async (req, res) => {
     res.status(500).json({ message: "Server error while creating project" });
   }
 };
+
+export const deleteProjectController = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+
+    const deleteProject = await Project.findByIdAndDelete(projectId);
+
+    if (!deleteProject) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Project deleted successfully",
+      deleteProject,
+    });
+  } catch (error) {
+    console.error("Error deleting project:", error);
+    res.status(500).json({ message: "Server error while deleting project" });
+  }
+};
