@@ -1,26 +1,25 @@
-import express from "express";
+// server.js
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
-import cors from "cors";
-import ProjectsRoute from "./routes/projects.route.js";
+import app from "./app.js";
+
 dotenv.config({
   path: "./.env.development",
 });
 
-const app = express();
-app.use(express.json());
-app.use(cors());
-// database connection
-connectDB();
-
 const PORT = process.env.PORT || 5000;
 
-// routes
-app.use("/api/projects", ProjectsRoute);
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+const startServer = async () => {
+  try {
+    await connectDB();
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("DB connection failed:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
