@@ -1,4 +1,3 @@
-import { success } from "zod";
 import Project from "../models/Project.js";
 
 export const getProjectsController = async (req, res) => {
@@ -18,19 +17,6 @@ export const getProjectsController = async (req, res) => {
 
 export const createProjectController = async (req, res) => {
   try {
-    const {
-      name,
-      description,
-      owner,
-      members,
-      tasks,
-      status,
-      progress,
-      startDate,
-      dueDate,
-      techStack,
-    } = req.body;
-
     // Create a new project instance
     const newProject = new Project({
       name,
@@ -56,6 +42,54 @@ export const createProjectController = async (req, res) => {
   } catch (error) {
     console.error("Error creating project:", error);
     res.status(500).json({ message: "Server error while creating project" });
+  }
+};
+
+export const updateProjectController = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const {
+      name,
+      description,
+      owner,
+      members,
+      tasks,
+      status,
+      progress,
+      startDate,
+      dueDate,
+      techStack,
+    } = req.body;
+
+    const updatedProject = await Project.findByIdAndUpdate(
+      projectId,
+      {
+        name,
+        description,
+        owner,
+        members,
+        tasks,
+        status,
+        progress,
+        startDate,
+        dueDate,
+        techStack,
+      },
+      { new: true, runValidators: true },
+    );
+
+    if (!updatedProject) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Project updated successfully",
+      project: updatedProject,
+    });
+  } catch (error) {
+    console.error("Error updating project:", error);
+    res.status(500).json({ message: "Server error while updating project" });
   }
 };
 
