@@ -1,13 +1,14 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
-
 const MainLayout = ({ children }) => {
   return (
-    <div>
+    <div className="flex">
       <aside>
         <Sidebar />
       </aside>
-      <main>{children}</main>
+      <main className="bg-(--color-bg)  min-h-screen  ml-62 flex-1">
+        {children}
+      </main>
     </div>
   );
 };
