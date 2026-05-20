@@ -6,20 +6,22 @@ import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
 const App = () => {
   return (
-    <Routes>
-      <Route path="/login" element={<LoginPage />} />
+    <>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
 
-      <Route
-        path="/"
-        element={
-          <MainLayout>
-            <HomePage />
-          </MainLayout>
-        }
-      />
+        <Route
+          path="/"
+          element={
+            <MainLayout>
+              <HomePage />
+            </MainLayout>
+          }
+        />
 
-      <Route path="/register" element={<RegisterPage />} />
-    </Routes>
+        <Route path="/register" element={<RegisterPage />} />
+      </Routes>
+    </>
   );
 };
 
