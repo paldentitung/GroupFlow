@@ -7,7 +7,7 @@ const MainLayout = ({ children }) => {
       <aside>
         <Sidebar />
       </aside>
-      <main className="bg-(--color-bg)  min-h-screen overflow-hidden  flex-2">
+      <main className="bg-(--color-bg)  min-h-screen overflow-hidden  flex-2 md:ml-64">
         {children}
       </main>
     </div>

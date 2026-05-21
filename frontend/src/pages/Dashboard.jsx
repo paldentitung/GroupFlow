@@ -166,7 +166,7 @@ function Dashboard() {
         </div>
 
         <h2 className="text-base font-bold mb-4">My Projects</h2>
-        <div className="flex flex-wrap gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
           {projects.map((p) => (
             <ProjectCard key={p.name} {...p} />
           ))}

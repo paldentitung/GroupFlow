@@ -51,7 +51,7 @@ export default function Sidebar() {
   return (
     <>
       <div
-        className={`fixed md:static top-0 left-0 z-50 flex flex-col h-screen w-64 bg-white border-r border-[#e8eaed]
+        className={`fixed  top-0 left-0 z-50 flex flex-col h-screen w-64 bg-white border-r border-[#e8eaed]
   transform transition-transform duration-300
   ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
         style={{ fontFamily: "'DM Sans', sans-serif" }}
