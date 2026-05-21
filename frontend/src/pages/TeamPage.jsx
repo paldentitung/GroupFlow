@@ -1,0 +1,124 @@
+import React from "react";
+
+const teamMembers = [
+  {
+    id: 1,
+    name: "Palden Karma",
+    role: "Frontend Developer",
+    position: "Owner",
+    projects: 8,
+    tasks: 24,
+    completed: 18,
+    color: "bg-violet-100 text-violet-600",
+  },
+  {
+    id: 2,
+    name: "John Smith",
+    role: "Backend Developer",
+    position: "Member",
+    projects: 6,
+    tasks: 19,
+    completed: 14,
+    color: "bg-blue-100 text-blue-600",
+  },
+  {
+    id: 3,
+    name: "Emily Johnson",
+    role: "UI/UX Designer",
+    position: "Member",
+    projects: 5,
+    tasks: 17,
+    completed: 12,
+    color: "bg-emerald-100 text-emerald-600",
+  },
+];
+
+const TeamPage = () => {
+  return (
+    <div className="min-h-screen bg-[#f8fafc] p-6">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-[#111827]">Team Members</h1>
+
+        <p className="text-sm text-[#6b7280] mt-1">
+          Overview of your organization team
+        </p>
+      </div>
+
+      {/* Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        {teamMembers.map((member) => {
+          const initials = member.name
+            .split(" ")
+            .map((word) => word[0])
+            .join("");
+
+          return (
+            <div
+              key={member.id}
+              className="bg-white border border-[#e5e7eb] rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200"
+            >
+              {/* Top */}
+              <div className="flex items-center gap-4 mb-5">
+                {/* Initial Circle */}
+                <div
+                  className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 font-bold text-lg ${member.color}`}
+                >
+                  {initials}
+                </div>
+
+                {/* Info */}
+                <div className="flex-1">
+                  <h2 className="text-[16px] font-semibold text-[#111827]">
+                    {member.name}
+                  </h2>
+
+                  <p className="text-sm text-[#6b7280]">{member.role}</p>
+
+                  <span
+                    className={`inline-block mt-2 text-[11px] font-medium px-2.5 py-1 rounded-full ${
+                      member.position === "Owner"
+                        ? "bg-orange-100 text-orange-600"
+                        : "bg-[#eef2ff] text-[#4f46e5]"
+                    }`}
+                  >
+                    {member.position}
+                  </span>
+                </div>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-[#f9fafb] rounded-xl p-3 text-center">
+                  <p className="text-lg font-bold text-[#111827]">
+                    {member.projects}
+                  </p>
+
+                  <p className="text-xs text-[#6b7280] mt-1">Projects</p>
+                </div>
+
+                <div className="bg-[#f9fafb] rounded-xl p-3 text-center">
+                  <p className="text-lg font-bold text-[#111827]">
+                    {member.tasks}
+                  </p>
+
+                  <p className="text-xs text-[#6b7280] mt-1">Tasks</p>
+                </div>
+
+                <div className="bg-[#f9fafb] rounded-xl p-3 text-center">
+                  <p className="text-lg font-bold text-[#111827]">
+                    {member.completed}
+                  </p>
+
+                  <p className="text-xs text-[#6b7280] mt-1">Done</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export default TeamPage;

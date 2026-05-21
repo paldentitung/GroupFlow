@@ -6,6 +6,8 @@ import RegisterPage from "./pages/RegisterPage";
 import Dashboard from "./pages/Dashboard";
 import ProjectsPage from "./pages/ProjectsPage";
 import TasksPage from "./pages/TasksPage";
+import TeamPage from "./pages/TeamPage";
+import SettingsPage from "./pages/SettingsPage";
 const App = () => {
   return (
     <>
@@ -34,6 +36,22 @@ const App = () => {
           element={
             <MainLayout>
               <TasksPage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/team"
+          element={
+            <MainLayout>
+              <TeamPage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <MainLayout>
+              <SettingsPage />
             </MainLayout>
           }
         />
