@@ -2,6 +2,7 @@ import React from "react";
 import Header from "../components/Header";
 import { tasks } from "../data/tasks";
 import { projects } from "../data/projects";
+import ProjectCard from "../components/ProjectCard";
 // ── Icons ────────────────────────────────────────────────────────────────────
 const FolderIcon = () => (
   <svg
@@ -70,17 +71,17 @@ const CheckIcon = () => (
 
 // ── Stat Card ────────────────────────────────────────────────────────────────
 const StatCard = ({ icon, value, label, iconBg, iconColor }) => (
-  <div className="flex-1 min-w-0 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5 flex flex-col gap-2">
+  <div className="flex-1 min-w-0 bg-(--color-surface) border border-(--color-border) rounded-xl p-5 flex flex-col gap-2">
     <span
       className="w-9 h-9 flex items-center justify-center rounded-lg"
       style={{ background: iconBg, color: iconColor }}
     >
       {icon}
     </span>
-    <span className="text-[28px] font-bold leading-none text-[var(--color-text-primary)]">
+    <span className="text-[28px] font-bold leading-none text-(--color-text-primary)">
       {value}
     </span>
-    <span className="text-[13.5px] font-medium text-[var(--color-text-muted)]">
+    <span className="text-[13.5px] font-medium text-(--color-text-muted)">
       {label}
     </span>
   </div>
@@ -98,7 +99,7 @@ const AVATAR_COLORS = [
 
 const Avatar = ({ initials, color, size = 28, overlap = false }) => (
   <span
-    className="inline-flex items-center justify-center rounded-full border-2 border-[var(--color-surface)] shrink-0 select-none font-bold text-white"
+    className="inline-flex items-center justify-center rounded-full border-2 border-(--color-surface) shrink-0 select-none font-bold text-white"
     style={{
       width: size,
       height: size,
@@ -108,51 +109,6 @@ const Avatar = ({ initials, color, size = 28, overlap = false }) => (
     }}
   >
     {initials}
-  </span>
-);
-
-const AvatarGroup = ({ members, extra }) => (
-  <div className="flex items-center">
-    {members.map((m, i) => (
-      <Avatar
-        key={i}
-        initials={m.initials}
-        color={AVATAR_COLORS[i % AVATAR_COLORS.length]}
-        overlap={i > 0}
-      />
-    ))}
-    {extra > 0 && (
-      <span
-        className="inline-flex items-center justify-center rounded-full border-2 border-[var(--color-surface)] text-[11px] font-bold text-[var(--color-text-muted)] bg-[var(--color-border)]"
-        style={{ width: 28, height: 28, marginLeft: -8 }}
-      >
-        +{extra}
-      </span>
-    )}
-  </div>
-);
-
-// ── Progress Bar ─────────────────────────────────────────────────────────────
-const ProgressBar = ({ value, color }) => (
-  <div className="w-full h-[5px] rounded-full overflow-hidden bg-[var(--color-border)]">
-    <div
-      className="h-full rounded-full transition-[width] duration-600 ease-in-out"
-      style={{ width: `${value}%`, background: color }}
-    />
-  </div>
-);
-
-// ── Status Badge ─────────────────────────────────────────────────────────────
-const BADGE_CLASSES = {
-  Active: "bg-indigo-50 text-indigo-600",
-  Completed: "bg-emerald-50 text-emerald-600",
-  "On Hold": "bg-amber-50 text-amber-600",
-};
-const Badge = ({ label }) => (
-  <span
-    className={`text-[12px] font-semibold px-2.5 py-0.5 rounded-full ${BADGE_CLASSES[label] ?? "bg-gray-100 text-gray-500"}`}
-  >
-    {label}
   </span>
 );
 
@@ -171,58 +127,12 @@ const TaskChip = ({ label }) => (
   </span>
 );
 
-// ── Project Card ─────────────────────────────────────────────────────────────
-const ProjectCard = ({
-  name,
-  desc,
-  status,
-  progress,
-  members,
-  extra,
-  due,
-  progressColor,
-}) => (
-  <div className="flex-1 basis-[calc(50%-8px)] min-w-0 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5 flex flex-col gap-3">
-    <div className="flex justify-between items-start gap-3">
-      <div>
-        <p className="font-bold text-[15.5px] text-[var(--color-text-primary)]">
-          {name}
-        </p>
-        <p className="text-[13px] text-[var(--color-text-muted)] mt-0.5">
-          {desc}
-        </p>
-      </div>
-      <Badge label={status} />
-    </div>
-
-    <div>
-      <div className="flex justify-between text-[12.5px] mb-1.5">
-        <span className="text-[var(--color-text-muted)]">Progress</span>
-        <span className="font-semibold text-[var(--color-text-primary)]">
-          {progress}%
-        </span>
-      </div>
-      <ProgressBar value={progress} color={progressColor} />
-    </div>
-
-    <div className="flex justify-between items-center">
-      <AvatarGroup members={members} extra={extra} />
-      <span className="text-[12.5px] text-[var(--color-text-muted)]">
-        Due {due}
-      </span>
-    </div>
-  </div>
-);
-
-// ── Data ─────────────────────────────────────────────────────────────────────
-
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 function Dashboard() {
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text-primary)] ">
+    <div className="min-h-screen bg-(--color-bg) text-(--color-text-primary) ">
       <Header title="Dashboard" buttonName="New Project" />
       <div className="p-6">
-        {/* ── Stat Cards ── */}
         <div className="flex flex-wrap gap-4 mb-8">
           <StatCard
             icon={<FolderIcon />}
@@ -254,7 +164,6 @@ function Dashboard() {
           />
         </div>
 
-        {/* ── My Projects ── */}
         <h2 className="text-base font-bold mb-4">My Projects</h2>
         <div className="flex flex-wrap gap-4 mb-8">
           {projects.map((p) => (
@@ -262,11 +171,10 @@ function Dashboard() {
           ))}
         </div>
 
-        {/* ── Recent Tasks ── */}
         <h2 className="text-base font-bold mb-4">Recent Tasks</h2>
-        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden">
+        <div className="bg-(--color-surface) border border-(--color-border) rounded-xl overflow-hidden">
           {/* Header row */}
-          <div className="grid grid-cols-[2fr_2fr_2fr_1.2fr_0.8fr] px-5 py-3 border-b border-[var(--color-border)] text-[11.5px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+          <div className="grid grid-cols-[2fr_2fr_2fr_1.2fr_0.8fr] px-5 py-3 border-b border-(--color-border) text-[11.5px] font-bold uppercase tracking-wider text-(--color-text-muted)">
             <span>Task</span>
             <span>Project</span>
             <span>Assigned</span>
@@ -278,26 +186,24 @@ function Dashboard() {
           {tasks.map((t, i) => (
             <div
               key={i}
-              className={`grid grid-cols-[2fr_2fr_2fr_1.2fr_0.8fr] px-5 py-3.5 items-center text-[13.5px] transition-colors duration-150 hover:bg-[var(--color-bg)] ${i < tasks.length - 1 ? "border-b border-[var(--color-border)]" : ""}`}
+              className={`grid grid-cols-[2fr_2fr_2fr_1.2fr_0.8fr] px-5 py-3.5 items-center text-[13.5px] transition-colors duration-150 hover:bg-(--color-bg) ${i < tasks.length - 1 ? "border-b border-(--color-border)" : ""}`}
             >
               <span className="font-semibold">{t.name}</span>
-              <span className="text-[var(--color-text-muted)]">
-                {t.project}
-              </span>
+              <span className="text-(--color-text-muted)">{t.project}</span>
               <span className="flex items-center gap-2">
                 <Avatar
                   initials={t.assigned.initials}
                   color={t.assigned.color}
                   size={26}
                 />
-                <span className="text-[var(--color-text-muted)]">
+                <span className="text-(--color-text-muted)">
                   {t.assigned.name}
                 </span>
               </span>
               <span>
                 <TaskChip label={t.status} />
               </span>
-              <span className="text-right text-[13px] text-[var(--color-text-muted)]">
+              <span className="text-right text-[13px] text-(--color-text-muted)">
                 {t.due}
               </span>
             </div>
