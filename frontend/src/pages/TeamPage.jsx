@@ -36,80 +36,81 @@ const teamMembers = [
 
 const TeamPage = () => {
   return (
-    <div className="min-h-screen bg-[#f8fafc] p-6">
+    <div className="min-h-screen ">
       <Header title="Team" showButton={false} />
 
-      {/* Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-        {teamMembers.map((member) => {
-          const initials = member.name
-            .split(" ")
-            .map((word) => word[0])
-            .join("");
+      <div className="p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          {teamMembers.map((member) => {
+            const initials = member.name
+              .split(" ")
+              .map((word) => word[0])
+              .join("");
 
-          return (
-            <div
-              key={member.id}
-              className="bg-white border border-[#e5e7eb] rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200"
-            >
-              {/* Top */}
-              <div className="flex items-center gap-4 mb-5">
-                {/* Initial Circle */}
-                <div
-                  className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 font-bold text-lg ${member.color}`}
-                >
-                  {initials}
-                </div>
-
-                {/* Info */}
-                <div className="flex-1">
-                  <h2 className="text-[16px] font-semibold text-[#111827]">
-                    {member.name}
-                  </h2>
-
-                  <p className="text-sm text-[#6b7280]">{member.role}</p>
-
-                  <span
-                    className={`inline-block mt-2 text-[11px] font-medium px-2.5 py-1 rounded-full ${
-                      member.position === "Owner"
-                        ? "bg-orange-100 text-orange-600"
-                        : "bg-[#eef2ff] text-[#4f46e5]"
-                    }`}
+            return (
+              <div
+                key={member.id}
+                className="bg-white border border-[#e5e7eb] rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200"
+              >
+                {/* Top */}
+                <div className="flex items-center gap-4 mb-5">
+                  {/* Initial Circle */}
+                  <div
+                    className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 font-bold text-lg ${member.color}`}
                   >
-                    {member.position}
-                  </span>
+                    {initials}
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1">
+                    <h2 className="text-[16px] font-semibold text-[#111827]">
+                      {member.name}
+                    </h2>
+
+                    <p className="text-sm text-[#6b7280]">{member.role}</p>
+
+                    <span
+                      className={`inline-block mt-2 text-[11px] font-medium px-2.5 py-1 rounded-full ${
+                        member.position === "Owner"
+                          ? "bg-orange-100 text-orange-600"
+                          : "bg-[#eef2ff] text-[#4f46e5]"
+                      }`}
+                    >
+                      {member.position}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="bg-[#f9fafb] rounded-xl p-3 text-center">
+                    <p className="text-lg font-bold text-[#111827]">
+                      {member.projects}
+                    </p>
+
+                    <p className="text-xs text-[#6b7280] mt-1">Projects</p>
+                  </div>
+
+                  <div className="bg-[#f9fafb] rounded-xl p-3 text-center">
+                    <p className="text-lg font-bold text-[#111827]">
+                      {member.tasks}
+                    </p>
+
+                    <p className="text-xs text-[#6b7280] mt-1">Tasks</p>
+                  </div>
+
+                  <div className="bg-[#f9fafb] rounded-xl p-3 text-center">
+                    <p className="text-lg font-bold text-[#111827]">
+                      {member.completed}
+                    </p>
+
+                    <p className="text-xs text-[#6b7280] mt-1">Done</p>
+                  </div>
                 </div>
               </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className="bg-[#f9fafb] rounded-xl p-3 text-center">
-                  <p className="text-lg font-bold text-[#111827]">
-                    {member.projects}
-                  </p>
-
-                  <p className="text-xs text-[#6b7280] mt-1">Projects</p>
-                </div>
-
-                <div className="bg-[#f9fafb] rounded-xl p-3 text-center">
-                  <p className="text-lg font-bold text-[#111827]">
-                    {member.tasks}
-                  </p>
-
-                  <p className="text-xs text-[#6b7280] mt-1">Tasks</p>
-                </div>
-
-                <div className="bg-[#f9fafb] rounded-xl p-3 text-center">
-                  <p className="text-lg font-bold text-[#111827]">
-                    {member.completed}
-                  </p>
-
-                  <p className="text-xs text-[#6b7280] mt-1">Done</p>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
