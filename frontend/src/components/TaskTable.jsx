@@ -54,7 +54,7 @@ const PriorityBadge = ({ label }) => (
 const TaskTable = ({ tasks = [] }) => {
   return (
     <div className="overflow-x-auto rounded-xl border border-(--color-border)">
-      <div className="min-w-[680px]">
+      <div className="min-w-170">
         {/* Header row */}
         <div className="grid grid-cols-[2fr_2fr_2fr_1.2fr_1fr_0.8fr] px-5 py-3 border-b border-(--color-border) text-[11.5px] font-bold uppercase tracking-wider text-(--color-text-muted) bg-(--color-surface)">
           <span>Task</span>

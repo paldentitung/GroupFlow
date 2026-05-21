@@ -1,4 +1,5 @@
 import React from "react";
+import Header from "../components/Header";
 
 const teamMembers = [
   {
@@ -36,14 +37,7 @@ const teamMembers = [
 const TeamPage = () => {
   return (
     <div className="min-h-screen bg-[#f8fafc] p-6">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-[#111827]">Team Members</h1>
-
-        <p className="text-sm text-[#6b7280] mt-1">
-          Overview of your organization team
-        </p>
-      </div>
+      <Header title="Team" showButton={false} />
 
       {/* Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
