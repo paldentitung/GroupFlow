@@ -168,7 +168,7 @@ const LoginPage = () => {
           {/* Logo */}
           <div className="relative z-10 flex items-center gap-2.5">
             <div
-              className="w-[34px] h-[34px] rounded-xl flex items-center justify-center text-white"
+              className="w-8.5 h-8.5 rounded-xl flex items-center justify-center text-white"
               style={{ background: "rgba(255,255,255,.18)" }}
             >
               <Logo />
@@ -191,7 +191,7 @@ const LoginPage = () => {
               <br />
               <em>move together.</em>
             </h2>
-            <p className="text-indigo-200 text-sm leading-relaxed max-w-[230px]">
+            <p className="text-indigo-200 text-sm leading-relaxed max-w-57">
               Sync tasks, track progress, and communicate — all in one space.
             </p>
           </div>

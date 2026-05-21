@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import MainLayout from "./mainlayout/MainLayout";
 import RegisterPage from "./pages/RegisterPage";
 import Dashboard from "./pages/Dashboard";
+import ProjectsPage from "./pages/ProjectsPage";
 const App = () => {
   return (
     <>
@@ -16,6 +17,14 @@ const App = () => {
           element={
             <MainLayout>
               <Dashboard />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/projects"
+          element={
+            <MainLayout>
+              <ProjectsPage />
             </MainLayout>
           }
         />
