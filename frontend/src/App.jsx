@@ -5,6 +5,7 @@ import MainLayout from "./mainlayout/MainLayout";
 import RegisterPage from "./pages/RegisterPage";
 import Dashboard from "./pages/Dashboard";
 import ProjectsPage from "./pages/ProjectsPage";
+import TasksPage from "./pages/TasksPage";
 const App = () => {
   return (
     <>
@@ -25,6 +26,14 @@ const App = () => {
           element={
             <MainLayout>
               <ProjectsPage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/tasks"
+          element={
+            <MainLayout>
+              <TasksPage />
             </MainLayout>
           }
         />

@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import { tasks } from "../data/tasks";
 import { projects } from "../data/projects";
 import ProjectCard from "../components/ProjectCard";
+import TaskTable from "../components/TaskTable";
 // ── Icons ────────────────────────────────────────────────────────────────────
 const FolderIcon = () => (
   <svg
@@ -172,43 +173,7 @@ function Dashboard() {
         </div>
 
         <h2 className="text-base font-bold mb-4">Recent Tasks</h2>
-        <div className="bg-(--color-surface) border border-(--color-border) rounded-xl overflow-hidden">
-          {/* Header row */}
-          <div className="grid grid-cols-[2fr_2fr_2fr_1.2fr_0.8fr] px-5 py-3 border-b border-(--color-border) text-[11.5px] font-bold uppercase tracking-wider text-(--color-text-muted)">
-            <span>Task</span>
-            <span>Project</span>
-            <span>Assigned</span>
-            <span>Status</span>
-            <span className="text-right">Due</span>
-          </div>
-
-          {/* Task rows */}
-          {tasks.map((t, i) => (
-            <div
-              key={i}
-              className={`grid grid-cols-[2fr_2fr_2fr_1.2fr_0.8fr] px-5 py-3.5 items-center text-[13.5px] transition-colors duration-150 hover:bg-(--color-bg) ${i < tasks.length - 1 ? "border-b border-(--color-border)" : ""}`}
-            >
-              <span className="font-semibold">{t.name}</span>
-              <span className="text-(--color-text-muted)">{t.project}</span>
-              <span className="flex items-center gap-2">
-                <Avatar
-                  initials={t.assigned.initials}
-                  color={t.assigned.color}
-                  size={26}
-                />
-                <span className="text-(--color-text-muted)">
-                  {t.assigned.name}
-                </span>
-              </span>
-              <span>
-                <TaskChip label={t.status} />
-              </span>
-              <span className="text-right text-[13px] text-(--color-text-muted)">
-                {t.due}
-              </span>
-            </div>
-          ))}
-        </div>
+        <TaskTable tasks={tasks.slice(0, 8)} />
       </div>
     </div>
   );
