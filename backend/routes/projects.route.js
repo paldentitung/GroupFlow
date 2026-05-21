@@ -6,10 +6,16 @@ import {
   updateProjectController,
 } from "../controllers/projects.controller.js";
 import asyncHandler from "../utils/asyncHandler.js";
+import validate from "../middleware/validate.middleware.js";
+import { createProjectSchema } from "../validators/projectsValidator.js";
 const Router = express.Router();
 
 Router.get("/", asyncHandler(getProjectsController));
-Router.post("/", asyncHandler(createProjectController));
+Router.post(
+  "/",
+  validate(createProjectSchema),
+  asyncHandler(createProjectController),
+);
 Router.put("/:projectId", asyncHandler(updateProjectController));
 Router.delete("/:projectId", asyncHandler(deleteProjectController));
 export default Router;
