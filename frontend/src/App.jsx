@@ -8,9 +8,10 @@ import ProjectsPage from "./pages/ProjectsPage";
 import TasksPage from "./pages/TasksPage";
 import TeamPage from "./pages/TeamPage";
 import SettingsPage from "./pages/SettingsPage";
+import { SidebarProvider } from "./contexts/SidebarContext";
 const App = () => {
   return (
-    <>
+    <SidebarProvider>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -56,7 +57,7 @@ const App = () => {
           }
         />
       </Routes>
-    </>
+    </SidebarProvider>
   );
 };
 

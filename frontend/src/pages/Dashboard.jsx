@@ -131,10 +131,10 @@ const TaskChip = ({ label }) => (
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 function Dashboard() {
   return (
-    <div className="min-h-screen bg-(--color-bg) text-(--color-text-primary) ">
+    <div className="min-h-screen bg-(--color-bg) text-(--color-text-primary) overflow-hidden ">
       <Header title="Dashboard" buttonName="New Project" />
       <div className="p-6">
-        <div className="flex flex-wrap gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
             icon={<FolderIcon />}
             value={6}

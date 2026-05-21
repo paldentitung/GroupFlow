@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useSidebar } from "../contexts/SidebarContext";
 const navItems = [
   {
     section: "Main",
@@ -46,109 +47,132 @@ const navItems = [
 export default function Sidebar() {
   const [active, setActive] = useState("Dashboard");
 
+  const { isOpen, closeSidebar } = useSidebar();
   return (
-    <div
-      className="w-full flex flex-col h-screen bg-[#ffffff] border-r border-[#e8eaed]"
-      style={{ fontFamily: "'DM Sans', sans-serif" }}
-    >
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-5 py-5 border-b border-[#e8eaed]">
-        <div className="w-8 h-8 rounded-lg bg-[#4f46e5] flex items-center justify-center shrink-0">
-          <svg
-            className="w-4 h-4 text-white"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2.2}
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M13 10V3L4 14h7v7l9-11h-7z"
-            />
-          </svg>
+    <>
+      <div
+        className={`fixed md:static top-0 left-0 z-50 flex flex-col h-screen w-64 bg-white border-r border-[#e8eaed]
+  transform transition-transform duration-300
+  ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+        style={{ fontFamily: "'DM Sans', sans-serif" }}
+      >
+        {/* Logo */}
+        <div className="flex items-center justify-between gap-3 px-5 py-5 border-b border-[#e8eaed]">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-[#4f46e5] flex items-center justify-center shrink-0 ">
+              <svg
+                className="w-4 h-4 text-white"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+            </div>
+            <span className="text-[15px] font-semibold tracking-tight text-[#111827]">
+              Group Flow
+            </span>
+          </div>
+
+          <button onClick={closeSidebar} className="text-3xl  md:hidden">
+            &times;
+          </button>
         </div>
-        <span className="text-[15px] font-semibold tracking-tight text-[#111827]">
-          Group Flow
-        </span>
-      </div>
 
-      {/* Nav */}
-      <nav className="flex-1 px-3 py-4 flex flex-col gap-5 overflow-y-auto">
-        {navItems.map(({ section, links }) => (
-          <div key={section}>
-            <p className="text-[10.5px] font-semibold uppercase tracking-widest text-[#6b7280] px-2 mb-1">
-              {section}
-            </p>
-            <ul className="flex flex-col gap-0.5">
-              {links.map(({ name, icon, badge, link }) => {
-                const isActive = active === name;
-                return (
-                  <div key={name}>
-                    <Link
-                      to={link}
-                      onClick={() => setActive(name)}
-                      className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-all duration-150 hover:cursor-pointer ${
-                        isActive
-                          ? "bg-[#eef2ff] text-[#4f46e5] font-medium"
-                          : "text-[#6b7280] hover:bg-[#f7f8fa] hover:text-[#111827]"
-                      }`}
-                    >
-                      <svg
-                        className="w-4.5 h-4.5 shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={isActive ? 2.2 : 1.8}
-                        viewBox="0 0 24 24"
+        {/* Nav */}
+        <nav className="flex-1 px-3 py-4 flex flex-col gap-5 overflow-y-auto">
+          {navItems.map(({ section, links }) => (
+            <div key={section}>
+              <p className="text-[10.5px] font-semibold uppercase tracking-widest text-[#6b7280] px-2 mb-1">
+                {section}
+              </p>
+              <ul className="flex flex-col gap-0.5">
+                {links.map(({ name, icon, badge, link }) => {
+                  const isActive = active === name;
+                  return (
+                    <div key={name}>
+                      <Link
+                        to={link}
+                        onClick={() => {
+                          setActive(name);
+                          closeSidebar();
+                        }}
+                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-all duration-150 hover:cursor-pointer ${
+                          isActive
+                            ? "bg-[#eef2ff] text-[#4f46e5] font-medium"
+                            : "text-[#6b7280] hover:bg-[#f7f8fa] hover:text-[#111827]"
+                        }`}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d={icon}
-                        />
-                      </svg>
-                      <span className="flex-1 text-left">{name}</span>
-                      {badge && (
-                        <span className="ml-auto text-[11px] font-semibold bg-[#4f46e5] text-white rounded-full px-2 py-0.5 leading-none">
-                          {badge}
-                        </span>
-                      )}
-                    </Link>
-                  </div>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
-      </nav>
+                        <svg
+                          className="w-4.5 h-4.5 shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={isActive ? 2.2 : 1.8}
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d={icon}
+                          />
+                        </svg>
+                        <span className="flex-1 text-left">{name}</span>
+                        {badge && (
+                          <span className="ml-auto text-[11px] font-semibold bg-[#4f46e5] text-white rounded-full px-2 py-0.5 leading-none">
+                            {badge}
+                          </span>
+                        )}
+                      </Link>
+                    </div>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </nav>
 
-      {/* User footer */}
-      <div className="px-3 py-3 border-t border-[#e8eaed]">
-        <button className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#f7f8fa] transition-colors duration-150">
-          <div className="w-8 h-8 rounded-full bg-[#eef2ff] flex items-center justify-center shrink-0">
-            <span className="text-[11px] font-semibold text-[#4f46e5]">JD</span>
-          </div>
-          <div className="flex-1 text-left min-w-0">
-            <p className="text-[13px] font-medium text-[#111827] truncate">
-              Jane Doe
-            </p>
-            <p className="text-[11px] text-[#6b7280]">Admin</p>
-          </div>
-          <svg
-            className="w-4 h-4 text-[#6b7280] shrink-0"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.8}
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M8 9l4-4 4 4m0 6l-4 4-4-4"
-            />
-          </svg>
-        </button>
+        {/* User footer */}
+        <div className="px-3 py-3 border-t border-[#e8eaed]">
+          <button className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#f7f8fa] transition-colors duration-150">
+            <div className="w-8 h-8 rounded-full bg-[#eef2ff] flex items-center justify-center shrink-0">
+              <span className="text-[11px] font-semibold text-[#4f46e5]">
+                JD
+              </span>
+            </div>
+            <div className="flex-1 text-left min-w-0">
+              <p className="text-[13px] font-medium text-[#111827] truncate">
+                Jane Doe
+              </p>
+              <p className="text-[11px] text-[#6b7280]">Admin</p>
+            </div>
+            <svg
+              className="w-4 h-4 text-[#6b7280] shrink-0"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.8}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M8 9l4-4 4 4m0 6l-4 4-4-4"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
-    </div>
+
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 md:hidden"
+          onClick={closeSidebar}
+        />
+      )}
+    </>
   );
 }

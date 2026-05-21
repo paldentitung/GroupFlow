@@ -1,13 +1,15 @@
 import React from "react";
 import { Search, Bell, Menu } from "lucide-react";
 import MainButton from "./MainButton";
+import { useSidebar } from "../contexts/SidebarContext";
 
 const Header = ({ title, buttonName, onClick }) => {
+  const { toggleSidebar } = useSidebar();
   return (
     <header className="flex justify-between items-center px-6 py-4 ">
       <div className="flex items-center gap-3">
         <span className="block md:hidden p-1.5 rounded-lg text-[#6b7280] hover:bg-[#f7f8fa] cursor-pointer transition-colors">
-          <Menu size={20} />
+          <Menu size={20} onClick={toggleSidebar} />
         </span>
         <h1 className="text-[17px] font-semibold tracking-tight text-[#111827]">
           {title}
