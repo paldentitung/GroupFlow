@@ -1,6 +1,7 @@
+import bcrypt from "bcrypt";
+import crypto from "crypto";
 import User from "../models/User.js";
 import AppError from "../utils/AppError.js";
-import bcrypt from "bcrypt";
 
 export const registerService = async ({
   firstName,
@@ -8,31 +9,44 @@ export const registerService = async ({
   email,
   password,
 }) => {
-  // Validate fields
   if (!firstName || !lastName || !email || !password) {
     throw new AppError("All fields are required", 400);
   }
-  // check existing user
-  const existingUser = await User.findOne({ email });
+
+  const normalizedEmail = email.toLowerCase();
+
+  const existingUser = await User.findOne({
+    email: normalizedEmail,
+  });
 
   if (existingUser) {
     throw new AppError("User with this email already exists", 400);
   }
 
-  // Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Create user
+  const verificationToken = crypto.randomBytes(32).toString("hex");
+
+  const verificationTokenExpires = new Date(Date.now() + 1000 * 60 * 60);
+
   const newUser = await User.create({
     firstName,
     lastName,
-    email,
+    email: normalizedEmail,
     password: hashedPassword,
+    verificationToken,
+    verificationTokenExpires,
   });
 
-  // Remove password from response
+  const verificationUrl = `${process.env.CLIENT_URL}/verify-email/${verificationToken}`;
+
+  console.log(verificationUrl);
+
   const userResponse = newUser.toObject();
+
   delete userResponse.password;
+  delete userResponse.verificationToken;
+  delete userResponse.verificationTokenExpires;
 
   return userResponse;
 };
