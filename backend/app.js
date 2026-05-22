@@ -4,7 +4,7 @@ import cors from "cors";
 import ProjectsRoute from "./routes/projects.route.js";
 import authRoute from "./routes/auth.route.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
-
+import cookieParser from "cookie-parser";
 const app = express();
 
 // middlewares
@@ -17,6 +17,7 @@ app.use(
   }),
 );
 
+app.use(cookieParser());
 // routes
 app.use("/api/projects", ProjectsRoute);
 app.use("/api/auth", authRoute);
