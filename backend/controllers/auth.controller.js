@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import {
   registerService,
   verifyEmailService,
+  loginService,
 } from "../services/auth.service.js";
 
 export const registerController = async (req, res) => {
@@ -14,7 +15,6 @@ export const registerController = async (req, res) => {
     password,
   });
 
-  // Send response
   res.status(201).json({
     success: true,
     message: "User registered successfully",
@@ -30,5 +30,24 @@ export const verifyEmailController = async (req, res) => {
   res.status(200).json({
     success: result.success,
     message: result.message,
+  });
+};
+
+export const loginController = async (req, res) => {
+  const { email, password } = req.body;
+
+  const result = await loginService(email, password);
+
+  res.cookie("token", result.token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  });
+
+  res.status(200).json({
+    success: result.success,
+    message: result.message,
+    user: result.user,
   });
 };
