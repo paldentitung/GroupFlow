@@ -32,12 +32,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    avatarInitials: {
-      type: String,
-      default: function () {
-        return (this.firstName?.[0] + this.lastName?.[0]).toUpperCase();
-      },
-    },
   },
   {
     timestamps: true,
