@@ -2,7 +2,8 @@
 import express from "express";
 import cors from "cors";
 import ProjectsRoute from "./routes/projects.route.js";
-import { errorMiddleware } from "./middleware/errorMiddleware.js";
+import authRoute from "./routes/auth.route.js";
+import { errorMiddleware } from "./middleware/error.middleware.js";
 
 const app = express();
 
@@ -18,7 +19,7 @@ app.use(
 
 // routes
 app.use("/api/projects", ProjectsRoute);
-
+app.use("/api/auth", authRoute);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
