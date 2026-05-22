@@ -1,5 +1,8 @@
 import User from "../models/User.js";
-import { registerService } from "../services/auth.service.js";
+import {
+  registerService,
+  verifyEmailService,
+} from "../services/auth.service.js";
 
 export const registerController = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -20,35 +23,12 @@ export const registerController = async (req, res) => {
 };
 
 export const verifyEmailController = async (req, res) => {
-  try {
-    const { token } = req.params;
+  const { token } = req.params;
 
-    const user = await User.findOne({
-      verificationToken: token,
-      verificationTokenExpires: { $gt: new Date() },
-    });
+  const result = await verifyEmailService(token);
 
-    if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid or expired verification token",
-      });
-    }
-
-    user.isEmailVerified = true;
-    user.verificationToken = null;
-    user.verificationTokenExpires = null;
-
-    await user.save();
-
-    res.status(200).json({
-      success: true,
-      message: "Email verified successfully",
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-    });
-  }
+  res.status(200).json({
+    success: result.success,
+    message: result.message,
+  });
 };

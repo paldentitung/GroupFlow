@@ -50,3 +50,25 @@ export const registerService = async ({
 
   return userResponse;
 };
+
+export const verifyEmailService = async (token) => {
+  const user = await User.findOne({
+    verificationToken: token,
+    verificationTokenExpires: { $gt: new Date() },
+  });
+
+  if (!user) {
+    throw new AppError("Invalid or expired verification token", 400);
+  }
+
+  user.isEmailVerified = true;
+  user.verificationToken = null;
+  user.verificationTokenExpires = null;
+
+  await user.save();
+
+  return {
+    success: true,
+    message: "Email verified successfully",
+  };
+};
