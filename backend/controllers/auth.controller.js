@@ -35,7 +35,7 @@ export const verifyEmailController = async (req, res) => {
       });
     }
 
-    user.isVerified = true;
+    user.isEmailVerified = true;
     user.verificationToken = null;
     user.verificationTokenExpires = null;
 

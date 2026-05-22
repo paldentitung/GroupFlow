@@ -27,10 +27,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    isVerified: {
+    isEmailVerified: {
       type: Boolean,
       default: false,
     },
+
     verificationToken: {
       type: String,
       default: null,
