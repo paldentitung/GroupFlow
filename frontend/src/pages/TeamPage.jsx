@@ -1,39 +1,7 @@
 import React from "react";
 import Header from "../components/Header";
 
-const teamMembers = [
-  {
-    id: 1,
-    name: "Palden Karma",
-    role: "Frontend Developer",
-    position: "Owner",
-    projects: 8,
-    tasks: 24,
-    completed: 18,
-    color: "bg-violet-100 text-violet-600",
-  },
-  {
-    id: 2,
-    name: "John Smith",
-    role: "Backend Developer",
-    position: "Member",
-    projects: 6,
-    tasks: 19,
-    completed: 14,
-    color: "bg-blue-100 text-blue-600",
-  },
-  {
-    id: 3,
-    name: "Emily Johnson",
-    role: "UI/UX Designer",
-    position: "Member",
-    projects: 5,
-    tasks: 17,
-    completed: 12,
-    color: "bg-emerald-100 text-emerald-600",
-  },
-];
-
+import teamMembers from "../data/team";
 const TeamPage = () => {
   return (
     <div className="min-h-screen ">
