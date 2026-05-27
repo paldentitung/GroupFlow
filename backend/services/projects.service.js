@@ -9,9 +9,24 @@ export const getProjectsService = async (userId) => {
   return projects;
 };
 
-export const createProjectService = async (projectData) => {
-  const newProject = new Project({ ...projectData });
-  return await newProject.save();
+export const createProjectService = async (projectData, userId) => {
+  const newProject = new Project({
+    name: projectData.name,
+    description: projectData.description,
+    status: projectData.status || "Active",
+    startDate: projectData.startDate,
+    dueDate: projectData.dueDate,
+    techStack: projectData.techStack || [],
+    owner: userId,
+    members: [
+      {
+        user: userId,
+        role: "Owner",
+      },
+    ],
+  });
+
+  return newProject.save();
 };
 
 export const updateProjectService = async (projectId, updateData) => {
