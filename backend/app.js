@@ -4,6 +4,7 @@ import cors from "cors";
 import ProjectsRoute from "./routes/projects.route.js";
 import authRoute from "./routes/auth.route.js";
 import tasksRoute from "./routes/tasks.route.js";
+import commentRoute from "./routes/comment.route.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
 import cookieParser from "cookie-parser";
 const app = express();
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use("/api/projects", ProjectsRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/tasks", tasksRoute);
+app.use("/api/comments", commentRoute);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
