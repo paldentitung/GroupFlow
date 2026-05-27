@@ -134,7 +134,7 @@ export const inviteMemberController = async (req, res) => {
       subject: `You're invited to join "${project.name}"`,
       html: inviteEmailTemplate({
         projectName: project.name,
-        inviterName: user.firstName + " " + user.lastName,
+        inviterName: req.user.firstName + " " + req.user.lastName,
         role: role || "Member",
         inviteLink: `${process.env.CLIENT_URL}/invite/accept/${token}`,
       }),
@@ -148,6 +148,51 @@ export const inviteMemberController = async (req, res) => {
     res.status(500).json({
       success: false,
       message: err.message,
+    });
+  }
+};
+
+export const acceptInviteController = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const { projectId, userId, role } = decoded;
+
+    const project = await Project.findById(projectId);
+
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: "Project not found",
+      });
+    }
+
+    const existingMember = project.members.find((m) => m.user.equals(userId));
+
+    if (existingMember) {
+      return res.status(400).json({
+        success: false,
+        message: "User already joined this project",
+      });
+    }
+
+    project.members.push({
+      user: userId,
+      role,
+    });
+
+    await project.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Invitation accepted successfully",
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "Invalid or expired invitation",
     });
   }
 };
