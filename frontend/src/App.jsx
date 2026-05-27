@@ -9,6 +9,7 @@ import TasksPage from "./pages/TasksPage";
 import TeamPage from "./pages/TeamPage";
 import SettingsPage from "./pages/SettingsPage";
 import { SidebarProvider } from "./contexts/SidebarContext";
+import TaskSidebar from "./components/TaskSidebar";
 const App = () => {
   return (
     <SidebarProvider>
@@ -57,6 +58,7 @@ const App = () => {
           }
         />
       </Routes>
+      <TaskSidebar />
     </SidebarProvider>
   );
 };
