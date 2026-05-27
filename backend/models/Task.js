@@ -32,14 +32,7 @@ const taskSchema = mongoose.Schema(
     timestamps: true,
   },
 );
-taskSchema.index({ projectId: 1, status: 1 });
-taskSchema.index({ assigneeId: 1, dueDate: 1 });
-taskSchema.post("save", async function () {
-  const Task = mongoose.model("Task");
-  const Project = mongoose.model("Project");
-  const tasks = await Task.find({ projectId: this.projectId });
-  const done = tasks.filter((t) => t.status === "completed").length;
-  const pct = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
-  await Project.findByIdAndUpdate(this.projectId, { progress: pct });
-});
-export const Task = mongoose.model("Task", taskSchema);
+
+const Task = mongoose.model("Task", taskSchema);
+
+export default Task;

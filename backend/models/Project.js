@@ -69,13 +69,7 @@ const projectSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-projectSchema.pre("save", function (next) {
-  const alreadyMember = this.members.some((m) => m.user.equals(this.owner));
-  if (!alreadyMember) {
-    this.members.unshift({ user: this.owner, role: "Owner" });
-  }
-  next();
-});
+
 const Project = mongoose.model("Project", projectSchema);
 
 export default Project;
