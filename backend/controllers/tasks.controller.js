@@ -55,3 +55,76 @@ export const createTaskController = async (req, res) => {
     data: task,
   });
 };
+
+export const updateTaskController = async (req, res) => {
+  const { taskId } = req.params;
+  const updateData = req.body;
+
+  const task = await Task.findById(taskId);
+
+  if (!task) {
+    return res.status(404).json({
+      success: false,
+      message: "Task not found",
+    });
+  }
+
+  // Check if user is the creator or assignee of the task
+  if (
+    !task.createdBy.equals(req.user._id) &&
+    (!task.assigneeId || !task.assigneeId.equals(req.user._id))
+  ) {
+    return res.status(403).json({
+      success: false,
+      message: "You do not have permission to update this task",
+    });
+  }
+  const allowedFields = [
+    "title",
+    "description",
+    "status",
+    "priority",
+    "dueDate",
+    "assigneeId",
+  ];
+
+  allowedFields.forEach((field) => {
+    if (updateData[field] !== undefined) {
+      task[field] = updateData[field];
+    }
+  });
+  await task.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Task updated",
+    data: task,
+  });
+};
+
+export const deleteTaskController = async (req, res) => {
+  const { taskId } = req.params;
+
+  const task = await Task.findById(taskId);
+
+  if (!task) {
+    return res.status(404).json({
+      success: false,
+      message: "Task not found",
+    });
+  }
+
+  // Check if user is the creator of the task
+  if (!task.createdBy.equals(req.user._id)) {
+    return res.status(403).json({
+      success: false,
+      message: "You do not have permission to delete this task",
+    });
+  }
+
+  await task.deleteOne();
+  res.status(200).json({
+    success: true,
+    message: "Task deleted",
+  });
+};
