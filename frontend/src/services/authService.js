@@ -1,4 +1,4 @@
-import { request } from "./api";
+import request from "./api";
 
 export const register = async (data) => {
   return request(
