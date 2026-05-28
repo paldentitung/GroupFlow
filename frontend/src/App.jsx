@@ -58,7 +58,6 @@ const App = () => {
           }
         />
       </Routes>
-      <TaskSidebar />
     </SidebarProvider>
   );
 };
