@@ -10,13 +10,14 @@ import TeamPage from "./pages/TeamPage";
 import SettingsPage from "./pages/SettingsPage";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import TaskSidebar from "./components/TaskSidebar";
+import VerifyEmailPage from "./pages/VerifyEmailPage";
 const App = () => {
   return (
     <SidebarProvider>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-
+        <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
         <Route
           path="/"
           element={

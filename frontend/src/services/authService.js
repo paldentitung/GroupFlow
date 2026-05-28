@@ -26,11 +26,9 @@ export const login = async (data) => {
 
 export const verifyEmail = async (token) => {
   return request(
-    "/auth/verify-email",
+    `/auth/verify-email/${token}`,
     {
-      method: "POST",
-      body: JSON.stringify({ token }),
-      headers: { "Content-Type": "application/json" },
+      method: "GET",
     },
     false,
   );

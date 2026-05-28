@@ -3,6 +3,7 @@ import crypto from "crypto";
 import User from "../models/User.js";
 import AppError from "../utils/AppError.js";
 import jwt from "jsonwebtoken";
+import sendEmail from "../utils/sendEmail.js";
 export const registerService = async ({
   firstName,
   lastName,
@@ -41,6 +42,12 @@ export const registerService = async ({
   const verificationUrl = `${process.env.CLIENT_URL}/verify-email/${verificationToken}`;
 
   console.log(verificationUrl);
+  console.log("Sending email to:", newUser.email);
+  await sendEmail({
+    to: newUser.email,
+    subject: "Verify your email",
+    html: `Please verify your email by clicking the following link: ${verificationUrl}`,
+  });
 
   const userResponse = newUser.toObject();
 
