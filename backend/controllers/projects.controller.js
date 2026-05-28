@@ -1,4 +1,3 @@
-import Project from "../models/Project.js";
 import {
   createProjectService,
   getProjectsService,
