@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
 /* ─── tiny inline icons ─────────────────────────────────────── */
 const Logo = () => (
   <svg
@@ -14,63 +15,6 @@ const Logo = () => (
     <circle cx="13.5" cy="6.5" r="2.3" fill="currentColor" fillOpacity=".6" />
     <circle cx="6.5" cy="13.5" r="2.3" fill="currentColor" fillOpacity=".6" />
     <circle cx="13.5" cy="13.5" r="3.2" fill="currentColor" />
-  </svg>
-);
-
-const EyeOn = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-    <circle cx="12" cy="12" r="3" />
-  </svg>
-);
-
-const EyeOff = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
-    <line x1="1" y1="1" x2="23" y2="23" />
-  </svg>
-);
-
-const Spinner = () => (
-  <svg
-    className="animate-spin"
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    aria-hidden="true"
-  >
-    <circle
-      cx="12"
-      cy="12"
-      r="10"
-      stroke="rgba(255,255,255,.35)"
-      strokeWidth="3"
-    />
-    <path
-      d="M12 2a10 10 0 0110 10"
-      stroke="white"
-      strokeWidth="3"
-      strokeLinecap="round"
-    />
   </svg>
 );
 
@@ -107,6 +51,8 @@ const LoginPage = () => {
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const { handleLogin } = useAuth();
+
   const set = (key) => (e) =>
     setFields((f) => ({ ...f, [key]: e.target.value }));
 
@@ -115,7 +61,7 @@ const LoginPage = () => {
     setErrors((er) => ({ ...er, [key]: validators[key](fields[key]) }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {
       email: validators.email(fields.email),
@@ -125,7 +71,14 @@ const LoginPage = () => {
     setErrors(newErrors);
     if (newErrors.email || newErrors.password) return;
     setLoading(true);
-    setTimeout(() => setLoading(false), 2000); // replace with real auth call
+
+    try {
+      await handleLogin(fields);
+    } catch (error) {
+      console.error("Login error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputCls = (key) =>
@@ -326,7 +279,7 @@ const LoginPage = () => {
                   style={{ color: "var(--color-text-muted)" }}
                   aria-label={showPwd ? "Hide password" : "Show password"}
                 >
-                  {showPwd ? <EyeOff /> : <EyeOn />}
+                  {showPwd ? <EyeOff /> : <Eye />}
                 </button>
               </div>
               <FieldError msg={touched.password && errors.password} />
@@ -344,7 +297,7 @@ const LoginPage = () => {
             >
               {loading ? (
                 <>
-                  <Spinner />
+                  <Loader2 />
                   Signing in…
                 </>
               ) : (
