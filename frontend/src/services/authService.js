@@ -20,7 +20,7 @@ export const login = async (data) => {
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" },
     },
-    false,
+    true,
   );
 };
 
