@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSidebar } from "../contexts/SidebarContext";
+import { LogOut } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
 const navItems = [
   {
     section: "Main",
@@ -48,6 +50,8 @@ export default function Sidebar() {
   const [active, setActive] = useState("Dashboard");
 
   const { isOpen, closeSidebar } = useSidebar();
+
+  const { handleLogout } = useAuth();
   return (
     <>
       <div
@@ -150,19 +154,11 @@ export default function Sidebar() {
               </p>
               <p className="text-[11px] text-[#6b7280]">Admin</p>
             </div>
-            <svg
+
+            <LogOut
               className="w-4 h-4 text-[#6b7280] shrink-0"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.8}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M8 9l4-4 4 4m0 6l-4 4-4-4"
-              />
-            </svg>
+              onClick={handleLogout}
+            />
           </button>
         </div>
       </div>

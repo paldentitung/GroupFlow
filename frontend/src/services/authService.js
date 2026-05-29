@@ -33,3 +33,13 @@ export const verifyEmail = async (token) => {
     false,
   );
 };
+
+export const logout = async () => {
+  return request(
+    "/auth/logout",
+    {
+      method: "POST",
+    },
+    false,
+  );
+};

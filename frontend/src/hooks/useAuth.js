@@ -1,4 +1,4 @@
-import { register, verifyEmail, login } from "../services/authService";
+import { register, verifyEmail, login, logout } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 export const useAuth = () => {
   const navigate = useNavigate();
@@ -35,5 +35,17 @@ export const useAuth = () => {
     }
   };
 
-  return { handleRegister, handleVerifyEmail, handleLogin };
+  const handleLogout = async () => {
+    try {
+      const res = await logout();
+
+      if (res.success) {
+        alert("Logout successful");
+        navigate("/login");
+      }
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+  return { handleRegister, handleVerifyEmail, handleLogin, handleLogout };
 };
