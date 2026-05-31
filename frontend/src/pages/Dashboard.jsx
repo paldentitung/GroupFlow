@@ -4,6 +4,7 @@ import { tasks } from "../data/tasks";
 import ProjectCard from "../components/ProjectCard";
 import TaskTable from "../components/TaskTable";
 import { useProjects } from "../hooks/useProjects.js";
+import { formatDate } from "../utils/formatDate.js";
 // ── Icons ────────────────────────────────────────────────────────────────────
 const FolderIcon = () => (
   <svg
@@ -73,18 +74,20 @@ const CheckIcon = () => (
 // ── Stat Card ────────────────────────────────────────────────────────────────
 const StatCard = ({ icon, value, label, iconBg, iconColor }) => (
   <div className="flex-1 min-w-0 bg-(--color-surface) border border-(--color-border) rounded-xl p-5 flex flex-col gap-2">
-    <span
-      className="w-9 h-9 flex items-center justify-center rounded-lg"
-      style={{ background: iconBg, color: iconColor }}
-    >
-      {icon}
-    </span>
-    <span className="text-[28px] font-bold leading-none text-(--color-text-primary)">
-      {value}
-    </span>
     <span className="text-[13.5px] font-medium text-(--color-text-muted)">
       {label}
     </span>
+    <div className="flex items-center justify-between">
+      <span className="text-[28px] font-bold leading-none text-(--color-text-primary)">
+        {value}
+      </span>
+      <span
+        className="w-9 h-9 flex items-center justify-center rounded-lg"
+        style={{ background: iconBg, color: iconColor }}
+      >
+        {icon}
+      </span>
+    </div>
   </div>
 );
 
@@ -169,7 +172,16 @@ function Dashboard() {
         <h2 className="text-base font-bold mb-4">My Projects</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
           {projects.map((p) => (
-            <ProjectCard key={p._id} {...p} id={p._id} />
+            <ProjectCard
+              key={p._id}
+              id={p._id}
+              name={p.name}
+              desc={p.description}
+              status={p.status}
+              progress={p.progress}
+              due={formatDate(p.dueDate)}
+              members={p.members}
+            />
           ))}
         </div>
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { getInitials } from "../utils/getInitials.js";
 // ── Avatar ───────────────────────────────────────────────────────────────────
 const AVATAR_COLORS = [
   "#4f46e5",
@@ -24,24 +25,45 @@ const Avatar = ({ initials, colorIndex = 0, overlap = false }) => (
   </span>
 );
 
-const AvatarGroup = ({ members = [], extra = 0 }) => (
-  <div className="flex items-center">
-    {members.map((m, i) => (
-      <Avatar key={i} initials={m.initials} colorIndex={i} overlap={i > 0} />
-    ))}
-    {extra > 0 && (
-      <span
-        className="inline-flex items-center justify-center rounded-full border-2 border-(--color-surface) text-[11px] font-bold text-(--color-text-muted) bg-(--color-border)"
-        style={{ width: 28, height: 28, marginLeft: -8 }}
-      >
-        +{extra}
-      </span>
-    )}
-  </div>
-);
+const AvatarGroup = ({ members = [] }) => {
+  if (members.length === 0) {
+    return (
+      <span className="text-[12px] text-(--color-text-muted)">No members</span>
+    );
+  }
+  const visible = members.slice(0, 3);
+  const extra = members.length - visible.length;
+
+  return (
+    <div className="flex items-center">
+      {visible.map((m, i) => (
+        <Avatar
+          key={m._id ?? i}
+          initials={getInitials(m.user?.firstName, m.user?.lastName)}
+          colorIndex={i}
+          overlap={i > 0}
+        />
+      ))}
+      {extra > 0 && (
+        <span
+          className="inline-flex items-center justify-center rounded-full border-2 border-(--color-surface) text-[11px] font-bold text-(--color-text-muted) bg-(--color-border)"
+          style={{ width: 28, height: 28, marginLeft: -8 }}
+        >
+          +{extra}
+        </span>
+      )}
+    </div>
+  );
+};
+
+const PROGRESS_COLORS = {
+  Active: "#4f46e5",
+  Completed: "#059669",
+  "On Hold": "#d97706",
+};
 
 // ── Progress Bar ─────────────────────────────────────────────────────────────
-const ProgressBar = ({ value = 0, color = "var(--color-accent)" }) => (
+const ProgressBar = ({ value = 0, color = { progressColor } }) => (
   <div className="w-full h-1.25 rounded-full overflow-hidden bg-(--color-border)">
     <div
       className="h-full rounded-full transition-[width] duration-500 ease-in-out"
@@ -72,12 +94,12 @@ const ProjectCard = ({
   desc = "",
   status = "Active",
   progress = 0,
-  progressColor = "#4f46e5",
   members = [],
   extra = 0,
   due = "",
   id,
 }) => {
+  const progressColor = PROGRESS_COLORS[status] ?? "#4f46e5";
   return (
     <Link
       to={`/projects/${id}`}
@@ -109,7 +131,7 @@ const ProjectCard = ({
 
       {/* Footer */}
       <div className="flex justify-between items-center">
-        <AvatarGroup members={members} extra={extra} />
+        <AvatarGroup members={members} />
         {due && (
           <span className="text-[12.5px] text-(--color-text-muted)">
             Due {due}
