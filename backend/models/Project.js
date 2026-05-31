@@ -60,12 +60,6 @@ const projectSchema = new mongoose.Schema(
     dueDate: {
       type: Date,
     },
-
-    techStack: [
-      {
-        type: String,
-      },
-    ],
   },
   { timestamps: true },
 );
