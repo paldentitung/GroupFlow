@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 // ── Avatar ───────────────────────────────────────────────────────────────────
 const AVATAR_COLORS = [
   "#4f46e5",
@@ -76,9 +76,13 @@ const ProjectCard = ({
   members = [],
   extra = 0,
   due = "",
+  id,
 }) => {
   return (
-    <div className="bg-(--color-surface) border border-(--color-border) rounded-xl p-5 flex flex-col gap-3 min-w-0 hover:shadow-sm transition-shadow duration-200">
+    <Link
+      to={`/projects/${id}`}
+      className="bg-(--color-surface) border border-(--color-border) rounded-xl p-5 flex flex-col gap-3 min-w-0 hover:shadow-sm transition-shadow duration-200"
+    >
       {/* Header */}
       <div className="flex justify-between items-start gap-3">
         <div className="min-w-0">
@@ -112,7 +116,7 @@ const ProjectCard = ({
           </span>
         )}
       </div>
-    </div>
+    </Link>
   );
 };
 

@@ -1,9 +1,9 @@
 import React from "react";
 import Header from "../components/Header";
 import { tasks } from "../data/tasks";
-import { projects } from "../data/projects";
 import ProjectCard from "../components/ProjectCard";
 import TaskTable from "../components/TaskTable";
+import { useProjects } from "../hooks/useProjects.js";
 // ── Icons ────────────────────────────────────────────────────────────────────
 const FolderIcon = () => (
   <svg
@@ -130,6 +130,7 @@ const TaskChip = ({ label }) => (
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 function Dashboard() {
+  const { projects } = useProjects();
   return (
     <div className="min-h-screen bg-(--color-bg) text-(--color-text-primary) overflow-hidden ">
       <Header title="Dashboard" buttonName="New Project" />
@@ -168,7 +169,7 @@ function Dashboard() {
         <h2 className="text-base font-bold mb-4">My Projects</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
           {projects.map((p) => (
-            <ProjectCard key={p.name} {...p} />
+            <ProjectCard key={p._id} {...p} id={p._id} />
           ))}
         </div>
 

@@ -11,6 +11,7 @@ import SettingsPage from "./pages/SettingsPage";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import TaskSidebar from "./components/TaskSidebar";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
+import ProjectDetailsPage from "./pages/ProjectDetailsPage";
 const App = () => {
   return (
     <SidebarProvider>
@@ -31,6 +32,14 @@ const App = () => {
           element={
             <MainLayout>
               <ProjectsPage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/projects/:id"
+          element={
+            <MainLayout>
+              <ProjectDetailsPage />
             </MainLayout>
           }
         />

@@ -3,7 +3,9 @@ import AppError from "../utils/AppError.js";
 
 // Only return projects where the user is a member
 export const getProjectsService = async (userId) => {
-  const projects = await Project.find();
+  const projects = await Project.find()
+    .populate("owner", "firstName lastName email")
+    .populate("members.user", "firstName lastName email");
   return projects;
 };
 
