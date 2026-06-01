@@ -87,7 +87,7 @@ const ProjectDetailsPage = () => {
       >
         {/* Back */}
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/projects")}
           className="flex items-center gap-1.5 text-[#4f46e5] text-sm mb-5"
         >
           ← Back to Projects
