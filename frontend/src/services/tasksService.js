@@ -1,0 +1,17 @@
+import request from "./api";
+
+export const getTasks = async (projectId) => {
+  return request(`/tasks/${projectId}/tasks`, {}, true);
+};
+
+export const createTask = async (projectId, taskData) => {
+  return request(
+    `/tasks/${projectId}/tasks`,
+    {
+      method: "POST",
+      body: JSON.stringify(taskData),
+      headers: { "Content-Type": "application/json" },
+    },
+    true,
+  );
+};

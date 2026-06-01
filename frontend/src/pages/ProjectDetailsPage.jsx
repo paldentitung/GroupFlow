@@ -3,7 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useProjects } from "../hooks/useProjects.js";
 import { formatDate } from "../utils/formatDate.js";
 import { getInitials } from "../utils/getInitials.js";
-
+import { useTasks } from "../hooks/useTasks.js";
+import AddTaskModal from "../components/AddTaskModal.jsx";
 const COLOR_POOL = [
   "bg-[#4f46e5]",
   "bg-[#f59e0b]",
@@ -59,196 +60,237 @@ const ProjectDetailsPage = () => {
   const navigate = useNavigate();
   const { projects } = useProjects();
   const [activeTab, setActiveTab] = useState("Task Board");
+  const [showAddTask, setShowAddTask] = useState(false);
+
+  const { tasks, handlecreateTask } = useTasks(id);
 
   const project = projects.find((p) => p._id === id);
   if (!project) return <div className="p-6">Project not found</div>;
 
   return (
-    <div
-      className="min-h-screen p-6"
-      style={{ background: "#f7f8fa", fontFamily: "'DM Sans', sans-serif" }}
-    >
-      {/* Back */}
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-1.5 text-[#4f46e5] text-sm mb-5"
+    <>
+      <div
+        className="min-h-screen p-6"
+        style={{ background: "#f7f8fa", fontFamily: "'DM Sans', sans-serif" }}
       >
-        ← Back to Projects
-      </button>
+        {/* Back */}
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-1.5 text-[#4f46e5] text-sm mb-5"
+        >
+          ← Back to Projects
+        </button>
 
-      {/* Header */}
-      <div className="flex items-start justify-between mb-5">
-        <div>
-          <div className="flex items-center gap-2.5 mb-1">
-            <h1 className="text-[22px] font-medium text-[#111827]">
-              {project.name}
-            </h1>
-            <span
-              className={`flex items-center gap-1.5 text-xs rounded-full px-3 py-1 ${STATUS_STYLES[project.status] || "text-[#6b7280] bg-[#f3f4f6]"}`}
+        {/* Header */}
+        <div className="flex items-start justify-between mb-5">
+          <div>
+            <div className="flex items-center gap-2.5 mb-1">
+              <h1 className="text-[22px] font-medium text-[#111827]">
+                {project.name}
+              </h1>
+              <span
+                className={`flex items-center gap-1.5 text-xs rounded-full px-3 py-1 ${STATUS_STYLES[project.status] || "text-[#6b7280] bg-[#f3f4f6]"}`}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-current inline-block" />
+                {project.status}
+              </span>
+            </div>
+            <p className="text-sm text-[#6b7280]">
+              {project.description || "No description provided."}
+            </p>
+          </div>
+          <div className="flex gap-2.5">
+            <button className="flex items-center gap-1.5 bg-white border border-[#e8eaed] rounded-lg px-4 py-2 text-sm text-[#111827]">
+              ✎ Edit
+            </button>
+            <button
+              onClick={() => setShowAddTask(true)}
+              className="flex items-center gap-1.5 bg-[#4f46e5] border-none rounded-lg px-4 py-2 text-sm text-white"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-current inline-block" />
-              {project.status}
-            </span>
+              + Add Task
+            </button>
           </div>
-          <p className="text-sm text-[#6b7280]">
-            {project.description || "No description provided."}
-          </p>
         </div>
-        <div className="flex gap-2.5">
-          <button className="flex items-center gap-1.5 bg-white border border-[#e8eaed] rounded-lg px-4 py-2 text-sm text-[#111827]">
-            ✎ Edit
-          </button>
-          <button className="flex items-center gap-1.5 bg-[#4f46e5] border-none rounded-lg px-4 py-2 text-sm text-white">
-            + Add Task
-          </button>
-        </div>
-      </div>
 
-      {/* Meta card */}
-      <div className="bg-white border border-[#e8eaed] rounded-[14px] p-5 mb-5">
-        {/* Top row — dates, owner, members */}
-        <div className="flex items-center gap-8 pb-4 border-b border-[#f0f1f3]">
-          <div className="flex flex-col gap-1">
-            <span className="text-[11px] font-medium tracking-wide uppercase text-[#9ca3af]">
-              Start
-            </span>
-            <span className="text-[13px] font-medium text-[#111827]">
-              {formatDate(project.startDate) || "Not set"}
-            </span>
-          </div>
-
-          <div className="w-px h-9 bg-[#f0f1f3]" />
-
-          <div className="flex flex-col gap-1">
-            <span className="text-[11px] font-medium tracking-wide uppercase text-[#9ca3af]">
-              Due
-            </span>
-            <span className="text-[13px] font-medium text-[#111827]">
-              {formatDate(project.dueDate) || "Not set"}
-            </span>
-          </div>
-
-          <div className="w-px h-9 bg-[#f0f1f3]" />
-
-          <div className="flex flex-col gap-1">
-            <span className="text-[11px] font-medium tracking-wide uppercase text-[#9ca3af]">
-              Owner
-            </span>
-            <div className="flex items-center gap-1.5">
-              <Avatar
-                initials={getInitials(
-                  project?.owner?.firstName,
-                  project?.owner?.lastName,
-                )}
-                size="w-6 h-6 text-[10px]"
-              />
+        {/* Meta card */}
+        <div className="bg-white border border-[#e8eaed] rounded-[14px] p-5 mb-5">
+          {/* Top row — dates, owner, members */}
+          <div className="flex items-center gap-8 pb-4 border-b border-[#f0f1f3]">
+            <div className="flex flex-col gap-1">
+              <span className="text-[11px] font-medium tracking-wide uppercase text-[#9ca3af]">
+                Start
+              </span>
               <span className="text-[13px] font-medium text-[#111827]">
-                {project?.owner?.firstName}{" "}
-                {project?.owner?.lastName || "Not set"}
+                {formatDate(project.startDate) || "Not set"}
               </span>
             </div>
-          </div>
 
-          <div className="w-px h-9 bg-[#f0f1f3]" />
+            <div className="w-px h-9 bg-[#f0f1f3]" />
 
-          <div className="flex flex-col gap-1">
-            <span className="text-[11px] font-medium tracking-wide uppercase text-[#9ca3af]">
-              Members
-            </span>
-            <div className="flex items-center gap-2">
-              <div className="flex">
-                {project?.members?.map((member, i) => (
-                  <div
-                    key={member._id}
-                    style={{ marginLeft: i === 0 ? 0 : -6 }}
-                  >
-                    <Avatar
-                      initials={getInitials(
-                        member.user?.firstName,
-                        member.user?.lastName,
-                      )}
-                      size="w-6 h-6 text-[10px]"
-                      style={{ border: "1.5px solid white" }}
-                    />
-                  </div>
-                ))}
-              </div>
-              <span className="text-[12px] text-[#9ca3af]">
-                {project.members?.length} members
+            <div className="flex flex-col gap-1">
+              <span className="text-[11px] font-medium tracking-wide uppercase text-[#9ca3af]">
+                Due
+              </span>
+              <span className="text-[13px] font-medium text-[#111827]">
+                {formatDate(project.dueDate) || "Not set"}
               </span>
             </div>
-          </div>
-        </div>
 
-        {/* Bottom row — progress bar */}
-        <div className="flex items-center gap-4 pt-4">
-          <span className="text-[11px] font-medium tracking-wide uppercase text-[#9ca3af] whitespace-nowrap">
-            Progress
-          </span>
-          <span className="text-[13px] font-semibold text-[#111827] w-9">
-            {project.progress}%
-          </span>
-          <div className="flex-1 h-[5px] bg-[#f0f1f3] rounded-full overflow-hidden">
-            <div
-              className="h-full bg-[#059669] rounded-full transition-all duration-300"
-              style={{ width: `${project.progress}%` }}
-            />
-          </div>
-          <span className="text-[12px] text-[#9ca3af] whitespace-nowrap">
-            {/* {doneTasks} done · {leftTasks} left */}
-          </span>
-        </div>
-      </div>
+            <div className="w-px h-9 bg-[#f0f1f3]" />
 
-      {/* Tabs */}
-      <div className="flex gap-1 border-b border-[#e8eaed] mb-5">
-        {TABS.map((item) => (
-          <button
-            key={item}
-            onClick={() => setActiveTab(item)}
-            className={`text-sm px-4 py-2 border-b-2 -mb-px cursor-pointer ${
-              activeTab === item
-                ? "text-[#4f46e5] border-[#4f46e5] font-medium"
-                : "text-[#6b7280] border-transparent"
-            }`}
-          >
-            {item}
-          </button>
-        ))}
-      </div>
-
-      {/* Tab content */}
-      {activeTab === "Task Board" && (
-        <div className="grid grid-cols-3 gap-4">
-          {[
-            { label: "Todo", color: "bg-[#6b7280]", tasks: [] },
-            { label: "In Progress", color: "bg-[#4f46e5]", tasks: [] },
-            { label: "Completed", color: "bg-[#059669]", tasks: [] },
-          ].map(({ label, color, tasks }) => (
-            <div key={label}>
-              <div className="flex items-center gap-2 text-sm font-medium text-[#111827] mb-3">
-                <span className={`w-2 h-2 rounded-full ${color}`} />
-                {label}
-                <span className="font-normal text-[#6b7280]">
-                  {tasks.length}
+            <div className="flex flex-col gap-1">
+              <span className="text-[11px] font-medium tracking-wide uppercase text-[#9ca3af]">
+                Owner
+              </span>
+              <div className="flex items-center gap-1.5">
+                <Avatar
+                  initials={getInitials(
+                    project?.owner?.firstName,
+                    project?.owner?.lastName,
+                  )}
+                  size="w-6 h-6 text-[10px]"
+                />
+                <span className="text-[13px] font-medium text-[#111827]">
+                  {project?.owner?.firstName}{" "}
+                  {project?.owner?.lastName || "Not set"}
                 </span>
               </div>
-              {tasks.map((t) => (
-                <TaskCard key={t._id} {...t} />
-              ))}
             </div>
+
+            <div className="w-px h-9 bg-[#f0f1f3]" />
+
+            <div className="flex flex-col gap-1">
+              <span className="text-[11px] font-medium tracking-wide uppercase text-[#9ca3af]">
+                Members
+              </span>
+              <div className="flex items-center gap-2">
+                <div className="flex">
+                  {project?.members?.map((member, i) => (
+                    <div
+                      key={member._id}
+                      style={{ marginLeft: i === 0 ? 0 : -6 }}
+                    >
+                      <Avatar
+                        initials={getInitials(
+                          member.user?.firstName,
+                          member.user?.lastName,
+                        )}
+                        size="w-6 h-6 text-[10px]"
+                        style={{ border: "1.5px solid white" }}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <span className="text-[12px] text-[#9ca3af]">
+                  {project.members?.length} members
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom row — progress bar */}
+          <div className="flex items-center gap-4 pt-4">
+            <span className="text-[11px] font-medium tracking-wide uppercase text-[#9ca3af] whitespace-nowrap">
+              Progress
+            </span>
+            <span className="text-[13px] font-semibold text-[#111827] w-9">
+              {project.progress}%
+            </span>
+            <div className="flex-1 h-[5px] bg-[#f0f1f3] rounded-full overflow-hidden">
+              <div
+                className="h-full bg-[#059669] rounded-full transition-all duration-300"
+                style={{ width: `${project.progress}%` }}
+              />
+            </div>
+            <span className="text-[12px] text-[#9ca3af] whitespace-nowrap">
+              {/* {doneTasks} done · {leftTasks} left */}
+            </span>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex gap-1 border-b border-[#e8eaed] mb-5">
+          {TABS.map((item) => (
+            <button
+              key={item}
+              onClick={() => setActiveTab(item)}
+              className={`text-sm px-4 py-2 border-b-2 -mb-px cursor-pointer ${
+                activeTab === item
+                  ? "text-[#4f46e5] border-[#4f46e5] font-medium"
+                  : "text-[#6b7280] border-transparent"
+              }`}
+            >
+              {item}
+            </button>
           ))}
         </div>
-      )}
 
-      {activeTab === "Members" && (
-        <div className="text-sm text-[#6b7280]">Members tab coming soon.</div>
-      )}
+        {/* Tab content */}
+        {activeTab === "Task Board" && (
+          <div className="grid grid-cols-3 gap-4">
+            {[
+              { label: "Todo", color: "bg-[#6b7280]", status: "todo" },
+              {
+                label: "In Progress",
+                color: "bg-[#4f46e5]",
+                status: "in_progress",
+              },
+              {
+                label: "Completed",
+                color: "bg-[#059669]",
+                status: "completed",
+              },
+            ].map(({ label, color, status }) => {
+              const colTasks = tasks?.filter((t) => t.status === status) ?? [];
+              return (
+                <div key={label}>
+                  <div className="flex items-center gap-2 text-sm font-medium text-[#111827] mb-3">
+                    <span className={`w-2 h-2 rounded-full ${color}`} />
+                    {label}
+                    <span className="font-normal text-[#6b7280]">
+                      {colTasks.length}
+                    </span>
+                  </div>
+                  {colTasks.map((t) => (
+                    <TaskCard
+                      key={t._id}
+                      title={t.title}
+                      subtitle={t.description}
+                      assignee={getInitials(
+                        t.assigneeId?.firstName,
+                        t.assigneeId?.lastName,
+                      )}
+                      date={formatDate(t.dueDate)}
+                      done={t.status === "completed"}
+                    />
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
-      {activeTab === "Overview" && (
-        <div className="text-sm text-[#6b7280]">Overview tab coming soon.</div>
+        {activeTab === "Members" && (
+          <div className="text-sm text-[#6b7280]">Members tab coming soon.</div>
+        )}
+
+        {activeTab === "Overview" && (
+          <div className="text-sm text-[#6b7280]">
+            Overview tab coming soon.
+          </div>
+        )}
+      </div>
+
+      {showAddTask && (
+        <AddTaskModal
+          onClose={() => setShowAddTask(false)}
+          onSubmit={handlecreateTask}
+          projectId={project._id}
+          createdBy={project.owner._id}
+          members={project.members}
+        />
       )}
-    </div>
+    </>
   );
 };
 

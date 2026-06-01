@@ -111,9 +111,9 @@ export const acceptInviteService = async (token, currentUserId) => {
     throw new AppError("Invalid token", 400);
   }
 
-  if (decoded.userId.toString() !== currentUserId.toString()) {
-    throw new AppError("Invalid invitation", 403);
-  }
+  // if (decoded.userId.toString() !== currentUserId.toString()) {
+  //   throw new AppError("Invalid invitation", 403);
+  // }
 
   const { projectId, userId, role } = decoded;
 
