@@ -13,5 +13,5 @@ Router.get("/:projectId/members", getAllMembersController);
 Router.get("/:projectId/member/:memberId", getMemberDetailsController);
 Router.delete("/:projectId/member/:memberId", removeMemberController);
 Router.post("/:projectId/member/invite", auth, inviteMemberController);
-Router.post("/:projectId/member/accept", auth, acceptInviteController);
+Router.post("/:projectId/member/accept/:token", auth, acceptInviteController);
 export default Router;

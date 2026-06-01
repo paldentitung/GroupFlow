@@ -52,7 +52,7 @@ export const inviteMemberController = async (req, res) => {
 };
 
 export const acceptInviteController = async (req, res) => {
-  const { token } = req.body;
+  const { token } = req.params;
 
   await acceptInviteService(token, req.user._id);
 
