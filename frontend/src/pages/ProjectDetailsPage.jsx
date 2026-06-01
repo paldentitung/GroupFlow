@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link, Outlet } from "react-router-dom";
 import { useProjects } from "../hooks/useProjects.js";
 import { formatDate } from "../utils/formatDate.js";
 import { getInitials } from "../utils/getInitials.js";
 import { useTasks } from "../hooks/useTasks.js";
 import AddTaskModal from "../components/AddTaskModal.jsx";
+
 const COLOR_POOL = [
   "bg-[#4f46e5]",
   "bg-[#f59e0b]",
@@ -36,9 +37,20 @@ function Avatar({ initials = "?", size = "w-7 h-7 text-xs" }) {
   );
 }
 
-function TaskCard({ title, subtitle, assignee, date, done = false }) {
+function TaskCard({
+  title,
+  subtitle,
+  assignee,
+  date,
+  done = false,
+  projectId,
+  taskId,
+}) {
   return (
-    <div className="bg-white border border-[#e8eaed] rounded-xl p-4 mb-2.5">
+    <Link
+      to={`/projects/${projectId}/task/${taskId}`}
+      className="bg-white border border-[#e8eaed] rounded-xl p-4 mb-2.5 block"
+    >
       <p
         className={`text-sm font-medium mb-0.5 ${done ? "line-through text-gray-400" : "text-[#111827]"}`}
       >
@@ -49,7 +61,7 @@ function TaskCard({ title, subtitle, assignee, date, done = false }) {
         <Avatar initials={assignee} size="w-6 h-6 text-[10px]" />
         <span className="text-xs text-[#6b7280]">{date}</span>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -114,7 +126,6 @@ const ProjectDetailsPage = () => {
 
         {/* Meta card */}
         <div className="bg-white border border-[#e8eaed] rounded-[14px] p-5 mb-5">
-          {/* Top row — dates, owner, members */}
           <div className="flex items-center gap-8 pb-4 border-b border-[#f0f1f3]">
             <div className="flex flex-col gap-1">
               <span className="text-[11px] font-medium tracking-wide uppercase text-[#9ca3af]">
@@ -176,7 +187,6 @@ const ProjectDetailsPage = () => {
                           member.user?.lastName,
                         )}
                         size="w-6 h-6 text-[10px]"
-                        style={{ border: "1.5px solid white" }}
                       />
                     </div>
                   ))}
@@ -188,7 +198,7 @@ const ProjectDetailsPage = () => {
             </div>
           </div>
 
-          {/* Bottom row — progress bar */}
+          {/* Progress bar */}
           <div className="flex items-center gap-4 pt-4">
             <span className="text-[11px] font-medium tracking-wide uppercase text-[#9ca3af] whitespace-nowrap">
               Progress
@@ -202,9 +212,6 @@ const ProjectDetailsPage = () => {
                 style={{ width: `${project.progress}%` }}
               />
             </div>
-            <span className="text-[12px] text-[#9ca3af] whitespace-nowrap">
-              {/* {doneTasks} done · {leftTasks} left */}
-            </span>
           </div>
         </div>
 
@@ -225,7 +232,7 @@ const ProjectDetailsPage = () => {
           ))}
         </div>
 
-        {/* Tab content */}
+        {/* Task Board */}
         {activeTab === "Task Board" && (
           <div className="grid grid-cols-3 gap-4">
             {[
@@ -233,13 +240,9 @@ const ProjectDetailsPage = () => {
               {
                 label: "In Progress",
                 color: "bg-[#4f46e5]",
-                status: "in_progress",
+                status: "in-progress",
               },
-              {
-                label: "Completed",
-                color: "bg-[#059669]",
-                status: "completed",
-              },
+              { label: "Completed", color: "bg-[#059669]", status: "done" },
             ].map(({ label, color, status }) => {
               const colTasks = tasks?.filter((t) => t.status === status) ?? [];
               return (
@@ -254,14 +257,17 @@ const ProjectDetailsPage = () => {
                   {colTasks.map((t) => (
                     <TaskCard
                       key={t._id}
+                      taskId={t._id}
+                      projectId={project._id}
                       title={t.title}
                       subtitle={t.description}
+                      // ✅ falls back to createdBy since API has no assignedTo yet
                       assignee={getInitials(
-                        t.assigneeId?.firstName,
-                        t.assigneeId?.lastName,
+                        t.assigneeId?.firstName || t.createdBy?.firstName,
+                        t.assigneeId?.lastName || t.createdBy?.lastName,
                       )}
                       date={formatDate(t.dueDate)}
-                      done={t.status === "completed"}
+                      done={t.status === "done"} // ✅ fixed from "completed"
                     />
                   ))}
                 </div>
@@ -290,6 +296,10 @@ const ProjectDetailsPage = () => {
           members={project.members}
         />
       )}
+
+      <div className="fixed top-0 right-0 h-screen z-50">
+        <Outlet />
+      </div>
     </>
   );
 };

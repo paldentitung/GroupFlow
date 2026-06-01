@@ -35,6 +35,7 @@ const App = () => {
             </MainLayout>
           }
         />
+
         <Route
           path="/projects/:id"
           element={
@@ -42,7 +43,10 @@ const App = () => {
               <ProjectDetailsPage />
             </MainLayout>
           }
-        />
+        >
+          <Route path="task/:taskId" element={<TaskSidebar />} />
+        </Route>
+
         <Route
           path="/tasks"
           element={

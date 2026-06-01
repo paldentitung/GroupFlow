@@ -4,6 +4,10 @@ export const getTasks = async (projectId) => {
   return request(`/tasks/${projectId}/tasks`, {}, true);
 };
 
+export const getTaskById = async (taskId) => {
+  return request(`/tasks/task/${taskId}`, {}, true);
+};
+
 export const createTask = async (projectId, taskData) => {
   return request(
     `/tasks/${projectId}/tasks`,

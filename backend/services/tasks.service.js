@@ -10,6 +10,18 @@ export const getTasksService = async (projectId) => {
   return tasks;
 };
 
+export const getTaskByIdService = async (taskId) => {
+  const task = await Task.findById(taskId)
+    .populate("assigneeId", "firstName lastName avatar")
+    .populate("createdBy", "firstName lastName avatar");
+
+  if (!task) {
+    throw new Error("Task not found");
+  }
+
+  return task;
+};
+
 export const createTaskService = async (
   projectId,
   title,

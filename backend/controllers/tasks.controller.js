@@ -3,6 +3,7 @@ import {
   createTaskService,
   updateTaskService,
   deleteTaskService,
+  getTaskByIdService,
 } from "../services/tasks.service.js";
 
 export const getTasksController = async (req, res) => {
@@ -14,6 +15,18 @@ export const getTasksController = async (req, res) => {
     success: true,
     message: "Tasks fetched",
     data: results,
+  });
+};
+
+export const getTaskByIdController = async (req, res) => {
+  const { taskId } = req.params;
+
+  const result = await getTaskByIdService(taskId);
+
+  res.status(200).json({
+    success: true,
+    message: "Task fetched",
+    data: result,
   });
 };
 
