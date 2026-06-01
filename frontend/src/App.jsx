@@ -12,9 +12,11 @@ import { SidebarProvider } from "./contexts/SidebarContext";
 import TaskSidebar from "./components/TaskSidebar";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
 import ProjectDetailsPage from "./pages/ProjectDetailsPage";
+import { Toaster } from "react-hot-toast";
 const App = () => {
   return (
     <SidebarProvider>
+      <Toaster position="top-right" />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

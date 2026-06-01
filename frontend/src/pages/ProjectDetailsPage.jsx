@@ -6,7 +6,7 @@ import { getInitials } from "../utils/getInitials.js";
 import { useTasks } from "../hooks/useTasks.js";
 import AddTaskModal from "../components/AddTaskModal.jsx";
 import InviteMembersModal from "../components/InviteMembersModal.jsx";
-
+import { useMembers } from "../hooks/useMembers.js";
 const COLOR_POOL = [
   "bg-[#4f46e5]",
   "bg-[#f59e0b]",
@@ -77,6 +77,7 @@ const ProjectDetailsPage = () => {
   const [showInviteModal, setShowInviteModal] = useState(false);
 
   const { tasks, handlecreateTask } = useTasks(id);
+  const { handleInviteMember } = useMembers(id);
 
   const project = projects.find((p) => p._id === id);
   if (!project) return <div className="p-6">Project not found</div>;
@@ -362,6 +363,7 @@ const ProjectDetailsPage = () => {
         isOpen={showInviteModal}
         onClose={() => setShowInviteModal(false)}
         projectId={project._id}
+        onSubmit={handleInviteMember}
       />
     </>
   );

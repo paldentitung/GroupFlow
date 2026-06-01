@@ -7,12 +7,13 @@ function InviteMembersModal({ isOpen, onClose, onSubmit }) {
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) return;
-    onSubmit({ email, role });
+    await onSubmit({ email, role });
     setEmail(""); // Reset form
     setRole("Member");
+    onClose();
   };
 
   return (
