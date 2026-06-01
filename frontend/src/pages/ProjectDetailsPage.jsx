@@ -5,6 +5,7 @@ import { formatDate } from "../utils/formatDate.js";
 import { getInitials } from "../utils/getInitials.js";
 import { useTasks } from "../hooks/useTasks.js";
 import AddTaskModal from "../components/AddTaskModal.jsx";
+import InviteMembersModal from "../components/InviteMembersModal.jsx";
 
 const COLOR_POOL = [
   "bg-[#4f46e5]",
@@ -73,6 +74,7 @@ const ProjectDetailsPage = () => {
   const { projects } = useProjects();
   const [activeTab, setActiveTab] = useState("Task Board");
   const [showAddTask, setShowAddTask] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   const { tasks, handlecreateTask } = useTasks(id);
 
@@ -277,7 +279,62 @@ const ProjectDetailsPage = () => {
         )}
 
         {activeTab === "Members" && (
-          <div className="text-sm text-[#6b7280]">Members tab coming soon.</div>
+          <div className="bg-white border border-[#e8eaed] rounded-[14px] p-6">
+            {/* Inner Header */}
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <h2 className="text-base font-medium text-[#111827]">
+                  Project Members
+                </h2>
+                <p className="text-xs text-[#6b7280]">
+                  Manage access and roles for this workspace.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowInviteModal(true)}
+                className="flex items-center gap-1.5 bg-[#4f46e5] border-none rounded-lg px-4 py-2 text-sm text-white hover:bg-[#4338ca] transition-colors"
+              >
+                + Invite Member
+              </button>
+            </div>
+
+            {/* List Array Map */}
+            <div className="divide-y divide-[#f0f1f3]">
+              {project.members && project.members.length > 0 ? (
+                project.members.map((member) => (
+                  <div
+                    key={member._id}
+                    className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Avatar
+                        initials={getInitials(
+                          member.user?.firstName,
+                          member.user?.lastName,
+                        )}
+                        size="w-9 h-9 text-xs"
+                      />
+                      <div>
+                        <p className="text-sm font-medium text-[#111827]">
+                          {member.user?.firstName} {member.user?.lastName}
+                        </p>
+                        <p className="text-xs text-[#6b7280]">
+                          {member.user?.email || "No email available"}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-xs px-2.5 py-1 rounded-full border border-[#e8eaed] bg-[#f7f8fa] text-[#4b5563] font-medium capitalize">
+                      {member.role || "Member"}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <div className="text-sm text-[#6b7280] text-center py-6">
+                  No members added yet.
+                </div>
+              )}
+            </div>
+          </div>
         )}
 
         {activeTab === "Overview" && (
@@ -300,6 +357,12 @@ const ProjectDetailsPage = () => {
       <div className="fixed top-0 right-0 h-screen z-50">
         <Outlet />
       </div>
+
+      <InviteMembersModal
+        isOpen={showInviteModal}
+        onClose={() => setShowInviteModal(false)}
+        projectId={project._id}
+      />
     </>
   );
 };
