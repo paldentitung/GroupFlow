@@ -22,7 +22,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
-        <Route path="/accept-invite" element={<AcceptInvitePage />} />
+        <Route path="/accept-invite/:token" element={<AcceptInvitePage />} />
         <Route
           path="/"
           element={

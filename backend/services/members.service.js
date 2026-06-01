@@ -87,6 +87,8 @@ export const inviteMemberService = async (projectId, email, role, inviter) => {
     { expiresIn: "7d" },
   );
 
+  console.log("Generated invite token:", token);
+
   await sendEmail({
     to: user.email,
     subject: `You're invited to join "${project.name}"`,
@@ -94,7 +96,7 @@ export const inviteMemberService = async (projectId, email, role, inviter) => {
       projectName: project.name,
       inviterName: inviter.firstName + " " + inviter.lastName,
       role: normalizedRole,
-      inviteLink: `${process.env.CLIENT_URL}/invite/accept/${token}`,
+      inviteLink: `${process.env.CLIENT_URL}/accept-invite/${token}`,
     }),
   });
 
@@ -102,6 +104,7 @@ export const inviteMemberService = async (projectId, email, role, inviter) => {
 };
 
 export const acceptInviteService = async (token, currentUserId) => {
+  console.log("Accepting invite with token:", token);
   let decoded;
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET);

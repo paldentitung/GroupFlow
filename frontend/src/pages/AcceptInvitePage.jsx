@@ -1,49 +1,67 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-// import { acceptInvite } from "../services/membersService";
+import { acceptInvite } from "../services/membersService.js";
+import { jwtDecode } from "jwt-decode";
 
 function AcceptInvitePage() {
   const { token } = useParams();
-
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
 
+  // ✅ prevents double API call in React StrictMode (dev)
+  const hasRun = useRef(false);
+
   useEffect(() => {
+    if (hasRun.current) return;
+    hasRun.current = true;
+
     const acceptInvitation = async () => {
       try {
         setLoading(true);
+        setError(null);
 
-        console.log(token);
+        if (!token) {
+          throw new Error("Invalid invite link");
+        }
 
-        // Replace this with API call
+        let decoded;
 
-        // const response =
-        // await acceptInvite(token);
+        try {
+          decoded = jwtDecode(token);
+        } catch {
+          throw new Error("Invalid or corrupted invite token");
+        }
 
-        // if(response.success){
+        const projectId = decoded?.projectId;
+
+        if (!projectId) {
+          throw new Error("Invalid invitation data");
+        }
+
+        const response = await acceptInvite(projectId, token);
+
+        if (!response?.success) {
+          throw new Error(response?.message || "Failed to accept invitation");
+        }
 
         setSuccess(true);
 
         setTimeout(() => {
           navigate("/projects");
         }, 1500);
-
-        // }
       } catch (err) {
-        console.error(err);
+        console.error("Accept invite error:", err);
 
-        setError("Failed to accept invitation.");
+        setError(err?.message || "Something went wrong.");
       } finally {
         setLoading(false);
       }
     };
 
-    if (token) {
-      acceptInvitation();
-    }
+    acceptInvitation();
   }, [token, navigate]);
 
   return (

@@ -14,11 +14,10 @@ export const inviteMember = async (projectId, email, role) => {
 
 export const acceptInvite = async (projectId, token) => {
   return request(
-    `/members/${projectId}/member/accept`,
+    `/members/${projectId}/member/accept/${token}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token }),
     },
     true,
   );
