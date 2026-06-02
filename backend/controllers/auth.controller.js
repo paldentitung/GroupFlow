@@ -61,3 +61,13 @@ export const logout = (req, res) => {
 
   res.status(200).json({ success: true, message: "Logged out" });
 };
+
+export const getMe = async (req, res) => {
+  const user = await User.findById(req.user._id).select("-password");
+
+  res.status(200).json({
+    success: true,
+    message: "User info retrieved",
+    user,
+  });
+};
