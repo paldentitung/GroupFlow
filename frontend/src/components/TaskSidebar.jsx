@@ -1,10 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useTask } from "../hooks/useTask.js";
 import { useProjects } from "../hooks/useProjects.js";
-import { deleteTask } from "../services/tasksService.js";
-import { toast } from "react-hot-toast";
+import { useTasksContext } from "../contexts/TasksContext.jsx";
 
-import { useOutletContext } from "react-router-dom";
 function getInitials(firstName = "", lastName = "") {
   return `${firstName[0] ?? ""}${lastName[0] ?? ""}`.toUpperCase();
 }
@@ -88,20 +86,17 @@ export default function TaskSidebar() {
   const { task, loading } = useTask(taskId);
   const navigate = useNavigate();
   const { projects } = useProjects();
+  const { handleDeleteTask } = useTasksContext(); // ✅ from context
 
   const handleClose = () => navigate(`/projects/${task?.projectId}`);
-  const { handleDeleteTask } = useOutletContext();
+
   if (loading) return <div className="p-6">Loading...</div>;
   if (!task) return <div className="p-6">Task not found</div>;
 
   const project = projects?.find((p) => p._id === task.projectId);
   const status = STATUS_STYLES[task.status] ?? STATUS_STYLES.todo;
   const overdue = isOverdue(task.dueDate) && task.status !== "done";
-
-  // Until the API returns assignedTo, fall back to createdBy
   const assignee = task.assigneeId || task.createdBy;
-
-  console.log("Rendering TaskSidebar with task:", task);
 
   return (
     <>
@@ -110,7 +105,7 @@ export default function TaskSidebar() {
         onClick={handleClose}
       />
       <div className="fixed top-0 right-0 h-screen w-[420px] bg-white border-l border-[#e8eaed] flex flex-col overflow-y-auto z-50 shadow-xl">
-        {/* ── Header ── */}
+        {/* Header */}
         <div className="px-[22px] pt-5 pb-4 border-b border-[#e8eaed]">
           <div className="flex items-start justify-between gap-3 mb-2.5">
             <span className="text-[15px] font-medium text-[#111827] leading-snug">
@@ -123,7 +118,6 @@ export default function TaskSidebar() {
               ✕
             </button>
           </div>
-
           <span
             className={`inline-flex items-center gap-1.5 bg-[#f7f8fa] border border-[#e8eaed] rounded-full px-2.5 py-[3px] text-[11px] ${status.text}`}
           >
@@ -132,7 +126,6 @@ export default function TaskSidebar() {
             />
             {status.label}
           </span>
-
           {task.description && (
             <p className="text-[13px] text-[#6b7280] leading-relaxed mt-2.5">
               {task.description}
@@ -140,7 +133,7 @@ export default function TaskSidebar() {
           )}
         </div>
 
-        {/* ── Meta grid ── */}
+        {/* Meta grid */}
         <div className="grid grid-cols-2 gap-y-3 px-[22px] py-4 bg-[#f7f8fa] border-b border-[#e8eaed]">
           <div>
             <p className="text-[10px] uppercase tracking-wider text-[#6b7280] mb-1">
@@ -150,7 +143,6 @@ export default function TaskSidebar() {
               {project?.name ?? "—"}
             </p>
           </div>
-
           <div>
             <p className="text-[10px] uppercase tracking-wider text-[#6b7280] mb-1">
               Due
@@ -161,8 +153,6 @@ export default function TaskSidebar() {
               {formatDate(task.dueDate)}
             </p>
           </div>
-
-          {/* Assigned to — uses assignedTo if present, falls back to createdBy */}
           <div>
             <p className="text-[10px] uppercase tracking-wider text-[#6b7280] mb-1">
               Assigned to
@@ -179,7 +169,6 @@ export default function TaskSidebar() {
               </span>
             </div>
           </div>
-
           <div>
             <p className="text-[10px] uppercase tracking-wider text-[#6b7280] mb-1">
               Created
@@ -190,7 +179,7 @@ export default function TaskSidebar() {
           </div>
         </div>
 
-        {/* ── Comments (static UI) ── */}
+        {/* Comments */}
         <div className="px-[22px] pt-[18px]">
           <p className="text-[13px] font-medium text-[#111827] mb-3.5">
             Comments
@@ -223,7 +212,7 @@ export default function TaskSidebar() {
           </div>
         </div>
 
-        {/* ── Comment input (static UI) ── */}
+        {/* Comment input */}
         <div className="flex gap-2.5 items-end px-[22px] py-4 mt-3.5 border-t border-[#e8eaed]">
           <textarea
             placeholder="Write a comment..."
@@ -235,10 +224,10 @@ export default function TaskSidebar() {
           </button>
         </div>
 
-        {/* ── Actions ── */}
+        {/* Actions */}
         <div className="flex items-center justify-between px-[22px] pb-[18px] border-t border-[#e8eaed] pt-3.5 mt-auto">
           <button
-            onClick={() => handleDeleteTask(task._id)}
+            onClick={() => handleDeleteTask(task._id, task.projectId)} // ✅ no more useOutletContext
             className="flex items-center gap-1.5 border border-[#e8eaed] rounded-lg px-3.5 py-2 text-[13px] text-[#dc2626] hover:bg-red-50 transition-colors cursor-pointer"
           >
             🗑 Delete

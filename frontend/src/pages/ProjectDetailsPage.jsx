@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link, Outlet } from "react-router-dom";
 import { useProjects } from "../hooks/useProjects.js";
 import { formatDate } from "../utils/formatDate.js";
 import { getInitials } from "../utils/getInitials.js";
-import { useTasks } from "../hooks/useTasks.js";
+import { useTasksContext } from "../contexts/TasksContext.jsx";
 import AddTaskModal from "../components/AddTaskModal.jsx";
 import InviteMembersModal from "../components/InviteMembersModal.jsx";
 import { useMembers } from "../hooks/useMembers.js";
-import { deleteTask } from "../services/tasksService.js";
 import { toast } from "react-hot-toast";
+
 const COLOR_POOL = [
   "bg-[#4f46e5]",
   "bg-[#f59e0b]",
@@ -78,24 +78,17 @@ const ProjectDetailsPage = () => {
   const [showAddTask, setShowAddTask] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
 
-  const { tasks, handlecreateTask, fetchTasks } = useTasks(id);
+  const { tasks, handleCreateTask, fetchTasks } = useTasksContext(); // ✅ from context
   const { handleInviteMember } = useMembers(id);
 
   const project = projects.find((p) => p._id === id);
+
+  useEffect(() => {
+    if (id) fetchTasks(id); // ✅ moved above early return
+  }, [id]);
+
   if (!project) return <div className="p-6">Project not found</div>;
 
-  const handleDeleteTask = async (taskId) => {
-    try {
-      const response = await deleteTask(taskId);
-
-      if (response.success) {
-        await fetchTasks(id); // 🔥 correct
-        navigate(`/projects/${id}`);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
   return (
     <>
       <div
@@ -152,9 +145,7 @@ const ProjectDetailsPage = () => {
                 {formatDate(project.startDate) || "Not set"}
               </span>
             </div>
-
             <div className="w-px h-9 bg-[#f0f1f3]" />
-
             <div className="flex flex-col gap-1">
               <span className="text-[11px] font-medium tracking-wide uppercase text-[#9ca3af]">
                 Due
@@ -163,9 +154,7 @@ const ProjectDetailsPage = () => {
                 {formatDate(project.dueDate) || "Not set"}
               </span>
             </div>
-
             <div className="w-px h-9 bg-[#f0f1f3]" />
-
             <div className="flex flex-col gap-1">
               <span className="text-[11px] font-medium tracking-wide uppercase text-[#9ca3af]">
                 Owner
@@ -184,9 +173,7 @@ const ProjectDetailsPage = () => {
                 </span>
               </div>
             </div>
-
             <div className="w-px h-9 bg-[#f0f1f3]" />
-
             <div className="flex flex-col gap-1">
               <span className="text-[11px] font-medium tracking-wide uppercase text-[#9ca3af]">
                 Members
@@ -238,11 +225,7 @@ const ProjectDetailsPage = () => {
             <button
               key={item}
               onClick={() => setActiveTab(item)}
-              className={`text-sm px-4 py-2 border-b-2 -mb-px cursor-pointer ${
-                activeTab === item
-                  ? "text-[#4f46e5] border-[#4f46e5] font-medium"
-                  : "text-[#6b7280] border-transparent"
-              }`}
+              className={`text-sm px-4 py-2 border-b-2 -mb-px cursor-pointer ${activeTab === item ? "text-[#4f46e5] border-[#4f46e5] font-medium" : "text-[#6b7280] border-transparent"}`}
             >
               {item}
             </button>
@@ -278,13 +261,12 @@ const ProjectDetailsPage = () => {
                       projectId={project._id}
                       title={t.title}
                       subtitle={t.description}
-                      // ✅ falls back to createdBy since API has no assignedTo yet
                       assignee={getInitials(
                         t.assigneeId?.firstName || t.createdBy?.firstName,
                         t.assigneeId?.lastName || t.createdBy?.lastName,
                       )}
                       date={formatDate(t.dueDate)}
-                      done={t.status === "done"} // ✅ fixed from "completed"
+                      done={t.status === "done"}
                     />
                   ))}
                 </div>
@@ -295,7 +277,6 @@ const ProjectDetailsPage = () => {
 
         {activeTab === "Members" && (
           <div className="bg-white border border-[#e8eaed] rounded-[14px] p-6">
-            {/* Inner Header */}
             <div className="flex items-center justify-between mb-5">
               <div>
                 <h2 className="text-base font-medium text-[#111827]">
@@ -312,8 +293,6 @@ const ProjectDetailsPage = () => {
                 + Invite Member
               </button>
             </div>
-
-            {/* List Array Map */}
             <div className="divide-y divide-[#f0f1f3]">
               {project.members && project.members.length > 0 ? (
                 project.members.map((member) => (
@@ -362,7 +341,7 @@ const ProjectDetailsPage = () => {
       {showAddTask && (
         <AddTaskModal
           onClose={() => setShowAddTask(false)}
-          onSubmit={handlecreateTask}
+          onSubmit={handleCreateTask} // ✅ fixed: was handlecreateTask
           projectId={project._id}
           createdBy={project.owner._id}
           members={project.members}
@@ -370,7 +349,7 @@ const ProjectDetailsPage = () => {
       )}
 
       <div className="fixed top-0 right-0 h-screen z-50">
-        <Outlet context={{ handleDeleteTask }} />
+        <Outlet /> {/* ✅ removed context prop, no longer needed */}
       </div>
 
       <InviteMembersModal
