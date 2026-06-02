@@ -72,7 +72,7 @@ export const updateTaskService = async (taskId, updateData, userId) => {
   const task = await Task.findById(taskId);
 
   if (!task) {
-    throw new Error("Task not found");
+    throw new AppError("Task not found", 404);
   }
 
   // Check if user is the creator or assignee of the task
@@ -80,7 +80,7 @@ export const updateTaskService = async (taskId, updateData, userId) => {
     !task.createdBy.equals(userId) &&
     (!task.assigneeId || !task.assigneeId.equals(userId))
   ) {
-    throw new Error("You do not have permission to update this task");
+    throw new AppError("You do not have permission to update this task", 403);
   }
 
   const allowedFields = [
@@ -106,35 +106,38 @@ export const deleteTaskService = async (taskId, userId) => {
   const task = await Task.findById(taskId);
 
   if (!task) {
-    throw new Error("Task not found");
+    throw new AppError("Task not found", 404);
   }
 
   const project = await Project.findById(task.projectId);
 
   if (!project) {
-    throw new Error("Project not found");
+    throw new AppError("Project not found", 404);
   }
 
   const isOwner = project.owner.equals(userId);
   const isCreator = task.createdBy.equals(userId);
 
   if (!isOwner && !isCreator) {
-    throw new Error("You do not have permission to delete this task");
+    throw new AppError("You do not have permission to delete this task", 403);
   }
 
   await task.deleteOne();
 };
 export const respondToTaskService = async (taskId, userId, response) => {
   const task = await Task.findById(taskId);
-  if (!task) throw new Error("Task not found");
+  if (!task) throw new AppError("Task not found", 404);
 
   // Only the assignee can accept/reject
   if (!task.assigneeId || !task.assigneeId.equals(userId)) {
-    throw new Error("You are not the assignee of this task");
+    throw new AppError("You are not the assignee of this task", 403);
   }
 
   if (!["accepted", "rejected"].includes(response)) {
-    throw new Error("Invalid response. Must be 'accepted' or 'rejected'");
+    throw new AppError(
+      "Invalid response. Must be 'accepted' or 'rejected'",
+      400,
+    );
   }
 
   task.acceptanceStatus = response;
