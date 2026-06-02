@@ -43,10 +43,9 @@ const RegisterPage = () => {
     try {
       await handleRegister(fields);
     } catch (err) {
-      setServerError(
-        err?.response?.data?.message ||
-          "Something went wrong. Please try again.",
-      );
+      const message = err.response?.data?.errors?.[0]?.message || err.message;
+
+      toast.error(message);
     } finally {
       setLoading(false);
     }
