@@ -11,7 +11,7 @@ import { createProjectSchema } from "../validators/projects.validator.js";
 import auth from "../middleware/auth.middleware.js";
 const Router = express.Router();
 
-Router.get("/", asyncHandler(getProjectsController));
+Router.get("/", auth, asyncHandler(getProjectsController));
 Router.post(
   "/",
   auth,

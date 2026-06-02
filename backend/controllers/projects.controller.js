@@ -6,7 +6,7 @@ import {
 } from "../services/projects.service.js";
 
 export const getProjectsController = async (req, res) => {
-  const result = await getProjectsService();
+  const result = await getProjectsService(req.user._id);
 
   res.status(200).json({
     success: true,
