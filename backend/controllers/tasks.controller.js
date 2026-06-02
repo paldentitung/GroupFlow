@@ -5,6 +5,7 @@ import {
   deleteTaskService,
   getTaskByIdService,
   respondToTaskService,
+  getCurrentUserTasksService,
 } from "../services/tasks.service.js";
 
 export const getTasksController = async (req, res) => {
@@ -28,6 +29,18 @@ export const getTaskByIdController = async (req, res) => {
     success: true,
     message: "Task fetched",
     data: result,
+  });
+};
+
+export const getCurrentUserTasksController = async (req, res) => {
+  const userId = req.user._id;
+
+  const tasks = await getCurrentUserTasksService(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Tasks fetched",
+    data: tasks,
   });
 };
 

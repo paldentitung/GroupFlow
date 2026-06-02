@@ -25,6 +25,17 @@ export const getTaskByIdService = async (taskId) => {
   return task;
 };
 
+export const getCurrentUserTasksService = async (userId) => {
+  const tasks = await Task.find({
+    $or: [{ assigneeId: userId }, { createdBy: userId }],
+  })
+    .populate("assigneeId", "firstName lastName avatar")
+    .populate("createdBy", "firstName lastName avatar")
+    .sort({ createdAt: -1 });
+
+  return tasks;
+};
+
 export const createTaskService = async (
   projectId,
   title,
