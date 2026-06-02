@@ -41,3 +41,15 @@ export const deleteTask = async (taskId) => {
     true,
   );
 };
+
+export const respondToTask = async (taskId, response) => {
+  return request(
+    `/tasks/${taskId}/respond`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ response }),
+      headers: { "Content-Type": "application/json" },
+    },
+    true,
+  );
+};

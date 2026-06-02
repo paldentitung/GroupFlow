@@ -4,6 +4,7 @@ import {
   createTask,
   deleteTask,
   updateTask,
+  respondToTask,
 } from "../services/tasksService.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -68,7 +69,21 @@ export const TasksProvider = ({ children }) => {
       toast.error(err.message);
     }
   };
-
+  const handleRespondToTask = async (taskId, response) => {
+    try {
+      const res = await respondToTask(taskId, response);
+      if (res.success) {
+        setTasks((prev) =>
+          prev.map((t) => (t._id === taskId ? { ...t, ...res.data } : t)),
+        );
+        toast.success(
+          response === "accepted" ? "Task accepted!" : "Task rejected",
+        );
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
   return (
     <TasksContext.Provider
       value={{
@@ -79,6 +94,7 @@ export const TasksProvider = ({ children }) => {
         handleCreateTask,
         handleDeleteTask,
         handleUpdateTask,
+        handleRespondToTask,
       }}
     >
       {children}

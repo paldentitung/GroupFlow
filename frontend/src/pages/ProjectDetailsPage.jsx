@@ -45,7 +45,7 @@ function TaskCard({
   subtitle,
   assignee,
   date,
-  done = false,
+  done,
   projectId,
   taskId,
   acceptanceStatus,
@@ -54,30 +54,43 @@ function TaskCard({
   return (
     <Link
       to={`/projects/${projectId}/task/${taskId}`}
-      className="bg-white border border-[#e8eaed] rounded-xl p-4 mb-2.5 block"
+      className="bg-white border border-[#e8eaed] rounded-xl p-4 mb-2.5 flex flex-col gap-2.5 block"
     >
-      <p
-        className={`text-sm font-medium mb-0.5 ${done ? "line-through text-gray-400" : "text-[#111827]"}`}
-      >
-        {title}
-      </p>
-      <p className="text-xs text-[#6b7280] mb-3">{subtitle}</p>
+      <div>
+        <p
+          className={`text-sm font-medium mb-0.5 ${done ? "line-through text-[#9ca3af]" : "text-[#111827]"}`}
+        >
+          {title}
+        </p>
+        <p className="text-xs text-[#6b7280]">{subtitle}</p>
+      </div>
+
       <div className="flex items-center justify-between">
         <Avatar initials={assignee} size="w-6 h-6 text-[10px]" />
         <span className="text-xs text-[#6b7280]">{date}</span>
       </div>
 
-      {/* ✅ Accept button — only shows when pending */}
       {acceptanceStatus === "pending" && (
-        <button
-          onClick={(e) => {
-            e.preventDefault(); // prevent Link navigation
-            onAccept(taskId);
-          }}
-          className="mt-3 w-full text-xs bg-[#4f46e5] text-white rounded-lg py-1.5 hover:bg-[#4338ca] transition-colors"
-        >
-          Accept Task
-        </button>
+        <div className="flex gap-2 mt-1">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              onAccept(taskId, "accepted");
+            }}
+            className="flex-1 text-xs font-medium bg-[#4f46e5] text-white rounded-lg py-1.5 hover:bg-[#4338ca] transition-colors"
+          >
+            ✓ Accept
+          </button>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              onAccept(taskId, "rejected");
+            }}
+            className="flex-1 text-xs font-medium bg-white text-[#ef4444] border border-[#ef4444] rounded-lg py-1.5 hover:bg-[#fef2f2] transition-colors"
+          >
+            ✕ Reject
+          </button>
+        </div>
       )}
     </Link>
   );
@@ -93,7 +106,8 @@ const ProjectDetailsPage = () => {
   const [showAddTask, setShowAddTask] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
 
-  const { tasks, handleCreateTask, fetchTasks } = useTasksContext(); // ✅ from context
+  const { tasks, handleCreateTask, fetchTasks, handleRespondToTask } =
+    useTasksContext(); // ✅ from context
   const { handleInviteMember } = useMembers(id);
 
   const project = projects.find((p) => p._id === id);
@@ -281,13 +295,15 @@ const ProjectDetailsPage = () => {
                       title={t.title}
                       subtitle={t.description}
                       acceptanceStatus={t.acceptanceStatus}
-                      onAccept={(taskId) => console.log("accept", taskId)}
+                      onAccept={(taskId, response) =>
+                        handleRespondToTask(taskId, response)
+                      }
                       assignee={getInitials(
                         t.assigneeId?.firstName || t.createdBy?.firstName,
                         t.assigneeId?.lastName || t.createdBy?.lastName,
                       )}
                       date={formatDate(t.dueDate)}
-                      done={t.status === "done"}
+                      done={t.status === "completed"}
                     />
                   ))}
                 </div>

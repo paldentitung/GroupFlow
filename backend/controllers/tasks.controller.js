@@ -80,5 +80,5 @@ export const respondToTaskController = async (req, res) => {
   const userId = req.user._id;
 
   const task = await respondToTaskService(taskId, userId, response);
-  res.status(200).json({ success: true, task });
+  res.status(200).json({ success: true, data: task });
 };
