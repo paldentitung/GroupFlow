@@ -1,5 +1,10 @@
 import { createContext, useContext, useState } from "react";
-import { getTasks, createTask, deleteTask } from "../services/tasksService.js";
+import {
+  getTasks,
+  createTask,
+  deleteTask,
+  updateTask,
+} from "../services/tasksService.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
@@ -47,10 +52,21 @@ export const TasksProvider = ({ children }) => {
     }
   };
 
-  const updateTask = (taskId, updatedData) => {
-    setTasks((prev) =>
-      prev.map((t) => (t._id === taskId ? { ...t, ...updatedData } : t)),
-    );
+  const handleUpdateTask = async (taskId, updatedData) => {
+    try {
+      const response = await updateTask(taskId, updatedData);
+      if (response.success) {
+        setTasks((prev) =>
+          prev.map((t) => (t._id === taskId ? { ...t, ...updatedData } : t)),
+        );
+
+        toast.success("Task updated");
+
+        navigate(`/projects/${response.data.projectId}`);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
   };
 
   return (
@@ -62,7 +78,7 @@ export const TasksProvider = ({ children }) => {
         fetchTasks,
         handleCreateTask,
         handleDeleteTask,
-        updateTask,
+        handleUpdateTask,
       }}
     >
       {children}

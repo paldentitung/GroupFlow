@@ -86,7 +86,7 @@ export default function TaskSidebar() {
   const { task, loading } = useTask(taskId);
   const navigate = useNavigate();
   const { projects } = useProjects();
-  const { handleDeleteTask } = useTasksContext(); // ✅ from context
+  const { handleDeleteTask, handleUpdateTask } = useTasksContext(); // ✅ from context
 
   const handleClose = () => navigate(`/projects/${task?.projectId}`);
 
@@ -98,6 +98,9 @@ export default function TaskSidebar() {
   const overdue = isOverdue(task.dueDate) && task.status !== "done";
   const assignee = task.assigneeId || task.createdBy;
 
+  const markComplete = async () => {
+    await handleUpdateTask(task._id, { status: "completed" });
+  };
   return (
     <>
       <div
@@ -232,7 +235,10 @@ export default function TaskSidebar() {
           >
             🗑 Delete
           </button>
-          <button className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[13px] font-medium rounded-lg px-4 py-2 transition-colors cursor-pointer">
+          <button
+            onClick={markComplete}
+            className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[13px] font-medium rounded-lg px-4 py-2 transition-colors cursor-pointer"
+          >
             ✓ Mark complete
           </button>
         </div>
