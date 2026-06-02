@@ -95,8 +95,16 @@ export const deleteTaskService = async (taskId, userId) => {
     throw new Error("Task not found");
   }
 
-  // Check if user is the creator of the task
-  if (!task.createdBy.equals(userId)) {
+  const project = await Project.findById(task.projectId);
+
+  if (!project) {
+    throw new Error("Project not found");
+  }
+
+  const isOwner = project.owner.equals(userId);
+  const isCreator = task.createdBy.equals(userId);
+
+  if (!isOwner && !isCreator) {
     throw new Error("You do not have permission to delete this task");
   }
 

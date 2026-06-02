@@ -7,6 +7,8 @@ import { useTasks } from "../hooks/useTasks.js";
 import AddTaskModal from "../components/AddTaskModal.jsx";
 import InviteMembersModal from "../components/InviteMembersModal.jsx";
 import { useMembers } from "../hooks/useMembers.js";
+import { deleteTask } from "../services/tasksService.js";
+import { toast } from "react-hot-toast";
 const COLOR_POOL = [
   "bg-[#4f46e5]",
   "bg-[#f59e0b]",
@@ -76,12 +78,24 @@ const ProjectDetailsPage = () => {
   const [showAddTask, setShowAddTask] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
 
-  const { tasks, handlecreateTask } = useTasks(id);
+  const { tasks, handlecreateTask, fetchTasks } = useTasks(id);
   const { handleInviteMember } = useMembers(id);
 
   const project = projects.find((p) => p._id === id);
   if (!project) return <div className="p-6">Project not found</div>;
 
+  const handleDeleteTask = async (taskId) => {
+    try {
+      const response = await deleteTask(taskId);
+
+      if (response.success) {
+        await fetchTasks(id); // 🔥 correct
+        navigate(`/projects/${id}`);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   return (
     <>
       <div
@@ -356,7 +370,7 @@ const ProjectDetailsPage = () => {
       )}
 
       <div className="fixed top-0 right-0 h-screen z-50">
-        <Outlet />
+        <Outlet context={{ handleDeleteTask }} />
       </div>
 
       <InviteMembersModal

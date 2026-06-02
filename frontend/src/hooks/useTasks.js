@@ -39,5 +39,6 @@ export const useTasks = (projectId) => {
     tasks,
     addTask,
     handlecreateTask,
+    fetchTasks,
   };
 };

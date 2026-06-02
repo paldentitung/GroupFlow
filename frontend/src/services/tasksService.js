@@ -19,3 +19,25 @@ export const createTask = async (projectId, taskData) => {
     true,
   );
 };
+
+export const updateTask = async (taskId, taskData) => {
+  return request(
+    `/tasks/${taskId}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(taskData),
+      headers: { "Content-Type": "application/json" },
+    },
+    true,
+  );
+};
+
+export const deleteTask = async (taskId) => {
+  return request(
+    `/tasks/${taskId}`,
+    {
+      method: "DELETE",
+    },
+    true,
+  );
+};

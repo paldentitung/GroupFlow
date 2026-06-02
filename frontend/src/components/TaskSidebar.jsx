@@ -1,7 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useTask } from "../hooks/useTask.js";
 import { useProjects } from "../hooks/useProjects.js";
+import { deleteTask } from "../services/tasksService.js";
+import { toast } from "react-hot-toast";
 
+import { useOutletContext } from "react-router-dom";
 function getInitials(firstName = "", lastName = "") {
   return `${firstName[0] ?? ""}${lastName[0] ?? ""}`.toUpperCase();
 }
@@ -87,7 +90,7 @@ export default function TaskSidebar() {
   const { projects } = useProjects();
 
   const handleClose = () => navigate(`/projects/${task?.projectId}`);
-
+  const { handleDeleteTask } = useOutletContext();
   if (loading) return <div className="p-6">Loading...</div>;
   if (!task) return <div className="p-6">Task not found</div>;
 
@@ -97,6 +100,8 @@ export default function TaskSidebar() {
 
   // Until the API returns assignedTo, fall back to createdBy
   const assignee = task.assigneeId || task.createdBy;
+
+  console.log("Rendering TaskSidebar with task:", task);
 
   return (
     <>
@@ -232,7 +237,10 @@ export default function TaskSidebar() {
 
         {/* ── Actions ── */}
         <div className="flex items-center justify-between px-[22px] pb-[18px] border-t border-[#e8eaed] pt-3.5 mt-auto">
-          <button className="flex items-center gap-1.5 border border-[#e8eaed] rounded-lg px-3.5 py-2 text-[13px] text-[#dc2626] hover:bg-red-50 transition-colors cursor-pointer">
+          <button
+            onClick={() => handleDeleteTask(task._id)}
+            className="flex items-center gap-1.5 border border-[#e8eaed] rounded-lg px-3.5 py-2 text-[13px] text-[#dc2626] hover:bg-red-50 transition-colors cursor-pointer"
+          >
             🗑 Delete
           </button>
           <button className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[13px] font-medium rounded-lg px-4 py-2 transition-colors cursor-pointer">
