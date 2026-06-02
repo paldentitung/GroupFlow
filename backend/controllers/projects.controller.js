@@ -39,7 +39,7 @@ export const updateProjectController = async (req, res) => {
 export const deleteProjectController = async (req, res) => {
   const { projectId } = req.params;
 
-  const deletedProject = await deleteProjectService(projectId);
+  const deletedProject = await deleteProjectService(projectId, req.user._id);
 
   res.status(200).json({
     success: true,

@@ -1,6 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { getInitials } from "../utils/getInitials.js";
+import { Trash2 } from "lucide-react";
+import { ProjectsContext } from "../contexts/ProjectsContext.jsx";
+import { useContext } from "react";
 // ── Avatar ───────────────────────────────────────────────────────────────────
 const AVATAR_COLORS = [
   "#4f46e5",
@@ -98,8 +101,12 @@ const ProjectCard = ({
   extra = 0,
   due = "",
   id,
+  onDelete = () => {},
+  owner,
 }) => {
   const progressColor = PROGRESS_COLORS[status] ?? "#4f46e5";
+  const { handleDeleteProject } = useContext(ProjectsContext);
+
   return (
     <Link
       to={`/projects/${id}`}
@@ -115,7 +122,19 @@ const ProjectCard = ({
             {desc}
           </p>
         </div>
-        <Badge label={status} />
+        <div className="flex items-center gap-2">
+          <Badge label={status} />
+
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              handleDeleteProject(id);
+            }}
+            className="text-[#9ca3af] hover:text-[#ef4444] transition-colors p-1 cursor-pointer"
+          >
+            <Trash2 className="w-4 h-4 text-red-600" />
+          </button>
+        </div>
       </div>
 
       {/* Progress */}

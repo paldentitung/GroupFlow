@@ -40,10 +40,15 @@ export const updateProjectService = async (projectId, updateData) => {
   return await project.save();
 };
 
-export const deleteProjectService = async (projectId) => {
-  const deletedProject = await Project.findByIdAndDelete(projectId);
+export const deleteProjectService = async (projectId, userId) => {
+  const project = await Project.findById(projectId);
 
-  if (!deletedProject) throw new AppError("Project not found", 404);
+  if (!project) throw new AppError("Project not found", 404);
 
-  return deletedProject;
+  if (project.owner.toString() !== userId) {
+    throw new AppError("You are not the owner of this project", 403);
+  }
+
+  await project.deleteOne();
+  return project;
 };

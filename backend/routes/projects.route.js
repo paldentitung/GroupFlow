@@ -18,6 +18,6 @@ Router.post(
   validate(createProjectSchema),
   asyncHandler(createProjectController),
 );
-Router.put("/:projectId", asyncHandler(updateProjectController));
-Router.delete("/:projectId", asyncHandler(deleteProjectController));
+Router.put("/:projectId", auth, asyncHandler(updateProjectController));
+Router.delete("/:projectId", auth, asyncHandler(deleteProjectController));
 export default Router;

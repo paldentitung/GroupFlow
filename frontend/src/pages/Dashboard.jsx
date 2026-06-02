@@ -181,6 +181,7 @@ function Dashboard() {
               progress={p.progress}
               due={formatDate(p.dueDate)}
               members={p.members}
+              owner={p.owner}
             />
           ))}
         </div>

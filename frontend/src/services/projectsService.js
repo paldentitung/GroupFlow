@@ -15,3 +15,13 @@ export const createProject = async (projectData) => {
     true,
   );
 };
+
+export const deleteProject = async (projectId) => {
+  return request(
+    `/projects/${projectId}`,
+    {
+      method: "DELETE",
+    },
+    true,
+  );
+};
