@@ -48,6 +48,8 @@ function TaskCard({
   done = false,
   projectId,
   taskId,
+  acceptanceStatus,
+  onAccept,
 }) {
   return (
     <Link
@@ -64,6 +66,19 @@ function TaskCard({
         <Avatar initials={assignee} size="w-6 h-6 text-[10px]" />
         <span className="text-xs text-[#6b7280]">{date}</span>
       </div>
+
+      {/* ✅ Accept button — only shows when pending */}
+      {acceptanceStatus === "pending" && (
+        <button
+          onClick={(e) => {
+            e.preventDefault(); // prevent Link navigation
+            onAccept(taskId);
+          }}
+          className="mt-3 w-full text-xs bg-[#4f46e5] text-white rounded-lg py-1.5 hover:bg-[#4338ca] transition-colors"
+        >
+          Accept Task
+        </button>
+      )}
     </Link>
   );
 }
@@ -240,9 +255,13 @@ const ProjectDetailsPage = () => {
               {
                 label: "In Progress",
                 color: "bg-[#4f46e5]",
-                status: "in-progress",
+                status: "in_progress",
               },
-              { label: "Completed", color: "bg-[#059669]", status: "done" },
+              {
+                label: "Completed",
+                color: "bg-[#059669]",
+                status: "completed",
+              },
             ].map(({ label, color, status }) => {
               const colTasks = tasks?.filter((t) => t.status === status) ?? [];
               return (
@@ -261,6 +280,8 @@ const ProjectDetailsPage = () => {
                       projectId={project._id}
                       title={t.title}
                       subtitle={t.description}
+                      acceptanceStatus={t.acceptanceStatus}
+                      onAccept={(taskId) => console.log("accept", taskId)}
                       assignee={getInitials(
                         t.assigneeId?.firstName || t.createdBy?.firstName,
                         t.assigneeId?.lastName || t.createdBy?.lastName,

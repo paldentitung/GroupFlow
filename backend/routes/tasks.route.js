@@ -5,6 +5,7 @@ import {
   updateTaskController,
   deleteTaskController,
   getTaskByIdController,
+  respondToTaskController,
 } from "../controllers/tasks.controller.js";
 import asyncHanlder from "../utils/asyncHandler.js";
 import auth from "../middleware/auth.middleware.js";
@@ -15,4 +16,5 @@ Router.get("/task/:taskId", asyncHanlder(getTaskByIdController));
 Router.post("/:projectId/tasks", auth, asyncHanlder(createTaskController));
 Router.put("/:taskId", auth, asyncHanlder(updateTaskController));
 Router.delete("/:taskId", auth, asyncHanlder(deleteTaskController));
+Router.patch("/:taskId/respond", auth, asyncHanlder(respondToTaskController));
 export default Router;

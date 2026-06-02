@@ -4,6 +4,7 @@ import {
   updateTaskService,
   deleteTaskService,
   getTaskByIdService,
+  respondToTaskService,
 } from "../services/tasks.service.js";
 
 export const getTasksController = async (req, res) => {
@@ -72,4 +73,12 @@ export const deleteTaskController = async (req, res) => {
     success: true,
     message: "Task deleted",
   });
+};
+export const respondToTaskController = async (req, res) => {
+  const { taskId } = req.params;
+  const { response } = req.body;
+  const userId = req.user._id;
+
+  const task = await respondToTaskService(taskId, userId, response);
+  res.status(200).json({ success: true, task });
 };

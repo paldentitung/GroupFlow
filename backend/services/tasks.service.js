@@ -1,5 +1,8 @@
 import Task from "../models/Task.js";
 import Project from "../models/Project.js";
+import AppError from "../utils/AppError.js";
+
+// chnage all the error to app error
 
 export const getTasksService = async (projectId) => {
   const tasks = await Task.find({ projectId })
@@ -16,7 +19,7 @@ export const getTaskByIdService = async (taskId) => {
     .populate("createdBy", "firstName lastName avatar");
 
   if (!task) {
-    throw new Error("Task not found");
+    throw new AppError("Task not found", 404);
   }
 
   return task;
@@ -33,7 +36,7 @@ export const createTaskService = async (
 ) => {
   const project = await Project.findById(projectId);
   if (!project) {
-    throw new Error("Project not found");
+    throw new AppError("Project not found", 404);
   }
 
   //   const isMember = project.members.some((m) => m.user.equals(userId));
@@ -109,4 +112,27 @@ export const deleteTaskService = async (taskId, userId) => {
   }
 
   await task.deleteOne();
+};
+export const respondToTaskService = async (taskId, userId, response) => {
+  const task = await Task.findById(taskId);
+  if (!task) throw new Error("Task not found");
+
+  // Only the assignee can accept/reject
+  if (!task.assigneeId || !task.assigneeId.equals(userId)) {
+    throw new Error("You are not the assignee of this task");
+  }
+
+  if (!["accepted", "rejected"].includes(response)) {
+    throw new Error("Invalid response. Must be 'accepted' or 'rejected'");
+  }
+
+  task.acceptanceStatus = response;
+
+  //  auto-update status when accepted
+  if (response === "accepted") {
+    task.status = "in_progress";
+  }
+
+  await task.save();
+  return task;
 };
