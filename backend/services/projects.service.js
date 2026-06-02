@@ -9,13 +9,7 @@ export const getProjectsService = async (userId) => {
     .populate("owner", "firstName lastName email")
     .populate("members.user", "firstName lastName email");
 
-  return projects.map((project) => {
-    const p = project.toObject();
-
-    p.members = p.members.filter((m) => m.role !== "Owner");
-
-    return p;
-  });
+  return projects;
 };
 export const createProjectService = async (projectData, userId) => {
   const newProject = new Project({

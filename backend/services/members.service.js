@@ -114,9 +114,9 @@ export const acceptInviteService = async (token, currentUserId) => {
     throw new AppError("Invalid token", 400);
   }
 
-  // if (decoded.userId.toString() !== currentUserId.toString()) {
-  //   throw new AppError("Invalid invitation", 403);
-  // }
+  if (decoded.userId.toString() !== currentUserId.toString()) {
+    throw new AppError("Invalid invitation", 403);
+  }
 
   const { projectId, userId, role } = decoded;
 
@@ -126,14 +126,16 @@ export const acceptInviteService = async (token, currentUserId) => {
     throw new AppError("Project not found", 404);
   }
 
-  const existingMember = project.members.find((m) => m.user.equals(userId));
+  const existingMember = project.members.find((m) =>
+    m.user.equals(currentUserId),
+  );
 
   if (existingMember) {
     throw new AppError("User already joined this project", 400);
   }
 
   project.members.push({
-    user: userId,
+    user: currentUserId,
     role,
   });
 
