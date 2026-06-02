@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useSidebar } from "../contexts/SidebarContext";
 import { LogOut } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
+import { getInitials } from "../utils/getInitials.js";
 const navItems = [
   {
     section: "Main",
@@ -52,6 +53,8 @@ export default function Sidebar() {
   const { isOpen, closeSidebar } = useSidebar();
 
   const { handleLogout } = useAuth();
+
+  const { user } = useAuth();
   return (
     <>
       <div
@@ -145,14 +148,13 @@ export default function Sidebar() {
           <button className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#f7f8fa] transition-colors duration-150">
             <div className="w-8 h-8 rounded-full bg-[#eef2ff] flex items-center justify-center shrink-0">
               <span className="text-[11px] font-semibold text-[#4f46e5]">
-                JD
+                {getInitials(user?.firstName, user?.lastName)}
               </span>
             </div>
             <div className="flex-1 text-left min-w-0">
               <p className="text-[13px] font-medium text-[#111827] truncate">
-                Jane Doe
+                {user?.firstName} {user?.lastName}
               </p>
-              <p className="text-[11px] text-[#6b7280]">Admin</p>
             </div>
 
             <LogOut

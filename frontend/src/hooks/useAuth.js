@@ -1,23 +1,30 @@
 import { register, verifyEmail, login, logout } from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext.jsx";
+
+import { toast } from "react-hot-toast";
+
 export const useAuth = () => {
   const navigate = useNavigate();
+
+  const { user, fetchUser } = useContext(AuthContext);
   const handleRegister = async (data) => {
     try {
       const res = await register(data);
 
-      alert(res.message);
+      toast.success(res.message);
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message);
     }
   };
 
   const handleVerifyEmail = async (token) => {
     try {
       const res = await verifyEmail(token);
-      alert(res.message);
+      toast.success(res.message);
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message);
     }
   };
 
@@ -26,12 +33,12 @@ export const useAuth = () => {
       const res = await login(data);
 
       if (res.success) {
-        alert("Login successful");
+        await fetchUser();
+        toast.success(res.message || "Login successful");
         navigate("/");
       }
-      alert(res.message);
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message);
     }
   };
 
@@ -40,12 +47,13 @@ export const useAuth = () => {
       const res = await logout();
 
       if (res.success) {
-        alert("Logout successful");
+        fetchUser();
+        toast.success("Logout successful");
         navigate("/login");
       }
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message);
     }
   };
-  return { handleRegister, handleVerifyEmail, handleLogin, handleLogout };
+  return { handleRegister, handleVerifyEmail, handleLogin, handleLogout, user };
 };
