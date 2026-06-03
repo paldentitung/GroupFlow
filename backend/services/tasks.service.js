@@ -2,8 +2,6 @@ import Task from "../models/Task.js";
 import Project from "../models/Project.js";
 import AppError from "../utils/AppError.js";
 
-// chnage all the error to app error
-
 export const getTasksService = async (projectId) => {
   const tasks = await Task.find({ projectId })
     .populate("assigneeId", "firstName lastName avatar")
@@ -27,10 +25,10 @@ export const getTaskByIdService = async (taskId) => {
 
 export const getCurrentUserTasksService = async (userId) => {
   const tasks = await Task.find({
-    $or: [{ assigneeId: userId }, { createdBy: userId }],
+    assigneeId: userId,
   })
     .populate("assigneeId", "firstName lastName avatar")
-    .populate("createdBy", "firstName lastName avatar")
+    .populate("projectId", "name")
     .sort({ createdAt: -1 });
 
   return tasks;
