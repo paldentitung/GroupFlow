@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import History from "./History.js";
 const commentSchema = new mongoose.Schema(
   {
     content: { type: String, required: true },
@@ -16,7 +16,13 @@ const commentSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-
+commentSchema.pre(
+  "deleteOne",
+  { document: true, query: false },
+  async function () {
+    await History.deleteMany({ entityId: this._id, entity: "comment" });
+  },
+);
 const Comment = mongoose.model("Comment", commentSchema);
 
 export default Comment;

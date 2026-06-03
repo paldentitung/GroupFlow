@@ -1,6 +1,7 @@
 import Task from "../models/Task.js";
 import Project from "../models/Project.js";
 import AppError from "../utils/AppError.js";
+import { createHistoryService } from "./history.service.js";
 
 export const getTasksService = async (projectId) => {
   const tasks = await Task.find({ projectId })
@@ -63,6 +64,18 @@ export const createTaskService = async (
     createdBy: userId,
   });
 
+  console.log("task created", task);
+
+  await createHistoryService({
+    userId,
+    projectId,
+    entity: "task",
+    entityId: task._id,
+    action: "created",
+    details: `Task "${task.title}" was created`,
+  });
+
+  console.log("History saved!");
   return task;
 };
 

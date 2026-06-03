@@ -1,6 +1,8 @@
 import Task from "../models/Task.js";
 import Comment from "../models/Comment.js";
 import AppError from "../utils/AppError.js";
+
+import { createHistoryService } from "./history.service.js";
 export const getCommentsService = async (taskId) => {
   const task = await Task.findById(taskId);
 
@@ -26,6 +28,15 @@ export const createCommentService = async (taskId, content, userId) => {
     content,
     authorId: userId,
     taskId,
+  });
+
+  await createHistoryService({
+    userId,
+    projectId: task.projectId,
+    entity: "comment",
+    entityId: comment._id,
+    action: "created",
+    details: `Comment added on task "${task.title}"`,
   });
 
   return comment;

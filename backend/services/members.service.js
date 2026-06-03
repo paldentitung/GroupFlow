@@ -4,7 +4,7 @@ import AppError from "../utils/AppError.js";
 import { inviteEmailTemplate } from "../utils/inviteEmailTemplate.js";
 import sendEmail from "../utils/sendEmail.js";
 import jwt from "jsonwebtoken";
-
+import { createHistoryService } from "./history.service.js";
 export const getAllMembersService = async (projectId) => {
   const project = await Project.findById(projectId).populate(
     "members.user",
@@ -57,6 +57,14 @@ export const removeMemberService = async (projectId, memberId) => {
   project.members.splice(memberIndex, 1);
   await project.save();
 
+  await createHistoryService({
+    userId: removedMember.user,
+    projectId,
+    entity: "member",
+    entityId: removedMember.user,
+    action: "deleted",
+    details: `Member was removed from the project`,
+  });
   return;
 };
 
@@ -100,6 +108,14 @@ export const inviteMemberService = async (projectId, email, role, inviter) => {
     }),
   });
 
+  await createHistoryService({
+    userId: inviter._id,
+    projectId,
+    entity: "member",
+    entityId: user._id,
+    action: "created",
+    details: `${inviter.firstName} ${inviter.lastName} invited ${user.email} as ${normalizedRole}`,
+  });
   return;
 };
 
@@ -141,5 +157,13 @@ export const acceptInviteService = async (token, currentUserId) => {
 
   await project.save();
 
+  await createHistoryService({
+    userId: currentUserId,
+    projectId,
+    entity: "member",
+    entityId: currentUserId,
+    action: "created",
+    details: `Member joined the project as ${role}`,
+  });
   return;
 };

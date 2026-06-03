@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-
+import History from "./History.js";
+import Task from "./Task.js";
 const projectSchema = new mongoose.Schema(
   {
     name: {
@@ -64,6 +65,14 @@ const projectSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const Project = mongoose.model("Project", projectSchema);
+projectSchema.pre(
+  "deleteOne",
+  { document: true, query: false },
+  async function () {
+    await History.deleteMany({ project: this._id });
+    await Task.deleteMany({ project: this._id });
+  },
+);
 
+const Project = mongoose.model("Project", projectSchema);
 export default Project;

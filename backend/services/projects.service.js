@@ -1,6 +1,6 @@
 import Project from "../models/Project.js";
 import AppError from "../utils/AppError.js";
-
+import { createHistoryService } from "./history.service.js";
 // Only return projects where the user is a member
 export const getProjectsService = async (userId) => {
   const projects = await Project.find({
@@ -25,6 +25,14 @@ export const createProjectService = async (projectData, userId) => {
         role: "Owner",
       },
     ],
+  });
+  await createHistoryService({
+    userId,
+    projectId: newProject._id,
+    entity: "project",
+    entityId: newProject._id,
+    action: "created",
+    details: `Project "${newProject.name}" was created`,
   });
 
   return newProject.save();
