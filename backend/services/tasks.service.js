@@ -2,6 +2,7 @@ import Task from "../models/Task.js";
 import Project from "../models/Project.js";
 import AppError from "../utils/AppError.js";
 import { createHistoryService } from "./history.service.js";
+import { createNotificationService } from "./notification.service.js";
 
 export const getTasksService = async (projectId) => {
   const tasks = await Task.find({ projectId })
@@ -76,6 +77,17 @@ export const createTaskService = async (
   });
 
   console.log("History saved!");
+
+  if (assigneeId) {
+    await createNotificationService({
+      recipientId: assigneeId,
+      senderId: userId,
+      projectId,
+      type: "task_assigned",
+      message: `You have been assigned to task "${task.title}"`,
+      link: `/projects/${projectId}/tasks/${task._id}`,
+    });
+  }
   return task;
 };
 
@@ -110,6 +122,30 @@ export const updateTaskService = async (taskId, updateData, userId) => {
   });
   await task.save();
 
+  if (
+    updateData.assigneeId &&
+    !task.assigneeId?.equals(updateData.assigneeId)
+  ) {
+    await createNotificationService({
+      recipientId: updateData.assigneeId,
+      senderId: userId,
+      projectId: task.projectId,
+      type: "task_assigned",
+      message: `You have been assigned to task "${task.title}"`,
+      link: `/projects/${task.projectId}/tasks/${task._id}`,
+    });
+  }
+  if (updateData.status === "completed") {
+    const project = await Project.findById(task.projectId);
+    await createNotificationService({
+      recipientId: project.owner,
+      senderId: userId,
+      projectId: task.projectId,
+      type: "task_completed",
+      message: `Task "${task.title}" has been completed`,
+      link: `/projects/${task.projectId}/tasks/${task._id}`,
+    });
+  }
   return task;
 };
 

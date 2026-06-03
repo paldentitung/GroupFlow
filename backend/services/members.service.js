@@ -116,6 +116,14 @@ export const inviteMemberService = async (projectId, email, role, inviter) => {
     action: "created",
     details: `${inviter.firstName} ${inviter.lastName} invited ${user.email} as ${normalizedRole}`,
   });
+
+  await createNotificationService({
+    recipientId: user._id,
+    senderId: inviter._id,
+    projectId,
+    type: "member_invited",
+    message: `${inviter.firstName} ${inviter.lastName} invited you to join "${project.name}" as ${normalizedRole}`,
+  });
   return;
 };
 

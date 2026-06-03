@@ -23,11 +23,13 @@ export const getTaskHistoryService = async (projectId, taskId) => {
     .populate("user", "firstName lastName email")
     .sort({ createdAt: -1 });
 };
+
 export const getUserHistoryService = async (userId) => {
   return await History.find({ user: userId })
     .populate("user", "firstName lastName email")
     .sort({ createdAt: -1 });
 };
+
 export const createHistoryService = async ({
   userId,
   projectId,

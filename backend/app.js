@@ -7,6 +7,7 @@ import tasksRoute from "./routes/tasks.route.js";
 import commentRoute from "./routes/comment.route.js";
 import membersRoute from "./routes/members.route.js";
 import historyRoute from "./routes/history.route.js";
+import notificationRoute from "./routes/notification.route.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
 import cookieParser from "cookie-parser";
 const app = express();
@@ -29,6 +30,7 @@ app.use("/api/tasks", tasksRoute);
 app.use("/api/comments", commentRoute);
 app.use("/api/members", membersRoute);
 app.use("/api/history", historyRoute);
+app.use("/api/notification", notificationRoute);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
