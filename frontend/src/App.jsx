@@ -17,7 +17,35 @@ import { Toaster } from "react-hot-toast";
 const App = () => {
   return (
     <SidebarProvider>
-      <Toaster position="top-right" />
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: "#1a1d23",
+            color: "#f9fafb",
+            fontSize: "13px",
+            fontWeight: "500",
+            borderRadius: "12px",
+            padding: "12px 16px",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+            border: "1px solid rgba(255,255,255,0.06)",
+            maxWidth: "360px",
+          },
+          success: {
+            style: { border: "1px solid rgba(5,150,105,0.4)" },
+            iconTheme: { primary: "#34d399", secondary: "#1a1d23" },
+          },
+          error: {
+            style: { border: "1px solid rgba(220,38,38,0.4)" },
+            iconTheme: { primary: "#f87171", secondary: "#1a1d23" },
+          },
+          loading: {
+            style: { border: "1px solid rgba(79,70,229,0.4)" },
+            iconTheme: { primary: "#818cf8", secondary: "#1a1d23" },
+          },
+        }}
+      />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
