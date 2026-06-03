@@ -91,8 +91,7 @@ export const TasksProvider = ({ children }) => {
       const response = await getCurrentUserTasks();
 
       if (response.success) {
-        toast.success("Tasks fetched");
-        return response.data; // <-- MUST return ONLY array
+        return response.data;
       }
 
       return [];

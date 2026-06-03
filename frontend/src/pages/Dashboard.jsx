@@ -5,6 +5,9 @@ import ProjectCard from "../components/ProjectCard";
 import TaskTable from "../components/TaskTable";
 import { useProjects } from "../hooks/useProjects.js";
 import { formatDate } from "../utils/formatDate.js";
+import { useTasksContext } from "../contexts/TasksContext";
+import { useEffect, useState } from "react";
+import { useUserTasks } from "../hooks/useUserTasks.jsx";
 // ── Icons ────────────────────────────────────────────────────────────────────
 const FolderIcon = () => (
   <svg
@@ -134,6 +137,8 @@ const TaskChip = ({ label }) => (
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 function Dashboard() {
   const { projects } = useProjects();
+
+  const { userTasks, loading } = useUserTasks();
   return (
     <div className="min-h-screen bg-(--color-bg) text-(--color-text-primary) overflow-hidden ">
       <Header title="Dashboard" buttonName="New Project" />
@@ -187,7 +192,7 @@ function Dashboard() {
         </div>
 
         <h2 className="text-base font-bold mb-4">Recent Tasks</h2>
-        <TaskTable tasks={tasks.slice(0, 8)} />
+        <TaskTable tasks={userTasks.slice(0, 8)} />
       </div>
     </div>
   );
