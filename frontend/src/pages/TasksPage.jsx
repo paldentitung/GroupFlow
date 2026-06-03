@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import TaskTable from "../components/TaskTable";
 import { useTasksContext } from "../contexts/TasksContext";
-import { useUserTasks } from "../hooks/useUserTasks.jsx";
+import { useUserTasks } from "../hooks/useUserTasks.js";
 
 function TasksPage() {
   const { userTasks, loading } = useUserTasks();

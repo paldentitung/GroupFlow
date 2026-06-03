@@ -7,7 +7,7 @@ import { useProjects } from "../hooks/useProjects.js";
 import { formatDate } from "../utils/formatDate.js";
 import { useTasksContext } from "../contexts/TasksContext";
 import { useEffect, useState } from "react";
-import { useUserTasks } from "../hooks/useUserTasks.jsx";
+import { useUserTasks } from "../hooks/useUserTasks.js";
 // ── Icons ────────────────────────────────────────────────────────────────────
 const FolderIcon = () => (
   <svg
