@@ -5,6 +5,7 @@ import {
   deleteTask,
   updateTask,
   respondToTask,
+  getCurrentUserTasks,
 } from "../services/tasksService.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -84,6 +85,22 @@ export const TasksProvider = ({ children }) => {
       toast.error(err.message);
     }
   };
+
+  const fetchCurrentUserTasks = async () => {
+    try {
+      const response = await getCurrentUserTasks();
+
+      if (response.success) {
+        toast.success("Tasks fetched");
+        return response.data; // <-- MUST return ONLY array
+      }
+
+      return [];
+    } catch (error) {
+      toast.error(error.message);
+      return [];
+    }
+  };
   return (
     <TasksContext.Provider
       value={{
@@ -95,6 +112,7 @@ export const TasksProvider = ({ children }) => {
         handleDeleteTask,
         handleUpdateTask,
         handleRespondToTask,
+        fetchCurrentUserTasks,
       }}
     >
       {children}

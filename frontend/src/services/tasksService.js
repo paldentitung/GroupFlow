@@ -53,3 +53,7 @@ export const respondToTask = async (taskId, response) => {
     true,
   );
 };
+
+export const getCurrentUserTasks = async () => {
+  return request("/tasks/my-tasks", {}, true);
+};

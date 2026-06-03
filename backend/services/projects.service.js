@@ -45,7 +45,7 @@ export const deleteProjectService = async (projectId, userId) => {
 
   if (!project) throw new AppError("Project not found", 404);
 
-  if (project.owner.toString() !== userId) {
+  if (!project.owner.equals(userId)) {
     throw new AppError("You are not the owner of this project", 403);
   }
 
