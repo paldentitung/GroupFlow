@@ -16,6 +16,7 @@ import {
   updateTaskValidator,
   respondToTaskValidator,
 } from "../validators/tasks.validator.js";
+import { createTaskLimiter } from "../utils/rateLimiter.js";
 
 const Router = express.Router();
 
@@ -25,6 +26,7 @@ Router.get("/my-tasks", auth, asyncHanlder(getCurrentUserTasksController));
 Router.post(
   "/:projectId/tasks",
   auth,
+  createTaskLimiter,
   validate(createTaskValidator),
   asyncHanlder(createTaskController),
 );

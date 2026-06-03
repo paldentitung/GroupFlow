@@ -9,12 +9,14 @@ import asyncHandler from "../utils/asyncHandler.js";
 import validate from "../middleware/validate.middleware.js";
 import { createProjectSchema } from "../validators/projects.validator.js";
 import auth from "../middleware/auth.middleware.js";
+import { createProjectLimiter } from "../utils/rateLimiter.js";
 const Router = express.Router();
 
 Router.get("/", auth, asyncHandler(getProjectsController));
 Router.post(
   "/",
   auth,
+  createProjectLimiter,
   validate(createProjectSchema),
   asyncHandler(createProjectController),
 );
