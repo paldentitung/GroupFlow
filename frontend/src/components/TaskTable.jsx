@@ -1,19 +1,6 @@
 import React from "react";
 import Pagination from "./Pagination";
-// ── Avatar ───────────────────────────────────────────────────────────────────
-const Avatar = ({ initials = "U", color = "#6366f1", size = 26 }) => (
-  <span
-    className="inline-flex items-center justify-center rounded-full border-2 border-(--color-surface) shrink-0 select-none font-bold text-white"
-    style={{
-      width: size,
-      height: size,
-      background: color,
-      fontSize: size * 0.36,
-    }}
-  >
-    {initials}
-  </span>
-);
+import Avatar from "./Avatar";
 
 // ── Status Chip ───────────────────────────────────────────────────────────────
 const CHIP_CLASSES = {
@@ -208,8 +195,9 @@ const TaskTable = ({ tasks = [], pagination, onPageChange }) => {
                 {/* Assignee */}
                 <div className="flex items-center gap-2 min-w-0">
                   <Avatar
-                    initials={initials}
-                    color={t.avatarColor ?? "#6366f1"}
+                    firstName={t.assigneeId?.firstName}
+                    lastName={t.assigneeId?.lastName}
+                    image={t.assigneeId?.avatar}
                   />
                   <span className="text-[13px] text-gray-500 truncate">
                     {name || "Unassigned"}

@@ -1,63 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { getInitials } from "../utils/getInitials.js";
 import { Trash2 } from "lucide-react";
 import { ProjectsContext } from "../contexts/ProjectsContext.jsx";
 import { useContext } from "react";
-// ── Avatar ───────────────────────────────────────────────────────────────────
-const AVATAR_COLORS = [
-  "#4f46e5",
-  "#059669",
-  "#d97706",
-  "#dc2626",
-  "#7c3aed",
-  "#0891b2",
-];
-
-const Avatar = ({ initials, colorIndex = 0, overlap = false }) => (
-  <span
-    className="inline-flex items-center justify-center rounded-full border-2 border-(--color-surface) shrink-0 select-none font-bold text-white text-[10px]"
-    style={{
-      width: 28,
-      height: 28,
-      background: AVATAR_COLORS[colorIndex % AVATAR_COLORS.length],
-      marginLeft: overlap ? -8 : 0,
-    }}
-  >
-    {initials}
-  </span>
-);
-
-const AvatarGroup = ({ members = [] }) => {
-  if (members.length === 0) {
-    return (
-      <span className="text-[12px] text-(--color-text-muted)">No members</span>
-    );
-  }
-  const visible = members.slice(0, 3);
-  const extra = members.length - visible.length;
-
-  return (
-    <div className="flex items-center">
-      {visible.map((m, i) => (
-        <Avatar
-          key={m._id ?? i}
-          initials={getInitials(m.user?.firstName, m.user?.lastName)}
-          colorIndex={i}
-          overlap={i > 0}
-        />
-      ))}
-      {extra > 0 && (
-        <span
-          className="inline-flex items-center justify-center rounded-full border-2 border-(--color-surface) text-[11px] font-bold text-(--color-text-muted) bg-(--color-border)"
-          style={{ width: 28, height: 28, marginLeft: -8 }}
-        >
-          +{extra}
-        </span>
-      )}
-    </div>
-  );
-};
+import AvatarGroup from "./AvatarGroup.jsx";
 
 const PROGRESS_COLORS = {
   Active: "#4f46e5",

@@ -6,6 +6,7 @@ import { getInitials } from "../utils/getInitials";
 import { useAddProject } from "../contexts/AddProjectContext";
 import { Search } from "lucide-react";
 import Pagination from "../components/Pagination";
+import Avatar from "../components/Avatar";
 // ── Styles ─────────────────────────────────────────────
 const entityIcon = {
   task: { bg: "bg-[#eef2ff]", color: "text-[#4f46e5]" },
@@ -33,19 +34,7 @@ const HistoryItem = ({ item, isLast }) => {
         !isLast ? "border-b border-gray-100" : ""
       }`}
     >
-      {/* Avatar */}
-      <div
-        className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-semibold ${iconStyle.bg} ${iconStyle.color}`}
-      >
-        {item.user?.avatar ? (
-          <img
-            src={item.user.avatar}
-            className="w-full h-full object-cover rounded-lg"
-          />
-        ) : (
-          getInitials(item.user?.firstName, item.user?.lastName)
-        )}
-      </div>
+      <Avatar firstName={item.user?.firstName} lastName={item.user?.lastName} />
 
       {/* Content */}
       <div className="flex-1 min-w-0">

@@ -8,37 +8,14 @@ import AddTaskModal from "../components/AddTaskModal.jsx";
 import InviteMembersModal from "../components/InviteMembersModal.jsx";
 import { useMembers } from "../hooks/useMembers.js";
 import { toast } from "react-hot-toast";
-
-const COLOR_POOL = [
-  "bg-[#4f46e5]",
-  "bg-[#f59e0b]",
-  "bg-[#ef4444]",
-  "bg-[#8b5cf6]",
-  "bg-[#3b82f6]",
-  "bg-[#10b981]",
-  "bg-[#ec4899]",
-  "bg-[#f97316]",
-];
+import Avatar from "../components/Avatar.jsx";
+import AvatarGroup from "../components/AvatarGroup.jsx";
 
 const STATUS_STYLES = {
   Active: "text-[#059669] bg-[#d1fae5]",
   Completed: "text-[#4f46e5] bg-[#eef2ff]",
   "On Hold": "text-[#d97706] bg-[#fef3c7]",
 };
-
-function getAvatarColor(initials = "") {
-  return COLOR_POOL[initials.charCodeAt(0) % COLOR_POOL.length];
-}
-
-function Avatar({ initials = "?", size = "w-7 h-7 text-xs" }) {
-  return (
-    <div
-      className={`${getAvatarColor(initials)} ${size} rounded-full flex items-center justify-center text-white font-medium flex-shrink-0`}
-    >
-      {initials}
-    </div>
-  );
-}
 
 function TaskCard({
   title,
@@ -66,7 +43,7 @@ function TaskCard({
       </div>
 
       <div className="flex items-center justify-between">
-        <Avatar initials={assignee} size="w-6 h-6 text-[10px]" />
+        <Avatar user={assignee} size={24} />
         <span className="text-xs text-[#6b7280]">{date}</span>
       </div>
 
@@ -190,11 +167,8 @@ const ProjectDetailsPage = () => {
               </span>
               <div className="flex items-center gap-1.5">
                 <Avatar
-                  initials={getInitials(
-                    project?.owner?.firstName,
-                    project?.owner?.lastName,
-                  )}
-                  size="w-6 h-6 text-[10px]"
+                  firstName={project?.owner?.firstName}
+                  lastName={project?.owner?.lastName}
                 />
                 <span className="text-[13px] font-medium text-[#111827]">
                   {project?.owner?.firstName}{" "}
@@ -208,24 +182,10 @@ const ProjectDetailsPage = () => {
                 Members
               </span>
               <div className="flex items-center gap-2">
-                <div className="flex">
-                  {project?.members?.map((member, i) => (
-                    <div
-                      key={member._id}
-                      style={{ marginLeft: i === 0 ? 0 : -6 }}
-                    >
-                      <Avatar
-                        initials={getInitials(
-                          member.user?.firstName,
-                          member.user?.lastName,
-                        )}
-                        size="w-6 h-6 text-[10px]"
-                      />
-                    </div>
-                  ))}
-                </div>
+                <AvatarGroup members={project.members.map((m) => m.user)} />
+
                 <span className="text-[12px] text-[#9ca3af]">
-                  {project.members?.length} members
+                  {project.members.length} members
                 </span>
               </div>
             </div>
@@ -298,10 +258,7 @@ const ProjectDetailsPage = () => {
                       onAccept={(taskId, response) =>
                         handleRespondToTask(taskId, response)
                       }
-                      assignee={getInitials(
-                        t.assigneeId?.firstName || t.createdBy?.firstName,
-                        t.assigneeId?.lastName || t.createdBy?.lastName,
-                      )}
+                      assignee={t.assigneeId || t.createdBy}
                       date={formatDate(t.dueDate)}
                       done={t.status === "completed"}
                     />
@@ -338,13 +295,7 @@ const ProjectDetailsPage = () => {
                     className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0"
                   >
                     <div className="flex items-center gap-3">
-                      <Avatar
-                        initials={getInitials(
-                          member.user?.firstName,
-                          member.user?.lastName,
-                        )}
-                        size="w-9 h-9 text-xs"
-                      />
+                      <Avatar user={member.user} />
                       <div>
                         <p className="text-sm font-medium text-[#111827]">
                           {member.user?.firstName} {member.user?.lastName}

@@ -3,51 +3,9 @@ import { useTask } from "../hooks/useTask.js";
 import { useProjects } from "../hooks/useProjects.js";
 import { useTasksContext } from "../contexts/TasksContext.jsx";
 
-function getInitials(firstName = "", lastName = "") {
-  return `${firstName[0] ?? ""}${lastName[0] ?? ""}`.toUpperCase();
-}
-
-const AVATAR_COLORS = [
-  "bg-indigo-100 text-indigo-700",
-  "bg-pink-100 text-pink-800",
-  "bg-yellow-100 text-yellow-800",
-  "bg-emerald-100 text-emerald-800",
-  "bg-red-100 text-red-700",
-  "bg-violet-100 text-violet-800",
-];
-
-function colorFromInitials(initials) {
-  const index =
-    (initials.charCodeAt(0) + (initials.charCodeAt(1) || 0)) %
-    AVATAR_COLORS.length;
-  return AVATAR_COLORS[index];
-}
-
-function Avatar({
-  firstName,
-  lastName,
-  size = "w-7 h-7",
-  text = "text-[10px]",
-}) {
-  const initials = getInitials(firstName, lastName);
-  const colors = colorFromInitials(initials);
-  return (
-    <div
-      className={`${size} ${text} ${colors} rounded-full flex items-center justify-center font-semibold shrink-0 tracking-wide`}
-    >
-      {initials}
-    </div>
-  );
-}
-
-function formatDate(iso) {
-  if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
+import Avatar from "./Avatar.jsx";
+import { getInitials } from "../utils/getInitials.js";
+import { formatDate } from "../utils/formatDate.js";
 
 function isOverdue(iso) {
   if (!iso) return false;
@@ -56,12 +14,12 @@ function isOverdue(iso) {
 
 const STATUS_STYLES = {
   todo: { dot: "bg-[#6b7280]", text: "text-[#6b7280]", label: "Todo" },
-  "in-progress": {
+  in_progress: {
     dot: "bg-blue-500",
     text: "text-blue-600",
     label: "In Progress",
   },
-  done: { dot: "bg-emerald-500", text: "text-emerald-600", label: "Done" },
+  completed: { dot: "bg-emerald-500", text: "text-emerald-600", label: "Done" },
 };
 
 const STATIC_COMMENTS = [
@@ -164,8 +122,6 @@ export default function TaskSidebar() {
               <Avatar
                 firstName={assignee?.firstName}
                 lastName={assignee?.lastName}
-                size="w-5 h-5"
-                text="text-[8px]"
               />
               <span className="text-[13px] font-medium text-[#111827]">
                 {assignee?.firstName} {assignee?.lastName}
@@ -195,12 +151,7 @@ export default function TaskSidebar() {
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
-                    <Avatar
-                      firstName={c.firstName}
-                      lastName={c.lastName}
-                      size="w-6 h-6"
-                      text="text-[9px]"
-                    />
+                    <Avatar firstName={c.firstName} lastName={c.lastName} />
                     <span className="text-[13px] font-medium text-[#111827]">
                       {c.firstName} {c.lastName}
                     </span>
