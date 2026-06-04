@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { useUserTasks } from "../hooks/useUserTasks.js";
 import { useAddProject } from "../contexts/AddProjectContext.jsx";
 import ProjectListing from "../components/ProjectListing.jsx";
-// ── Icons ────────────────────────────────────────────────────────────────────
+
 const FolderIcon = () => (
   <svg
     width="20"
@@ -96,51 +96,19 @@ const StatCard = ({ icon, value, label, iconBg, iconColor }) => (
   </div>
 );
 
-// ── Avatar ───────────────────────────────────────────────────────────────────
-const AVATAR_COLORS = [
-  "#4f46e5",
-  "#059669",
-  "#d97706",
-  "#dc2626",
-  "#7c3aed",
-  "#0891b2",
-];
-
-const Avatar = ({ initials, color, size = 28, overlap = false }) => (
-  <span
-    className="inline-flex items-center justify-center rounded-full border-2 border-(--color-surface) shrink-0 select-none font-bold text-white"
-    style={{
-      width: size,
-      height: size,
-      background: color,
-      fontSize: size * 0.36,
-      marginLeft: overlap ? -8 : 0,
-    }}
-  >
-    {initials}
-  </span>
-);
-
-// ── Task Status Chip ─────────────────────────────────────────────────────────
-const CHIP_CLASSES = {
-  "In Progress": "bg-indigo-50 text-indigo-600",
-  Completed: "bg-emerald-50 text-emerald-600",
-  Overdue: "bg-red-50 text-red-600",
-  Todo: "bg-gray-100 text-gray-500",
-};
-const TaskChip = ({ label }) => (
-  <span
-    className={`whitespace-nowrap text-[12px] font-semibold px-2.5 py-0.5 rounded-full ${CHIP_CLASSES[label] ?? CHIP_CLASSES.Todo}`}
-  >
-    {label}
-  </span>
-);
-
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 function Dashboard() {
   const { projects } = useProjects();
 
-  const { userTasks, loading } = useUserTasks();
+  const {
+    loading,
+    pagination,
+    page,
+    setPage,
+    filteredTasks,
+    setStatus,
+    setSearch,
+  } = useUserTasks();
   const { isModalOpen, setIsModalOpen } = useAddProject();
 
   return (
@@ -187,7 +155,13 @@ function Dashboard() {
         <ProjectListing projects={projects} loading={loading} />
 
         <h2 className="text-base font-bold mb-4">Recent Tasks</h2>
-        <TaskTable tasks={userTasks.slice(0, 8)} />
+        <TaskTable
+          tasks={filteredTasks}
+          pagination={pagination}
+          onPageChange={setPage}
+          setSearch={setSearch}
+          setStatus={setStatus}
+        />
       </div>
     </div>
   );

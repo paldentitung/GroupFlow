@@ -6,7 +6,6 @@ import { useUserTasks } from "../hooks/useUserTasks.js";
 
 function TasksPage() {
   const {
-    userTasks,
     loading,
     pagination,
     page,
