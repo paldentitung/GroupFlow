@@ -24,10 +24,25 @@ export const getTaskHistoryService = async (projectId, taskId) => {
     .sort({ createdAt: -1 });
 };
 
-export const getUserHistoryService = async (userId) => {
-  return await History.find({ user: userId })
+export const getUserHistoryService = async (userId, page, limit) => {
+  const skip = (page - 1) * limit;
+  const historys = await History.find({ user: userId })
     .populate("user", "firstName lastName email")
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  const total = await History.countDocuments({ user: userId });
+
+  return {
+    historys,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 export const createHistoryService = async ({

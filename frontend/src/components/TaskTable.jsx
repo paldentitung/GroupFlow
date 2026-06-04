@@ -1,5 +1,5 @@
 import React from "react";
-
+import Pagination from "./Pagination";
 // ── Avatar ───────────────────────────────────────────────────────────────────
 const Avatar = ({ initials = "U", color = "#6366f1", size = 26 }) => (
   <span
@@ -97,42 +97,6 @@ const ColHeader = ({
     )}
   </div>
 );
-
-// ── Pagination ────────────────────────────────────────────────────────────────
-const Pagination = ({
-  currentPage = 1,
-  totalPages = 1,
-  total = 0,
-  onPageChange,
-}) => {
-  return (
-    <div className="flex items-center justify-between mt-4 px-1 flex-wrap gap-3">
-      <span className="text-[12.5px] text-gray-400">
-        Page <span className="font-semibold text-gray-600">{currentPage}</span>{" "}
-        of <span className="font-semibold text-gray-600">{totalPages}</span> —{" "}
-        <span className="font-semibold text-gray-600">{total}</span> tasks
-      </span>
-
-      <div className="flex items-center gap-1">
-        <button
-          disabled={currentPage <= 1}
-          onClick={() => onPageChange(currentPage - 1)}
-          className="w-8 h-8 rounded-lg border disabled:opacity-30"
-        >
-          ←
-        </button>
-
-        <button
-          disabled={currentPage >= totalPages}
-          onClick={() => onPageChange(currentPage + 1)}
-          className="w-8 h-8 rounded-lg border disabled:opacity-30"
-        >
-          →
-        </button>
-      </div>
-    </div>
-  );
-};
 
 // ── Table ─────────────────────────────────────────────────────────────────────
 const TaskTable = ({ tasks = [], pagination, onPageChange }) => {
@@ -293,10 +257,8 @@ const TaskTable = ({ tasks = [], pagination, onPageChange }) => {
 
       {/* Pagination */}
       <Pagination
-        currentPage={pagination?.page}
+        page={pagination?.page}
         totalPages={pagination?.totalPages}
-        from={pagination?.from}
-        to={pagination?.to}
         total={pagination?.total}
         onPageChange={onPageChange}
       />

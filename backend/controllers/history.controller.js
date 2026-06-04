@@ -28,7 +28,12 @@ export const getTaskHistoryController = async (req, res) => {
   });
 };
 export const getUserHistoryController = async (req, res) => {
-  const result = await getUserHistoryService(req.user._id);
+  const userId = req.user._id;
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+
+  const result = await getUserHistoryService(userId, page, limit);
 
   res.status(200).json({
     success: true,
