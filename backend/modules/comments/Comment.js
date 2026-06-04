@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import History from "../../models/History.js";
+import History from "../history/History.js";
 const commentSchema = new mongoose.Schema(
   {
     content: { type: String, required: true },

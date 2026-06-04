@@ -1,6 +1,6 @@
 import Project from "./Project.js";
 import AppError from "../../utils/AppError.js";
-import { createHistoryService } from "../../services/history.service.js";
+import { createHistoryService } from "../history/history.service.js";
 // Only return projects where the user is a member
 export const getProjectsService = async (userId) => {
   const projects = await Project.find({

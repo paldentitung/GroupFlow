@@ -2,7 +2,7 @@ import Task from "../tasks/Task.js";
 import Comment from "./Comment.js";
 import AppError from "../../utils/AppError.js";
 
-import { createHistoryService } from "../../services/history.service.js";
+import { createHistoryService } from "../history/history.service.js";
 import { createNotificationService } from "../../services/notification.service.js";
 export const getCommentsService = async (taskId) => {
   const task = await Task.findById(taskId);

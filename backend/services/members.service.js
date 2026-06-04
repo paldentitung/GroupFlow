@@ -4,7 +4,7 @@ import AppError from "../utils/AppError.js";
 import { inviteEmailTemplate } from "../utils/inviteEmailTemplate.js";
 import sendEmail from "../utils/sendEmail.js";
 import jwt from "jsonwebtoken";
-import { createHistoryService } from "./history.service.js";
+import { createHistoryService } from "../modules/history/history.service.js";
 export const getAllMembersService = async (projectId) => {
   const project = await Project.findById(projectId).populate(
     "members.user",

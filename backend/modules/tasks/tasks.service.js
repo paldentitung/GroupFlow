@@ -1,7 +1,7 @@
 import Task from "./Task.js";
 import Project from "../projects/Project.js";
 import AppError from "../../utils/AppError.js";
-import { createHistoryService } from "../../services/history.service.js";
+import { createHistoryService } from "../history/history.service.js";
 import { createNotificationService } from "../../services/notification.service.js";
 
 export const getTasksService = async (projectId) => {

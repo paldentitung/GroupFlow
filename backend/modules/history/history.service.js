@@ -1,4 +1,4 @@
-import History from "../models/History.js";
+import History from "./History.js";
 
 export const getProjectHistoryService = async (projectId, query) => {
   const { entity, action, user } = query;

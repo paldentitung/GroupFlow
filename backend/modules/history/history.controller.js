@@ -2,7 +2,7 @@ import {
   getProjectHistoryService,
   getTaskHistoryService,
   getUserHistoryService,
-} from "../services/history.service.js";
+} from "./history.service.js";
 
 export const getProjectHistoryController = async (req, res) => {
   const { projectId } = req.params;

@@ -6,7 +6,7 @@ import authRoute from "./modules/auth/auth.route.js";
 import tasksRoute from "./modules/tasks/tasks.route.js";
 import commentRoute from "./modules/comments/comment.route.js";
 import membersRoute from "./routes/members.route.js";
-import historyRoute from "./routes/history.route.js";
+import historyRoute from "./modules/history/history.route.js";
 import notificationRoute from "./routes/notification.route.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
 import cookieParser from "cookie-parser";

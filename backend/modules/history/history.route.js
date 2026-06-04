@@ -3,9 +3,9 @@ import {
   getProjectHistoryController,
   getTaskHistoryController,
   getUserHistoryController,
-} from "../controllers/history.controller.js";
-import protect from "../middleware/auth.middleware.js";
-import asyncHandler from "../utils/asyncHandler.js";
+} from "./history.controller.js";
+import protect from "../../middleware/auth.middleware.js";
+import asyncHandler from "../../utils/asyncHandler.js";
 
 const Router = express.Router({ mergeParams: true });
 
