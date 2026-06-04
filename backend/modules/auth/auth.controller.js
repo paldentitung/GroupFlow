@@ -1,10 +1,9 @@
-import User from "../models/User.js";
 import {
   registerService,
   verifyEmailService,
   loginService,
-} from "../services/auth.service.js";
-
+} from "./auth.service.js";
+import User from "../users/User.js";
 export const registerController = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 

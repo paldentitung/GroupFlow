@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import User from "../models/User.js";
-import AppError from "../utils/AppError.js";
+import User from "../users/User.js";
+import AppError from "../../utils/AppError.js";
 import jwt from "jsonwebtoken";
-import sendEmail from "../utils/sendEmail.js";
+import sendEmail from "../../utils/sendEmail.js";
 export const registerService = async ({
   firstName,
   lastName,
