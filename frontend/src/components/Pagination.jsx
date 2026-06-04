@@ -1,4 +1,5 @@
 import React from "react";
+import MainButton from "./MainButton";
 
 const Pagination = ({
   page = 1,
@@ -36,21 +37,8 @@ const Pagination = ({
 
       {/* Controls */}
       <div className="flex items-center gap-2 ml-auto">
-        <button
-          onClick={goPrev}
-          disabled={page <= 1}
-          className="w-8 h-8 flex items-center justify-center border rounded-lg disabled:opacity-30 hover:bg-gray-100 transition"
-        >
-          ←
-        </button>
-
-        <button
-          onClick={goNext}
-          disabled={page >= totalPages}
-          className="w-8 h-8 flex items-center justify-center border rounded-lg disabled:opacity-30 hover:bg-gray-100 transition"
-        >
-          →
-        </button>
+        <MainButton onClick={goPrev}>←</MainButton>
+        <MainButton onClick={goNext}>→</MainButton>
       </div>
     </div>
   );
