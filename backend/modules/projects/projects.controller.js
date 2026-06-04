@@ -3,7 +3,7 @@ import {
   getProjectsService,
   updateProjectService,
   deleteProjectService,
-} from "../services/projects.service.js";
+} from "./projects.service.js";
 
 export const getProjectsController = async (req, res) => {
   const result = await getProjectsService(req.user._id);

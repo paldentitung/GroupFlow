@@ -4,12 +4,12 @@ import {
   deleteProjectController,
   getProjectsController,
   updateProjectController,
-} from "../controllers/projects.controller.js";
-import asyncHandler from "../utils/asyncHandler.js";
-import validate from "../middleware/validate.middleware.js";
-import { createProjectSchema } from "../validators/projects.validator.js";
-import auth from "../middleware/auth.middleware.js";
-import { createProjectLimiter } from "../utils/rateLimiter.js";
+} from "./projects.controller.js";
+import asyncHandler from "../../utils/asyncHandler.js";
+import validate from "../../middleware/validate.middleware.js";
+import { createProjectSchema } from "./projects.validator.js";
+import auth from "../../middleware/auth.middleware.js";
+import { createProjectLimiter } from "../../utils/rateLimiter.js";
 const Router = express.Router();
 
 Router.get("/", auth, asyncHandler(getProjectsController));

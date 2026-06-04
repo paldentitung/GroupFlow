@@ -1,5 +1,5 @@
 import Task from "../models/Task.js";
-import Project from "../models/Project.js";
+import Project from "../modules/projects/Project.js";
 import AppError from "../utils/AppError.js";
 import { createHistoryService } from "./history.service.js";
 import { createNotificationService } from "./notification.service.js";

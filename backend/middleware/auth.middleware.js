@@ -1,7 +1,7 @@
 import User from "../modules/users/User.js";
 import AppError from "../utils/AppError.js";
 import jwt from "jsonwebtoken";
-export const protect = async (req, res, next) => {
+const auth = async (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) return next(new AppError("Not authorized", 401));
@@ -18,4 +18,4 @@ export const protect = async (req, res, next) => {
     return next(new AppError("Invalid token", 401));
   }
 };
-export default protect;
+export default auth;

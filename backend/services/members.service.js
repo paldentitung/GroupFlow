@@ -1,4 +1,4 @@
-import Project from "../models/Project.js";
+import Project from "../modules/projects/Project.js";
 import User from "../modules/users/User.js";
 import AppError from "../utils/AppError.js";
 import { inviteEmailTemplate } from "../utils/inviteEmailTemplate.js";
