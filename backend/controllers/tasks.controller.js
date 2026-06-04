@@ -35,12 +35,16 @@ export const getTaskByIdController = async (req, res) => {
 export const getCurrentUserTasksController = async (req, res) => {
   const userId = req.user._id;
 
-  const tasks = await getCurrentUserTasksService(userId);
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+
+  const result = await getCurrentUserTasksService(userId, page, limit);
 
   res.status(200).json({
     success: true,
     message: "Tasks fetched",
-    data: tasks,
+    data: result.tasks,
+    pagination: result.pagination,
   });
 };
 

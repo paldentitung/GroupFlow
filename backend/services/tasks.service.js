@@ -25,15 +25,33 @@ export const getTaskByIdService = async (taskId) => {
   return task;
 };
 
-export const getCurrentUserTasksService = async (userId) => {
+export const getCurrentUserTasksService = async (
+  userId,
+  page = 1,
+  limit = 10,
+) => {
+  const skip = (page - 1) * limit;
+
   const tasks = await Task.find({
     assigneeId: userId,
   })
     .populate("assigneeId", "firstName lastName avatar")
     .populate("projectId", "name")
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
 
-  return tasks;
+  const total = await Task.countDocuments({ assigneeId: userId });
+
+  return {
+    tasks,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 export const createTaskService = async (

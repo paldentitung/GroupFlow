@@ -5,14 +5,18 @@ import { useTasksContext } from "../contexts/TasksContext";
 import { useUserTasks } from "../hooks/useUserTasks.js";
 
 function TasksPage() {
-  const { userTasks, loading } = useUserTasks();
+  const { userTasks, loading, pagination, page, setPage } = useUserTasks();
 
   return (
     <div className="min-h-screen bg-(--color-bg) text-(--color-text-primary)">
       <Header title="Tasks" buttonName="New Task" />
 
       <div className="p-4 md:p-6">
-        <TaskTable tasks={userTasks} />
+        <TaskTable
+          tasks={userTasks}
+          pagination={pagination}
+          onPageChange={setPage}
+        />
       </div>
     </div>
   );

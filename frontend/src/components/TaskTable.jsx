@@ -100,141 +100,42 @@ const ColHeader = ({
 
 // ── Pagination ────────────────────────────────────────────────────────────────
 const Pagination = ({
-  currentPage = 3,
-  totalPages = 8,
-  from = 11,
-  to = 15,
-  total = 38,
+  currentPage = 1,
+  totalPages = 1,
+  total = 0,
+  onPageChange,
 }) => {
-  const pages = [1, 2, 3, "...", 7, 8];
   return (
     <div className="flex items-center justify-between mt-4 px-1 flex-wrap gap-3">
       <span className="text-[12.5px] text-gray-400">
-        Showing{" "}
-        <span className="font-semibold text-gray-600">
-          {from}–{to}
-        </span>{" "}
-        of <span className="font-semibold text-gray-600">{total}</span> tasks
+        Page <span className="font-semibold text-gray-600">{currentPage}</span>{" "}
+        of <span className="font-semibold text-gray-600">{totalPages}</span> —{" "}
+        <span className="font-semibold text-gray-600">{total}</span> tasks
       </span>
 
       <div className="flex items-center gap-1">
         <button
-          className="flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 bg-white text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors disabled:opacity-30"
-          disabled={currentPage === 1}
+          disabled={currentPage <= 1}
+          onClick={() => onPageChange(currentPage - 1)}
+          className="w-8 h-8 rounded-lg border disabled:opacity-30"
         >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m15 18-6-6 6-6"
-            />
-          </svg>
+          ←
         </button>
 
-        {pages.map((p, i) =>
-          p === "..." ? (
-            <span
-              key={`e-${i}`}
-              className="w-8 h-8 flex items-center justify-center text-[13px] text-gray-400"
-            >
-              …
-            </span>
-          ) : (
-            <button
-              key={p}
-              className={`w-8 h-8 rounded-lg text-[13px] font-medium transition-colors ${
-                p === currentPage
-                  ? "bg-indigo-600 text-white border border-indigo-600"
-                  : "border border-gray-200 bg-white text-gray-500 hover:bg-gray-50"
-              }`}
-            >
-              {p}
-            </button>
-          ),
-        )}
-
-        <button className="flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 transition-colors">
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m9 18 6-6-6-6"
-            />
-          </svg>
+        <button
+          disabled={currentPage >= totalPages}
+          onClick={() => onPageChange(currentPage + 1)}
+          className="w-8 h-8 rounded-lg border disabled:opacity-30"
+        >
+          →
         </button>
       </div>
     </div>
   );
 };
 
-// ── Demo data (same shape as original) ───────────────────────────────────────
-const DEMO_TASKS = [
-  {
-    _id: "1",
-    title: "Redesign landing page hero",
-    projectId: "Website Revamp",
-    assigneeId: { firstName: "Alice", lastName: "Kim" },
-    avatarColor: "#818cf8",
-    status: "in_progress",
-    priority: "high",
-    dueDate: "2025-06-10",
-  },
-  {
-    _id: "2",
-    title: "Set up CI/CD pipeline",
-    projectId: "DevOps",
-    assigneeId: { firstName: "Ben", lastName: "Torres" },
-    avatarColor: "#34d399",
-    status: "completed",
-    priority: "medium",
-    dueDate: "2025-05-28",
-  },
-  {
-    _id: "3",
-    title: "Write API documentation",
-    projectId: "Developer Portal",
-    assigneeId: { firstName: "Cara", lastName: "Patel" },
-    avatarColor: "#f472b6",
-    status: "todo",
-    priority: "low",
-    dueDate: "2025-06-20",
-  },
-  {
-    _id: "4",
-    title: "Fix checkout payment bug",
-    projectId: "E-commerce",
-    assigneeId: { firstName: "David", lastName: "Ng" },
-    avatarColor: "#fb923c",
-    status: "overdue",
-    priority: "high",
-    dueDate: "2025-05-15",
-  },
-  {
-    _id: "5",
-    title: "User interviews – Q3 planning",
-    projectId: "Research",
-    assigneeId: { firstName: "Eva", lastName: "Müller" },
-    avatarColor: "#60a5fa",
-    status: "in_progress",
-    priority: "medium",
-    dueDate: "2025-06-05",
-  },
-];
-
 // ── Table ─────────────────────────────────────────────────────────────────────
-const TaskTable = ({ tasks = DEMO_TASKS }) => {
+const TaskTable = ({ tasks = [], pagination, onPageChange }) => {
   return (
     <div className="font-sans">
       {/* Toolbar: search + single status filter */}
@@ -391,7 +292,14 @@ const TaskTable = ({ tasks = DEMO_TASKS }) => {
       </div>
 
       {/* Pagination */}
-      <Pagination />
+      <Pagination
+        currentPage={pagination?.page}
+        totalPages={pagination?.totalPages}
+        from={pagination?.from}
+        to={pagination?.to}
+        total={pagination?.total}
+        onPageChange={onPageChange}
+      />
     </div>
   );
 };

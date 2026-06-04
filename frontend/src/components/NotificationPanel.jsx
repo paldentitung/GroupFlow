@@ -38,7 +38,7 @@ const TYPE_CONFIG = {
 
 const NotificationPanel = ({ notifications, onReadAll, onReadSingle }) => {
   return (
-    <div className="h-screen w-[400px] bg-white  shadow-xl flex flex-col">
+    <div className="h-screen w-100 bg-white  shadow-xl flex flex-col">
       {/* Header */}
 
       <div className="p-5 border-b flex items-center justify-between shrink-0">

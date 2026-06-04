@@ -86,18 +86,18 @@ export const TasksProvider = ({ children }) => {
     }
   };
 
-  const fetchCurrentUserTasks = async () => {
+  const fetchCurrentUserTasks = async (page = 1, limit = 10) => {
     try {
-      const response = await getCurrentUserTasks();
+      const response = await getCurrentUserTasks(page, limit);
 
-      if (response.success) {
-        return response.data;
-      }
-
-      return [];
+      return {
+        tasks: response.tasks || [],
+        pagination: response.pagination || null,
+      };
     } catch (error) {
-      toast.error(error.message);
-      return [];
+      toast.error(error.message || "Failed to fetch tasks");
+
+      return { tasks: [], pagination: null };
     }
   };
   return (

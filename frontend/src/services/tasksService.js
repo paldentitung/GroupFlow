@@ -54,6 +54,15 @@ export const respondToTask = async (taskId, response) => {
   );
 };
 
-export const getCurrentUserTasks = async () => {
-  return request("/tasks/my-tasks", {}, true);
+export const getCurrentUserTasks = async (page, limit) => {
+  const res = await request(
+    `/tasks/my-tasks?page=${page}&limit=${limit}`,
+    {},
+    true,
+  );
+
+  return {
+    tasks: res.data,
+    pagination: res.pagination,
+  };
 };
