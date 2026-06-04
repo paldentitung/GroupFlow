@@ -8,6 +8,7 @@ import { formatDate } from "../utils/formatDate.js";
 import { useTasksContext } from "../contexts/TasksContext";
 import { useEffect, useState } from "react";
 import { useUserTasks } from "../hooks/useUserTasks.js";
+import { useAddProject } from "../contexts/AddProjectContext.jsx";
 // ── Icons ────────────────────────────────────────────────────────────────────
 const FolderIcon = () => (
   <svg
@@ -139,9 +140,15 @@ function Dashboard() {
   const { projects } = useProjects();
 
   const { userTasks, loading } = useUserTasks();
+  const { isModalOpen, setIsModalOpen } = useAddProject();
+
   return (
     <div className="min-h-screen bg-(--color-bg) text-(--color-text-primary) overflow-hidden ">
-      <Header title="Dashboard" buttonName="New Project" />
+      <Header
+        title="Dashboard"
+        buttonName="New Project"
+        onClick={() => setIsModalOpen((prev) => !prev)}
+      />
       <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard

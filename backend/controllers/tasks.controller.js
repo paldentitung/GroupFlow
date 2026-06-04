@@ -87,6 +87,13 @@ export const deleteTaskController = async (req, res) => {
     message: "Task deleted",
   });
 };
+
+/**
+ * Description
+ * @param {any} req
+ * @param {any} res
+ * @returns {any}
+ */
 export const respondToTaskController = async (req, res) => {
   const { taskId } = req.params;
   const { response } = req.body;

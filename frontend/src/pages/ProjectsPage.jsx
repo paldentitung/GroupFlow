@@ -6,10 +6,10 @@ import NewProjectForm from "../components/NewProjectForm";
 import MainButton from "../components/MainButton";
 import { useProjects } from "../hooks/useProjects.js";
 import { formatDate } from "../utils/formatDate.js";
+import { useAddProject } from "../contexts/AddProjectContext.jsx";
 const ProjectsPage = () => {
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
   const { handleCreateProject, projects } = useProjects();
-
+  const { isModalOpen, setIsModalOpen } = useAddProject();
   return (
     <>
       <div>
@@ -35,14 +35,6 @@ const ProjectsPage = () => {
           </div>
         </div>
       </div>
-
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="New project"
-      >
-        <NewProjectForm onCancel={() => setIsModalOpen(false)} />
-      </Modal>
     </>
   );
 };

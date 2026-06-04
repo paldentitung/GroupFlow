@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ProjectsProvider } from "./contexts/ProjectsContext.jsx";
 import { TasksProvider } from "./contexts/TasksContext.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
+import { AddProjectProvider } from "./contexts/AddProjectContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -13,7 +14,9 @@ createRoot(document.getElementById("root")).render(
       <AuthProvider>
         <ProjectsProvider>
           <TasksProvider>
-            <App />
+            <AddProjectProvider>
+              <App />
+            </AddProjectProvider>
           </TasksProvider>
         </ProjectsProvider>
       </AuthProvider>

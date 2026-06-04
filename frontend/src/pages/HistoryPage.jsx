@@ -4,6 +4,7 @@ import { formatDate } from "../utils/formatDate";
 import { getUserHistory } from "../services/historyService";
 import { getInitials } from "../utils/getInitials";
 import { Search } from "lucide-react";
+import { useAddProject } from "../contexts/AddProjectContext";
 
 const entityIcon = {
   task: { bg: "bg-[#eef2ff]", color: "text-[#4f46e5]" },
@@ -19,7 +20,7 @@ const actionBadge = {
 function HistoryPage() {
   const [historyData, setHistoryData] = useState([]);
   const [searchItem, setSearchItem] = useState("");
-
+  const { setIsModalOpen } = useAddProject();
   useEffect(() => {
     const fetchUserHistory = async () => {
       try {
@@ -39,7 +40,11 @@ function HistoryPage() {
 
   return (
     <div className="min-h-screen bg-[#f7f8fa]">
-      <Header title="History" showButton={false} />
+      <Header
+        title="History"
+        buttonName="New Project"
+        onClick={() => setIsModalOpen(true)}
+      />
 
       <div className="p-6">
         {/* Search */}
