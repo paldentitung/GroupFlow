@@ -9,6 +9,18 @@ export function useUserTasks() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
 
+  const [status, setStatus] = useState("");
+  const [search, setSearch] = useState("");
+
+  const filteredTasks = userTasks.filter((t) => {
+    const matchStatus = status ? t.status === status : true;
+
+    const matchSearch = search
+      ? t.title.toLowerCase().includes(search.toLowerCase())
+      : true;
+
+    return matchStatus && matchSearch;
+  });
   useEffect(() => {
     const load = async () => {
       setLoading(true);
@@ -29,5 +41,8 @@ export function useUserTasks() {
     loading,
     page,
     setPage,
+    filteredTasks,
+    setSearch,
+    setStatus,
   };
 }

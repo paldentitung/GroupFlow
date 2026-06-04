@@ -86,7 +86,13 @@ const ColHeader = ({
 );
 
 // ── Table ─────────────────────────────────────────────────────────────────────
-const TaskTable = ({ tasks = [], pagination, onPageChange }) => {
+const TaskTable = ({
+  tasks = [],
+  pagination,
+  onPageChange,
+  setStatus,
+  setSearch,
+}) => {
   return (
     <div className="font-sans">
       {/* Toolbar: search + single status filter */}
@@ -109,6 +115,7 @@ const TaskTable = ({ tasks = [], pagination, onPageChange }) => {
           <input
             type="text"
             placeholder="Search tasks…"
+            onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-2 text-[13.5px] rounded-lg border border-gray-200 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50 transition-all"
           />
         </div>
@@ -117,6 +124,7 @@ const TaskTable = ({ tasks = [], pagination, onPageChange }) => {
         <div className="relative">
           <select
             defaultValue=""
+            onChange={(e) => setStatus(e.target.value)}
             className="appearance-none pl-3 pr-8 py-2 text-[13px] rounded-lg border border-gray-200 bg-white text-gray-600 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50 cursor-pointer transition-all"
           >
             <option value="">All statuses</option>
