@@ -5,9 +5,9 @@ import {
   removeMemberController,
   inviteMemberController,
   acceptInviteController,
-} from "../controllers/members.controller.js";
-import auth from "../middleware/auth.middleware.js";
-import { inviteLimiter } from "../utils/rateLimiter.js";
+} from "./members.controller.js";
+import auth from "../../middleware/auth.middleware.js";
+import { inviteLimiter } from "../../utils/rateLimiter.js";
 const Router = express.Router();
 
 Router.get("/:projectId/members", getAllMembersController);

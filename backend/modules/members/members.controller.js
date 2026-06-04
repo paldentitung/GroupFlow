@@ -4,7 +4,7 @@ import {
   removeMemberService,
   inviteMemberService,
   acceptInviteService,
-} from "../services/members.service.js";
+} from "./members.service.js";
 
 export const getAllMembersController = async (req, res) => {
   const { projectId } = req.params;

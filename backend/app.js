@@ -5,7 +5,7 @@ import ProjectsRoute from "./modules/projects/projects.route.js";
 import authRoute from "./modules/auth/auth.route.js";
 import tasksRoute from "./modules/tasks/tasks.route.js";
 import commentRoute from "./modules/comments/comment.route.js";
-import membersRoute from "./routes/members.route.js";
+import membersRoute from "./modules/members/members.route.js";
 import historyRoute from "./modules/history/history.route.js";
 import notificationRoute from "./modules/notifications/notification.route.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";

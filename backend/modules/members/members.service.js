@@ -1,10 +1,12 @@
-import Project from "../modules/projects/Project.js";
-import User from "../modules/users/User.js";
-import AppError from "../utils/AppError.js";
-import { inviteEmailTemplate } from "../utils/inviteEmailTemplate.js";
-import sendEmail from "../utils/sendEmail.js";
+import Project from "../projects/Project.js";
+import User from "../users/User.js";
+import AppError from "../../utils/AppError.js";
+import { inviteEmailTemplate } from "../../utils/inviteEmailTemplate.js";
+import sendEmail from "../../utils/sendEmail.js";
 import jwt from "jsonwebtoken";
-import { createHistoryService } from "../modules/history/history.service.js";
+import { createHistoryService } from "../history/history.service.js";
+import { createNotificationService } from "../notifications/notification.service.js";
+import mongoose from "mongoose";
 export const getAllMembersService = async (projectId) => {
   const project = await Project.findById(projectId).populate(
     "members.user",
@@ -138,10 +140,9 @@ export const acceptInviteService = async (token, currentUserId) => {
     throw new AppError("Invalid token", 400);
   }
 
-  if (decoded.userId.toString() !== currentUserId.toString()) {
+  if (!new mongoose.Types.ObjectId(currentUserId).equals(decoded.userId)) {
     throw new AppError("Invalid invitation", 403);
   }
-
   const { projectId, userId, role } = decoded;
 
   const project = await Project.findById(projectId);
