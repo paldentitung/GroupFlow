@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-
+import { getInitials } from "../utils/getInitials";
 const COLORS = [
   "#4f46e5",
   "#059669",
@@ -15,10 +15,6 @@ function getColorFromString(str = "") {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
   return COLORS[Math.abs(hash) % COLORS.length];
-}
-
-function getInitials(first = "", last = "") {
-  return (first?.[0] || "") + (last?.[0] || "");
 }
 
 const Avatar = ({ user, firstName, lastName, size = 28, className = "" }) => {
