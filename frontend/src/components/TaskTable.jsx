@@ -1,6 +1,8 @@
 import React from "react";
 import Pagination from "./Pagination";
 import Avatar from "./Avatar";
+import { getInitials } from "../utils/getInitials";
+import { formatDate } from "../utils/formatDate";
 
 // ── Status Chip ───────────────────────────────────────────────────────────────
 const CHIP_CLASSES = {
@@ -94,7 +96,7 @@ const TaskTable = ({
   setSearch,
 }) => {
   return (
-    <div className="font-sans">
+    <div className="font-sans overflow-auto">
       {/* Toolbar: search + single status filter */}
       <div className="flex items-center gap-2.5 mb-4 flex-wrap">
         {/* Search */}
@@ -149,106 +151,105 @@ const TaskTable = ({
         </div>
       </div>
 
-      {/* Table card */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-        {/* Column headers */}
-        <div className="grid grid-cols-[2fr_1.8fr_1.8fr_1.2fr_1fr_0.9fr] px-5 py-3 border-b border-gray-100 bg-gray-50/70">
-          <ColHeader label="Task" sortable active dir="asc" />
-          <ColHeader label="Project" sortable />
-          <ColHeader label="Assigned to" />
-          <ColHeader label="Status" sortable />
-          <ColHeader label="Priority" sortable />
-          <ColHeader label="Due date" sortable align="right" />
-        </div>
+      <div className="overflow-x-auto">
+        <div className="min-w-[900px] ">
+          {/* Table card */}
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+            {/* Column headers */}
+            <div className="grid grid-cols-[2fr_1.8fr_1.8fr_1.2fr_1fr_0.9fr] px-5 py-3 border-b border-gray-100 bg-gray-50/70">
+              <ColHeader label="Task" sortable active dir="asc" />
+              <ColHeader label="Project" sortable />
+              <ColHeader label="Assigned to" />
+              <ColHeader label="Status" sortable />
+              <ColHeader label="Priority" sortable />
+              <ColHeader label="Due date" sortable align="right" />
+            </div>
 
-        {/* Rows */}
-        {tasks.length > 0 ? (
-          tasks.map((t, i) => {
-            const initials =
-              (t.assigneeId?.firstName?.[0] || "") +
-              (t.assigneeId?.lastName?.[0] || "");
-            const name =
-              `${t.assigneeId?.firstName || ""} ${t.assigneeId?.lastName || ""}`.trim();
-            const due = t.dueDate
-              ? new Date(t.dueDate).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })
-              : "—";
-            const isOverdue = t.status === "overdue";
+            {/* Rows */}
+            {tasks.length > 0 ? (
+              tasks.map((t, i) => {
+                const initials = getInitials(
+                  t.assigneeId?.firstName?.[0] || "",
+                  t.assigneeId?.lastName?.[0] || "",
+                );
+                const name =
+                  `${t.assigneeId?.firstName || ""} ${t.assigneeId?.lastName || ""}`.trim();
+                const due = formatDate(t.dueDate);
+                const isOverdue = t.status === "overdue";
 
-            return (
-              <div
-                key={t._id || i}
-                className={`grid grid-cols-[2fr_1.8fr_1.8fr_1.2fr_1fr_0.9fr] px-5 py-3.5 items-center hover:bg-gray-50/70 transition-colors ${
-                  i < tasks.length - 1 ? "border-b border-gray-100" : ""
-                }`}
-              >
-                {/* Title */}
-                <div className="flex items-center gap-3 pr-3 min-w-0">
-                  <span className="text-[13.5px] font-medium text-gray-800 truncate">
-                    {t.title}
-                  </span>
-                </div>
+                return (
+                  <div
+                    key={t._id || i}
+                    className={`grid grid-cols-[2fr_1.8fr_1.8fr_1.2fr_1fr_0.9fr] px-5 py-3.5 items-center hover:bg-gray-50/70 transition-colors ${
+                      i < tasks.length - 1 ? "border-b border-gray-100" : ""
+                    }`}
+                  >
+                    {/* Title */}
+                    <div className="flex items-center gap-3 pr-3 min-w-0">
+                      <span className="text-[13.5px] font-medium text-gray-800 truncate">
+                        {t.title}
+                      </span>
+                    </div>
 
-                {/* Project */}
-                <div className="flex items-center gap-1.5 pr-3 min-w-0">
-                  <span className="w-2 h-2 rounded-sm bg-indigo-200 shrink-0" />
-                  <span className="text-[13px] text-gray-500 truncate">
-                    {t.projectId?.name || "not found"}
-                  </span>
-                </div>
+                    {/* Project */}
+                    <div className="flex items-center gap-1.5 pr-3 min-w-0">
+                      <span className="w-2 h-2 rounded-sm bg-indigo-200 shrink-0" />
+                      <span className="text-[13px] text-gray-500 truncate">
+                        {t.projectId?.name || "not found"}
+                      </span>
+                    </div>
 
-                {/* Assignee */}
-                <div className="flex items-center gap-2 min-w-0">
-                  <Avatar
-                    firstName={t.assigneeId?.firstName}
-                    lastName={t.assigneeId?.lastName}
-                    image={t.assigneeId?.avatar}
-                  />
-                  <span className="text-[13px] text-gray-500 truncate">
-                    {name || "Unassigned"}
-                  </span>
-                </div>
+                    {/* Assignee */}
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Avatar
+                        firstName={t.assigneeId?.firstName}
+                        lastName={t.assigneeId?.lastName}
+                        image={t.assigneeId?.avatar}
+                      />
+                      <span className="text-[13px] text-gray-500 truncate">
+                        {name || "Unassigned"}
+                      </span>
+                    </div>
 
-                {/* Status */}
-                <div>
-                  <TaskChip label={t.status} />
-                </div>
+                    {/* Status */}
+                    <div>
+                      <TaskChip label={t.status} />
+                    </div>
 
-                {/* Priority */}
-                <div>
-                  <PriorityBadge label={t.priority} />
-                </div>
+                    {/* Priority */}
+                    <div>
+                      <PriorityBadge label={t.priority} />
+                    </div>
 
-                {/* Due */}
-                <div
-                  className={`text-right text-[12.5px] font-medium ${isOverdue ? "text-red-500" : "text-gray-400"}`}
+                    {/* Due */}
+                    <div
+                      className={`text-right text-[12.5px] font-medium ${isOverdue ? "text-red-500" : "text-gray-400"}`}
+                    >
+                      {due}
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="flex flex-col items-center justify-center py-16 text-gray-400 gap-2">
+                <svg
+                  className="w-8 h-8 opacity-40"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
                 >
-                  {due}
-                </div>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25Z"
+                  />
+                </svg>
+                <span className="text-[13.5px]">No tasks found</span>
               </div>
-            );
-          })
-        ) : (
-          <div className="flex flex-col items-center justify-center py-16 text-gray-400 gap-2">
-            <svg
-              className="w-8 h-8 opacity-40"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25Z"
-              />
-            </svg>
-            <span className="text-[13.5px]">No tasks found</span>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Pagination */}
