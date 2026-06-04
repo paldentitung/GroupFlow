@@ -1,5 +1,5 @@
-import Notification from "../models/Notification.js";
-import AppError from "../utils/AppError.js";
+import Notification from "./Notification.js";
+import AppError from "../../utils/AppError.js";
 export const getUserNotificatonService = async (userId) => {
   return await Notification.find({ recipient: userId });
 };

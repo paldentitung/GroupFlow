@@ -2,7 +2,7 @@ import {
   getUserNotificatonService,
   markAsReadService,
   markAllAsReadService,
-} from "../services/notification.service.js";
+} from "./notification.service.js";
 
 export const getUserNotificatonController = async (req, res) => {
   const result = await getUserNotificatonService(req.user._id);
@@ -21,6 +21,7 @@ export const markAsReadController = async (req, res) => {
     data: result,
   });
 };
+
 export const markAllAsReadController = async (req, res) => {
   const userId = req.user._id;
 
