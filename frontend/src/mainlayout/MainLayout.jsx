@@ -6,8 +6,11 @@ import Modal from "../components/Modal";
 import NewProjectForm from "../components/NewProjectForm";
 import { useContext } from "react";
 import { useAddProject } from "../contexts/AddProjectContext";
+import NotificationPanel from "../components/NotificationPanel";
+import { useNotifications } from "../contexts/NotificationContext";
 const MainLayout = ({ children }) => {
   const { isModalOpen, setIsModalOpen } = useAddProject();
+  const { open, setOpen } = useNotifications();
   return (
     <>
       <div className="flex">
@@ -26,6 +29,21 @@ const MainLayout = ({ children }) => {
       >
         <NewProjectForm onCancel={() => setIsModalOpen(false)} />
       </Modal>
+
+      {open && (
+        <div className="fixed inset-0 z-50">
+          {/* BACKDROP */}
+          <div
+            onClick={() => setOpen(false)}
+            className="absolute inset-0 bg-black/40"
+          />
+
+          {/* PANEL */}
+          <div className="absolute right-0 top-0 h-full">
+            <NotificationPanel />
+          </div>
+        </div>
+      )}
     </>
   );
 };

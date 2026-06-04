@@ -7,6 +7,7 @@ import { ProjectsProvider } from "./contexts/ProjectsContext.jsx";
 import { TasksProvider } from "./contexts/TasksContext.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { AddProjectProvider } from "./contexts/AddProjectContext.jsx";
+import { NotificationProvider } from "./contexts/NotificationContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -15,7 +16,9 @@ createRoot(document.getElementById("root")).render(
         <ProjectsProvider>
           <TasksProvider>
             <AddProjectProvider>
-              <App />
+              <NotificationProvider>
+                <App />
+              </NotificationProvider>
             </AddProjectProvider>
           </TasksProvider>
         </ProjectsProvider>

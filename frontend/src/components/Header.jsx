@@ -2,9 +2,11 @@ import React from "react";
 import { Search, Bell, Menu, User } from "lucide-react";
 import MainButton from "./MainButton";
 import { useSidebar } from "../contexts/SidebarContext";
+import { useNotifications } from "../contexts/NotificationContext";
 
 const Header = ({ title, buttonName, onClick, showButton = true }) => {
   const { toggleSidebar } = useSidebar();
+  const { toggleNotification } = useNotifications();
   return (
     <header className="flex justify-between items-center px-6 py-4 ">
       <div className="flex items-center gap-3">
@@ -17,7 +19,10 @@ const Header = ({ title, buttonName, onClick, showButton = true }) => {
       </div>
 
       <div className="flex items-center gap-2">
-        <button className="relative p-2 rounded-lg bg-[#f7f8fa] border border-[#e8eaed] text-[#6b7280] hover:bg-[#eef2ff] hover:text-[#4f46e5] hover:border-[#4f46e5] transition-all duration-150 hover:cursor-pointer">
+        <button
+          onClick={toggleNotification}
+          className="relative p-2 rounded-lg bg-[#f7f8fa] border border-[#e8eaed] text-[#6b7280] hover:bg-[#eef2ff] hover:text-[#4f46e5] hover:border-[#4f46e5] transition-all duration-150 hover:cursor-pointer"
+        >
           <Bell size={17} />
           <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#4f46e5]" />
         </button>
