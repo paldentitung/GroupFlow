@@ -19,7 +19,9 @@ const ProjectsPage = () => {
           buttonName="New Project"
           onClick={() => setIsModalOpen(true)}
         />
-        <ProjectListing projects={projects} loading={loading} />
+        <div className="p-6">
+          <ProjectListing projects={projects} loading={loading} />
+        </div>
       </div>
     </>
   );
