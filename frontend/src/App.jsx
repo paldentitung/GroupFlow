@@ -14,6 +14,7 @@ import VerifyEmailPage from "./pages/VerifyEmailPage";
 import ProjectDetailsPage from "./pages/ProjectDetailsPage";
 import AcceptInvitePage from "./pages/AcceptInvitePage";
 import { Toaster } from "react-hot-toast";
+import HistoryPage from "./pages/HistoryPage";
 const App = () => {
   return (
     <SidebarProvider>
@@ -67,7 +68,6 @@ const App = () => {
             </MainLayout>
           }
         />
-
         <Route
           path="/projects/:id"
           element={
@@ -78,7 +78,6 @@ const App = () => {
         >
           <Route path="task/:taskId" element={<TaskSidebar />} />
         </Route>
-
         <Route
           path="/tasks"
           element={
@@ -100,6 +99,14 @@ const App = () => {
           element={
             <MainLayout>
               <SettingsPage />
+            </MainLayout>
+          }
+        />{" "}
+        <Route
+          path="/history"
+          element={
+            <MainLayout>
+              <HistoryPage />
             </MainLayout>
           }
         />
