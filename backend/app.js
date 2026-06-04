@@ -4,7 +4,7 @@ import cors from "cors";
 import ProjectsRoute from "./modules/projects/projects.route.js";
 import authRoute from "./modules/auth/auth.route.js";
 import tasksRoute from "./modules/tasks/tasks.route.js";
-import commentRoute from "./routes/comment.route.js";
+import commentRoute from "./modules/comments/comment.route.js";
 import membersRoute from "./routes/members.route.js";
 import historyRoute from "./routes/history.route.js";
 import notificationRoute from "./routes/notification.route.js";

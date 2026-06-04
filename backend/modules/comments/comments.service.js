@@ -1,9 +1,9 @@
-import Task from "../modules/tasks/Task.js";
-import Comment from "../models/Comment.js";
-import AppError from "../utils/AppError.js";
+import Task from "../tasks/Task.js";
+import Comment from "./Comment.js";
+import AppError from "../../utils/AppError.js";
 
-import { createHistoryService } from "./history.service.js";
-import { createNotificationService } from "./notification.service.js";
+import { createHistoryService } from "../../services/history.service.js";
+import { createNotificationService } from "../../services/notification.service.js";
 export const getCommentsService = async (taskId) => {
   const task = await Task.findById(taskId);
 
@@ -15,7 +15,7 @@ export const getCommentsService = async (taskId) => {
     .populate("authorId", "firstName lastName avatar")
     .sort({ createdAt: -1 });
 
-  return await comment.populate("authorId", "firstName lastName avatar");
+  return comments;
 };
 
 export const createCommentService = async (taskId, content, userId) => {

@@ -3,7 +3,7 @@ import {
   createCommentService,
   updateCommentService,
   deleteCommentService,
-} from "../services/comments.service.js";
+} from "./comments.service.js";
 
 export const getCommentsController = async (req, res) => {
   const { taskId } = req.params;

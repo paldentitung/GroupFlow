@@ -4,10 +4,10 @@ import {
   createCommentController,
   updateCommentController,
   deleteCommentController,
-} from "../controllers/comments.controller.js";
-import asyncHandler from "../utils/asyncHandler.js";
-import auth from "../middleware/auth.middleware.js";
-import { commentLimiter } from "../utils/rateLimiter.js";
+} from "./comments.controller.js";
+import asyncHandler from "../../utils/asyncHandler.js";
+import auth from "../../middleware/auth.middleware.js";
+import { commentLimiter } from "../../utils/rateLimiter.js";
 
 const Router = express.Router();
 
