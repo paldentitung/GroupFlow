@@ -9,6 +9,7 @@ import { useTasksContext } from "../contexts/TasksContext";
 import { useEffect, useState } from "react";
 import { useUserTasks } from "../hooks/useUserTasks.js";
 import { useAddProject } from "../contexts/AddProjectContext.jsx";
+import ProjectListing from "../components/ProjectListing.jsx";
 // ── Icons ────────────────────────────────────────────────────────────────────
 const FolderIcon = () => (
   <svg
@@ -182,21 +183,8 @@ function Dashboard() {
         </div>
 
         <h2 className="text-base font-bold mb-4">My Projects</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-          {projects.map((p) => (
-            <ProjectCard
-              key={p._id}
-              id={p._id}
-              name={p.name}
-              desc={p.description}
-              status={p.status}
-              progress={p.progress}
-              due={formatDate(p.dueDate)}
-              members={p.members}
-              owner={p.owner}
-            />
-          ))}
-        </div>
+
+        <ProjectListing projects={projects} loading={loading} />
 
         <h2 className="text-base font-bold mb-4">Recent Tasks</h2>
         <TaskTable tasks={userTasks.slice(0, 8)} />
