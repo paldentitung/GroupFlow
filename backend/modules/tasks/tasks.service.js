@@ -1,8 +1,8 @@
-import Task from "../models/Task.js";
-import Project from "../modules/projects/Project.js";
-import AppError from "../utils/AppError.js";
-import { createHistoryService } from "./history.service.js";
-import { createNotificationService } from "./notification.service.js";
+import Task from "./Task.js";
+import Project from "../projects/Project.js";
+import AppError from "../../utils/AppError.js";
+import { createHistoryService } from "../../services/history.service.js";
+import { createNotificationService } from "../../services/notification.service.js";
 
 export const getTasksService = async (projectId) => {
   const tasks = await Task.find({ projectId })

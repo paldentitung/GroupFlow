@@ -1,4 +1,4 @@
-import Task from "../models/Task.js";
+import Task from "../modules/tasks/Task.js";
 import Comment from "../models/Comment.js";
 import AppError from "../utils/AppError.js";
 

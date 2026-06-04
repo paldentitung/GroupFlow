@@ -6,7 +6,7 @@ import {
   getTaskByIdService,
   respondToTaskService,
   getCurrentUserTasksService,
-} from "../services/tasks.service.js";
+} from "./tasks.service.js";
 
 export const getTasksController = async (req, res) => {
   const { projectId } = req.params;

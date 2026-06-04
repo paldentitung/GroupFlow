@@ -7,16 +7,16 @@ import {
   getTaskByIdController,
   respondToTaskController,
   getCurrentUserTasksController,
-} from "../controllers/tasks.controller.js";
-import asyncHanlder from "../utils/asyncHandler.js";
-import auth from "../middleware/auth.middleware.js";
-import validate from "../middleware/validate.middleware.js";
+} from "./tasks.controller.js";
+import asyncHanlder from "../../utils/asyncHandler.js";
+import auth from "../../middleware/auth.middleware.js";
+import validate from "../../middleware/validate.middleware.js";
 import {
   createTaskValidator,
   updateTaskValidator,
   respondToTaskValidator,
-} from "../validators/tasks.validator.js";
-import { createTaskLimiter } from "../utils/rateLimiter.js";
+} from "./tasks.validator.js";
+import { createTaskLimiter } from "../../utils/rateLimiter.js";
 
 const Router = express.Router();
 

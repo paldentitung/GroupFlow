@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import History from "../../models/History.js";
-import Task from "../../models/Task.js";
+import Task from "../tasks/Task.js";
 const projectSchema = new mongoose.Schema(
   {
     name: {
