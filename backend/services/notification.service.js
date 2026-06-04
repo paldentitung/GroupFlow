@@ -15,6 +15,16 @@ export const markAsReadService = async (notificationId, userId) => {
 
   return notification;
 };
+
+export const markAllAsReadService = async (userId) => {
+  const result = await Notification.updateMany(
+    { recipient: userId, isRead: false },
+    { $set: { isRead: true } },
+  );
+
+  return result;
+};
+
 export const createNotificationService = async ({
   recipientId,
   senderId,

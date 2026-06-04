@@ -36,37 +36,7 @@ const TYPE_CONFIG = {
   },
 };
 
-const MOCK_NOTIFICATIONS = [
-  {
-    _id: 1,
-    type: "task_assigned",
-    message: 'You were assigned "Fix login bug"',
-    isRead: false,
-    createdAt: new Date(),
-  },
-
-  {
-    _id: 2,
-    type: "comment_added",
-    message: "John commented on Dashboard Task",
-    isRead: true,
-    createdAt: new Date(),
-  },
-
-  {
-    _id: 3,
-    type: "project_updated",
-    message: "Project settings updated",
-    isRead: false,
-    createdAt: new Date(),
-  },
-];
-
-const NotificationPanel = ({
-  notifications = MOCK_NOTIFICATIONS,
-  onReadAll = () => {},
-  onReadSingle = () => {},
-}) => {
+const NotificationPanel = ({ notifications, onReadAll, onReadSingle }) => {
   return (
     <div className="h-screen w-[400px] bg-white  shadow-xl flex flex-col">
       {/* Header */}
@@ -78,7 +48,7 @@ const NotificationPanel = ({
           <h2 className="font-semibold text-lg">Notifications</h2>
 
           <span className="px-2 py-1 rounded-full bg-gray-100 text-xs">
-            {notifications.length}
+            {notifications?.length}
           </span>
         </div>
 
@@ -94,7 +64,7 @@ const NotificationPanel = ({
       {/* List */}
 
       <div className="flex-1 overflow-y-auto">
-        {notifications.length === 0 ? (
+        {notifications?.length === 0 ? (
           <div className="h-full flex flex-col justify-center items-center text-gray-500">
             <FaBell size={35} />
 

@@ -10,7 +10,13 @@ import NotificationPanel from "../components/NotificationPanel";
 import { useNotifications } from "../contexts/NotificationContext";
 const MainLayout = ({ children }) => {
   const { isModalOpen, setIsModalOpen } = useAddProject();
-  const { open, setOpen } = useNotifications();
+  const {
+    open,
+    setOpen,
+    notifications,
+    handleMarkAsReadNotification,
+    handleMarkAllReadNotification,
+  } = useNotifications();
   return (
     <>
       <div className="flex">
@@ -40,7 +46,11 @@ const MainLayout = ({ children }) => {
 
           {/* PANEL */}
           <div className="absolute right-0 top-0 h-full">
-            <NotificationPanel />
+            <NotificationPanel
+              notifications={notifications}
+              onReadSingle={handleMarkAsReadNotification}
+              onReadAll={handleMarkAllReadNotification}
+            />
           </div>
         </div>
       )}
