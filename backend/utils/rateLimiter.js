@@ -52,3 +52,13 @@ export const inviteLimiter = createLimiter(
   10,
   "Too many invites sent. Please try again later.",
 );
+export const changeAvatarLimiter = createLimiter(
+  1,
+  2,
+  "Too many changes sent. Please try again later.",
+);
+export const changePasswordLimiter = createLimiter(
+  1,
+  2,
+  "Too many change Passowrd sent. Please try again later.",
+);

@@ -9,6 +9,7 @@ import {
 import auth from "../../middleware/auth.middleware.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import { upload } from "../../middleware/upload.middleware.js";
+import { changeAvatarLimiter } from "../../utils/rateLimiter.js";
 const Router = express.Router();
 
 Router.get("/me", auth, asyncHandler(getMeController));
@@ -17,6 +18,7 @@ Router.patch("/me", auth, asyncHandler(updateUserProfileController));
 Router.patch(
   "/me/avatar",
   auth,
+  changeAvatarLimiter,
   upload.single("avatar"),
   asyncHandler(changeAvatarConroller),
 );
