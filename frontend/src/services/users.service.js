@@ -29,3 +29,13 @@ export const changeAvatar = async (avatar) => {
     true,
   );
 };
+
+export const removeAvatar = async () => {
+  return request(
+    "/users/me/avatar",
+    {
+      method: "DELETE",
+    },
+    true,
+  );
+};

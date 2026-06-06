@@ -113,7 +113,8 @@ function ProfileSection() {
   const [saved, setSaved] = useState(false);
 
   const { user } = useAuth();
-  const { handleUpdateProfile, handleChangeAvatar } = useProfile();
+  const { handleUpdateProfile, handleChangeAvatar, handleRemoveAvatar } =
+    useProfile();
 
   const [form, setForm] = useState({
     firstName: "",
@@ -200,7 +201,13 @@ function ProfileSection() {
               onChange={(e) => setAvatar(e.target.files[0])}
             />
 
-            <button className="flex items-center gap-1.5 border border-gray-200 text-red-500 text-xs font-medium px-3 py-2 rounded-lg hover:bg-red-50 transition-colors">
+            <button
+              onClick={() => {
+                window.confirm(" are you sure");
+                handleRemoveAvatar();
+              }}
+              className="flex items-center gap-1.5 border border-gray-200 text-red-500 text-xs font-medium px-3 py-2 rounded-lg hover:bg-red-50 transition-colors"
+            >
               <Trash2 size={13} />
               Remove
             </button>

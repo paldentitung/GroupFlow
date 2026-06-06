@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { changeAvatar, updateProfile } from "../services/users.service";
+import {
+  changeAvatar,
+  removeAvatar,
+  updateProfile,
+} from "../services/users.service";
 import { toast } from "react-hot-toast";
 import { useAuth } from "./useAuth";
 export const useProfile = () => {
@@ -40,8 +44,29 @@ export const useProfile = () => {
     }
   };
 
+  const handleRemoveAvatar = async () => {
+    setLoading(true);
+    try {
+      const res = await removeAvatar();
+
+      if (res.success) {
+        toast.success("Avatar changed");
+
+        setUser((prev) => ({
+          ...prev,
+          avatar: res.data.avatar,
+        }));
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     handleUpdateProfile,
     handleChangeAvatar,
+    handleRemoveAvatar,
   };
 };
