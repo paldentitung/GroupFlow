@@ -3,6 +3,13 @@ import User from "./User.js";
 import fs from "fs";
 import path from "path";
 import bcrypt from "bcrypt";
+
+export const getMeService = async (userId) => {
+  const user = await User.findById(userId).select("-password");
+
+  return user;
+};
+
 export const updateUserProfileService = async (
   userId,
   { firstName, lastName, bio, phone },

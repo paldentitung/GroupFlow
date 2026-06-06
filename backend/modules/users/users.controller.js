@@ -4,7 +4,18 @@ import {
   changeAvatarService,
   removeAvatarService,
   changePasswordService,
+  getMeService,
 } from "./users.service.js";
+
+export const getMeController = async (req, res) => {
+  const user = await getMeService(req.user._id);
+
+  res.status(200).json({
+    success: true,
+    message: "User info retrieved",
+    user,
+  });
+};
 
 export const updateUserProfileController = async (req, res) => {
   const { firstName, lastName, bio, phone } = req.body;

@@ -4,12 +4,14 @@ import {
   changePasswordController,
   removeAvatarConroller,
   updateUserProfileController,
+  getMeController,
 } from "./users.controller.js";
 import auth from "../../middleware/auth.middleware.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import { upload } from "../../middleware/upload.middleware.js";
 const Router = express.Router();
 
+Router.get("/me", auth, asyncHandler(getMeController));
 Router.patch("/me", auth, asyncHandler(updateUserProfileController));
 
 Router.patch(
