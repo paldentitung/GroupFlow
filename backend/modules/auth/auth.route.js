@@ -4,7 +4,6 @@ import {
   registerController,
   verifyEmailController,
   logout,
-  getMe,
 } from "./auth.controller.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import auth from "../../middleware/auth.middleware.js";
@@ -35,5 +34,4 @@ Router.post(
   asyncHandler(loginController),
 );
 Router.post("/logout", asyncHandler(logout));
-Router.get("/me", auth, asyncHandler(getMe));
 export default Router;
