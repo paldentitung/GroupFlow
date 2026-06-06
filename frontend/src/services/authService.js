@@ -43,13 +43,3 @@ export const logout = async () => {
     false,
   );
 };
-
-export const getMe = async () => {
-  return request(
-    "/auth/me",
-    {
-      method: "GET",
-    },
-    true,
-  );
-};
