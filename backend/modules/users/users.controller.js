@@ -42,6 +42,7 @@ export const changeAvatarConroller = async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Avatar changed",
+    data: result,
   });
 };
 
@@ -51,6 +52,7 @@ export const removeAvatarConroller = async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Avatar remove",
+    data: result,
   });
 };
 

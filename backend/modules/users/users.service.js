@@ -3,11 +3,12 @@ import User from "./User.js";
 import fs from "fs";
 import path from "path";
 import bcrypt from "bcrypt";
+import { userResponseMapper } from "./userResponseMapper.js";
 
 export const getMeService = async (userId) => {
-  const user = await User.findById(userId).select("-password");
+  const user = await User.findById(userId);
 
-  return user;
+  return userResponseMapper(user);
 };
 
 export const updateUserProfileService = async (
@@ -24,14 +25,7 @@ export const updateUserProfileService = async (
     throw new AppError("User not found", 404);
   }
 
-  return {
-    _id: updatedUser._id,
-    firstName: updatedUser.firstName,
-    lastName: updatedUser.lastName,
-    bio: updatedUser.bio,
-    phone: updatedUser.phone,
-    avatar: updatedUser.avatar,
-  };
+  return userResponseMapper(updatedUser);
 };
 
 export const changeAvatarService = async (userId, avatar) => {
@@ -43,7 +37,7 @@ export const changeAvatarService = async (userId, avatar) => {
   if (!updatedUser) {
     throw new AppError("User not found", 404);
   }
-  return updatedUser;
+  return userResponseMapper(updatedUser);
 };
 
 export const removeAvatarService = async (userId) => {
@@ -71,7 +65,7 @@ export const removeAvatarService = async (userId) => {
     { new: true },
   );
 
-  return updatedUser;
+  return userResponseMapper(updatedUser);
 };
 
 export const changePasswordService = async (
