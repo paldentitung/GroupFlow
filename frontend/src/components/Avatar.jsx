@@ -17,7 +17,7 @@ function getColorFromString(str = "") {
   return COLORS[Math.abs(hash) % COLORS.length];
 }
 
-const Avatar = ({ user, firstName, lastName, size = 40, className = "" }) => {
+const Avatar = ({ user, firstName, lastName, size = 28, className = "" }) => {
   const fallbackFirst = user?.firstName || firstName;
   const fallbackLast = user?.lastName || lastName;
 

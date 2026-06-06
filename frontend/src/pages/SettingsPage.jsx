@@ -8,11 +8,15 @@ import {
   Trash2,
   Save,
   Check,
+  EyeClosed,
+  Eye,
 } from "lucide-react";
 import Header from "../components/Header";
 import { useProfile } from "../hooks/useProfile";
 import { useAuth } from "../hooks/useAuth.js";
 import Avatar from "../components/Avatar.jsx";
+
+import { toast } from "react-hot-toast";
 const MEMBERS = [
   {
     initials: "AK",
@@ -264,6 +268,39 @@ function ProfileSection() {
 }
 
 function SecuritySection() {
+  const { handleChangePassword } = useProfile();
+
+  const [form, setForm] = useState({
+    password: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const [show, setShow] = useState({
+    password: false,
+    newPassword: false,
+    confirmPassword: false,
+  });
+
+  const handleSave = async () => {
+    if (form.newPassword !== form.confirmPassword) {
+      toast.error("New password and confirm password do not match");
+      return;
+    }
+
+    await handleChangePassword({
+      password: form.password,
+      newPassword: form.newPassword,
+    });
+  };
+
+  const toggleShow = (field) => {
+    setShow((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -274,35 +311,90 @@ function SecuritySection() {
       </div>
 
       <div className="space-y-4">
-        <InputField label="Current Password" value="" type="password" />
+        {/* Current Password */}
+        <div className="relative">
+          <InputField
+            label="Current Password"
+            type={show.password ? "text" : "password"}
+            value={form.password}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, password: e.target.value }))
+            }
+          />
+
+          <button
+            type="button"
+            onClick={() => toggleShow("password")}
+            className="absolute right-3 top-9 text-gray-500"
+          >
+            {show.password ? <EyeClosed size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
+
+        {/* New + Confirm */}
         <div className="grid grid-cols-2 gap-4">
-          <InputField label="New Password" value="" type="password" />
-          <InputField label="Confirm Password" value="" type="password" />
+          {/* New Password */}
+          <div className="relative">
+            <InputField
+              label="New Password"
+              type={show.newPassword ? "text" : "password"}
+              value={form.newPassword}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  newPassword: e.target.value,
+                }))
+              }
+            />
+
+            <button
+              type="button"
+              onClick={() => toggleShow("newPassword")}
+              className="absolute right-3 top-9 text-gray-500"
+            >
+              {show.newPassword ? <EyeClosed size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+
+          {/* Confirm Password */}
+          <div className="relative">
+            <InputField
+              label="Confirm Password"
+              type={show.confirmPassword ? "text" : "password"}
+              value={form.confirmPassword}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  confirmPassword: e.target.value,
+                }))
+              }
+            />
+
+            <button
+              type="button"
+              onClick={() => toggleShow("confirmPassword")}
+              className="absolute right-3 top-9 text-gray-500"
+            >
+              {show.confirmPassword ? (
+                <EyeClosed size={18} />
+              ) : (
+                <Eye size={18} />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="pt-2">
-        <button className="flex items-center gap-2 bg-indigo-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-indigo-700 transition-colors">
-          <Lock size={14} />
-          Update Password
-        </button>
-      </div>
-
-      <div className="border border-gray-100 rounded-xl p-4 bg-gray-50 mt-6">
-        <p className="text-sm font-medium text-gray-700 mb-1">
-          Two-factor authentication
-        </p>
-        <p className="text-xs text-gray-500 mb-3">
-          Add an extra layer of security to your account
-        </p>
-        <button className="text-xs font-medium text-indigo-600 border border-indigo-200 bg-white px-3 py-1.5 rounded-lg hover:bg-indigo-50 transition-colors">
-          Enable 2FA
-        </button>
-      </div>
+      <button
+        onClick={handleSave}
+        className="flex items-center gap-2 bg-indigo-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-indigo-700 transition-colors"
+      >
+        <Lock size={14} />
+        Update Password
+      </button>
     </div>
   );
 }
-
 function NotificationsSection() {
   const [notifs, setNotifs] = useState({
     taskAssigned: true,

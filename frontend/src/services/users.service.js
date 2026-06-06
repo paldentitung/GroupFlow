@@ -39,3 +39,17 @@ export const removeAvatar = async () => {
     true,
   );
 };
+
+export const changePassword = async ({ newPassword, password }) => {
+  return request(
+    "/users/me/password",
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ newPassword, password }),
+    },
+    true,
+  );
+};
