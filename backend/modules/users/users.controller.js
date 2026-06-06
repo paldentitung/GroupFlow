@@ -2,6 +2,7 @@ import { success } from "zod";
 import {
   updateUserProfileService,
   changeAvatarService,
+  removeAvatarService,
 } from "./users.service.js";
 
 export const updateUserProfileController = async (req, res) => {
@@ -29,5 +30,14 @@ export const changeAvatarConroller = async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Avatar changed",
+  });
+};
+
+export const removeAvatarConroller = async (req, res) => {
+  const result = await removeAvatarService(req.user._id);
+
+  res.status(200).json({
+    success: true,
+    message: "Avatar remove",
   });
 };

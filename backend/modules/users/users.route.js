@@ -1,6 +1,7 @@
 import express from "express";
 import {
   changeAvatarConroller,
+  removeAvatarConroller,
   updateUserProfileController,
 } from "./users.controller.js";
 import auth from "../../middleware/auth.middleware.js";
@@ -20,4 +21,6 @@ Router.patch(
   upload.single("avatar"),
   asyncHandler(changeAvatarConroller),
 );
+
+Router.delete("/remove-avatar", auth, asyncHandler(removeAvatarConroller));
 export default Router;
