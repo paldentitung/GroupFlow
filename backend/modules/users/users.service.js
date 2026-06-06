@@ -24,3 +24,15 @@ export const updateUserProfileService = async (
     avatar: updatedUser.avatar,
   };
 };
+
+export const changeAvatarService = async (userId, avatar) => {
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { avatar },
+    { new: true, runValidators: true },
+  );
+  if (!updatedUser) {
+    throw new AppError("User not found", 404);
+  }
+  return updatedUser;
+};

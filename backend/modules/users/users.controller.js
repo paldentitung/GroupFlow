@@ -1,4 +1,8 @@
-import { updateUserProfileService } from "./users.service.js";
+import { success } from "zod";
+import {
+  updateUserProfileService,
+  changeAvatarService,
+} from "./users.service.js";
 
 export const updateUserProfileController = async (req, res) => {
   const { firstName, lastName, bio, phone } = req.body;
@@ -14,5 +18,16 @@ export const updateUserProfileController = async (req, res) => {
     success: true,
     message: "User Profile updated",
     data: result,
+  });
+};
+
+export const changeAvatarConroller = async (req, res) => {
+  const avatar = req.file?.path;
+
+  const result = await changeAvatarService(req.user._id, avatar);
+
+  res.status(200).json({
+    success: true,
+    message: "Avatar changed",
   });
 };
