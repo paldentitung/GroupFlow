@@ -3,6 +3,7 @@ import {
   updateUserProfileService,
   changeAvatarService,
   removeAvatarService,
+  changePasswordService,
 } from "./users.service.js";
 
 export const updateUserProfileController = async (req, res) => {
@@ -39,5 +40,20 @@ export const removeAvatarConroller = async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Avatar remove",
+  });
+};
+
+export const changePasswordController = async (req, res) => {
+  const { newPassword, password } = req.body;
+
+  const result = await changePasswordService(req.user._id, {
+    newPassword,
+    password,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Password change",
+    data: result,
   });
 };

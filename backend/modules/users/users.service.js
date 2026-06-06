@@ -2,7 +2,7 @@ import AppError from "../../utils/AppError.js";
 import User from "./User.js";
 import fs from "fs";
 import path from "path";
-
+import bcrypt from "bcrypt";
 export const updateUserProfileService = async (
   userId,
   { firstName, lastName, bio, phone },
@@ -65,4 +65,30 @@ export const removeAvatarService = async (userId) => {
   );
 
   return updatedUser;
+};
+
+export const changePasswordService = async (
+  userId,
+  { password, newPassword },
+) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    throw new AppError("Current password is incorrect", 400);
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  user.password = hashedPassword;
+  await user.save();
+
+  return {
+    message: "Password updated successfully",
+  };
 };

@@ -1,6 +1,7 @@
 import express from "express";
 import {
   changeAvatarConroller,
+  changePasswordController,
   removeAvatarConroller,
   updateUserProfileController,
 } from "./users.controller.js";
@@ -23,4 +24,6 @@ Router.patch(
 );
 
 Router.delete("/remove-avatar", auth, asyncHandler(removeAvatarConroller));
+
+Router.patch("/change-password", auth, asyncHandler(changePasswordController));
 export default Router;
