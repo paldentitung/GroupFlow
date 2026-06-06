@@ -10,7 +10,8 @@ import {
   Check,
 } from "lucide-react";
 import Header from "../components/Header";
-
+import { useProfile } from "../hooks/useProfile";
+import { useAuth } from "../hooks/useAuth.js";
 const MEMBERS = [
   {
     initials: "AK",
@@ -124,10 +125,36 @@ function RoleBadge({ role }) {
 
 function ProfileSection() {
   const [saved, setSaved] = useState(false);
+  const { user } = useAuth();
+  const { handleUpdateProfile } = useProfile();
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    bio: "",
+    phone: "",
+  });
 
-  const handleSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+  useEffect(() => {
+    if (user) {
+      setForm({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        bio: user.bio || "",
+        phone: user.phone || "",
+      });
+    }
+  }, [user]);
+  const handleSave = async () => {
+    try {
+      setSaved(true);
+
+      await handleUpdateProfile(form);
+
+      setTimeout(() => setSaved(false), 2000);
+    } catch (err) {
+      console.error(err);
+      setSaved(false);
+    }
   };
 
   return (
@@ -164,28 +191,30 @@ function ProfileSection() {
 
       {/* Fields */}
       <div className="grid grid-cols-2 gap-4">
-        <InputField label="First Name" value="Alex" />
-        <InputField label="Last Name" value="Kim" />
+        <InputField
+          label="FirstName"
+          value={form.firstName}
+          onChange={(e) =>
+            setForm((p) => ({ ...p, firstName: e.target.value }))
+          }
+        />
+        <InputField
+          label="lastName"
+          value={form.lastName}
+          onChange={(e) => setForm((p) => ({ ...p, lastName: e.target.value }))}
+        />
+        <InputField
+          label="bio"
+          value={form.bio}
+          onChange={(e) => setForm((p) => ({ ...p, bio: e.target.value }))}
+        />{" "}
+        <InputField
+          label="phone"
+          value={form.phone}
+          onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
+        />
       </div>
-      <InputField
-        label="Email Address"
-        value="alex.kim@example.com"
-        type="email"
-      />
-
-      <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-          Role
-        </label>
-        <select className="border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
-          <option>Team Lead</option>
-          <option>Owner</option>
-          <option>Developer</option>
-          <option>UI/UX</option>
-          <option>DevOps</option>
-          <option>Member</option>
-        </select>
-      </div>
+      <InputField label="Email Address" value={user?.email} disabled />
 
       <button
         onClick={handleSave}
