@@ -10,20 +10,16 @@ import asyncHandler from "../../utils/asyncHandler.js";
 import { upload } from "../../middleware/upload.middleware.js";
 const Router = express.Router();
 
-Router.patch(
-  "/update-profile",
-  auth,
-  asyncHandler(updateUserProfileController),
-);
+Router.patch("/me", auth, asyncHandler(updateUserProfileController));
 
 Router.patch(
-  "/change-avatar",
+  "/me/avatar",
   auth,
   upload.single("avatar"),
   asyncHandler(changeAvatarConroller),
 );
 
-Router.delete("/remove-avatar", auth, asyncHandler(removeAvatarConroller));
+Router.delete("/me/avatar", auth, asyncHandler(removeAvatarConroller));
 
-Router.patch("/change-password", auth, asyncHandler(changePasswordController));
+Router.patch("/me/password", auth, asyncHandler(changePasswordController));
 export default Router;
