@@ -8,7 +8,7 @@ import { toast } from "react-hot-toast";
 export const useAuth = () => {
   const navigate = useNavigate();
 
-  const { user, fetchUser } = useContext(AuthContext);
+  const { user, fetchUser, setUser } = useContext(AuthContext);
   const handleRegister = async (data) => {
     try {
       const res = await register(data);
@@ -55,5 +55,12 @@ export const useAuth = () => {
       toast.error(err.message);
     }
   };
-  return { handleRegister, handleVerifyEmail, handleLogin, handleLogout, user };
+  return {
+    handleRegister,
+    handleVerifyEmail,
+    handleLogin,
+    handleLogout,
+    user,
+    setUser,
+  };
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   User,
   Lock,
@@ -12,6 +12,7 @@ import {
 import Header from "../components/Header";
 import { useProfile } from "../hooks/useProfile";
 import { useAuth } from "../hooks/useAuth.js";
+import Avatar from "../components/Avatar.jsx";
 const MEMBERS = [
   {
     initials: "AK",
@@ -56,21 +57,6 @@ const NAV_ITEMS = [
   { key: "notifications", label: "Notifications", icon: Bell },
   { key: "team", label: "Team", icon: Users },
 ];
-
-function Avatar({
-  initials,
-  colorClass,
-  size = "w-10 h-10",
-  textSize = "text-sm",
-}) {
-  return (
-    <div
-      className={`${size} ${colorClass} rounded-full flex items-center justify-center font-medium ${textSize} flex-shrink-0`}
-    >
-      {initials}
-    </div>
-  );
-}
 
 function Toggle({ enabled, onChange }) {
   return (
@@ -125,14 +111,23 @@ function RoleBadge({ role }) {
 
 function ProfileSection() {
   const [saved, setSaved] = useState(false);
+
   const { user } = useAuth();
-  const { handleUpdateProfile } = useProfile();
+  const { handleUpdateProfile, handleChangeAvatar } = useProfile();
+
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
     bio: "",
     phone: "",
   });
+
+  const [avatar, setAvatar] = useState(null);
+  const avatarRef = useRef(null);
+
+  const handleAvatarClick = () => {
+    avatarRef.current?.click();
+  };
 
   useEffect(() => {
     if (user) {
@@ -144,6 +139,7 @@ function ProfileSection() {
       });
     }
   }, [user]);
+
   const handleSave = async () => {
     try {
       setSaved(true);
@@ -157,6 +153,23 @@ function ProfileSection() {
     }
   };
 
+  useEffect(() => {
+    if (!avatar) return;
+
+    const upload = async () => {
+      try {
+        const formData = new FormData();
+        formData.append("avatar", avatar);
+
+        await handleChangeAvatar(formData);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    upload();
+  }, [avatar]);
+
   return (
     <div className="space-y-6">
       <div>
@@ -168,23 +181,31 @@ function ProfileSection() {
 
       {/* Avatar */}
       <div className="flex items-center gap-4 pb-6 border-b border-gray-100">
-        <Avatar
-          initials="AK"
-          colorClass="bg-indigo-100 text-indigo-600"
-          size="w-16 h-16"
-          textSize="text-lg"
-        />
+        <Avatar user={user} />
+
         <div className="flex flex-col gap-2">
           <div className="flex gap-2">
-            <button className="flex items-center gap-1.5 bg-indigo-600 text-white text-xs font-medium px-3 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+            <button
+              onClick={handleAvatarClick}
+              className="flex items-center gap-1.5 bg-indigo-600 text-white text-xs font-medium px-3 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+            >
               <Camera size={13} />
               Change Photo
             </button>
+
+            <input
+              type="file"
+              className="hidden"
+              ref={avatarRef}
+              onChange={(e) => setAvatar(e.target.files[0])}
+            />
+
             <button className="flex items-center gap-1.5 border border-gray-200 text-red-500 text-xs font-medium px-3 py-2 rounded-lg hover:bg-red-50 transition-colors">
               <Trash2 size={13} />
               Remove
             </button>
           </div>
+
           <p className="text-xs text-gray-400">JPG, PNG or GIF — max 2MB</p>
         </div>
       </div>
@@ -192,28 +213,32 @@ function ProfileSection() {
       {/* Fields */}
       <div className="grid grid-cols-2 gap-4">
         <InputField
-          label="FirstName"
+          label="First Name"
           value={form.firstName}
           onChange={(e) =>
             setForm((p) => ({ ...p, firstName: e.target.value }))
           }
         />
+
         <InputField
-          label="lastName"
+          label="Last Name"
           value={form.lastName}
           onChange={(e) => setForm((p) => ({ ...p, lastName: e.target.value }))}
         />
+
         <InputField
-          label="bio"
+          label="Bio"
           value={form.bio}
           onChange={(e) => setForm((p) => ({ ...p, bio: e.target.value }))}
-        />{" "}
+        />
+
         <InputField
-          label="phone"
+          label="Phone"
           value={form.phone}
           onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
         />
       </div>
+
       <InputField label="Email Address" value={user?.email} disabled />
 
       <button

@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
     console.log("User state updated:", user);
   }, [user]);
   return (
-    <AuthContext.Provider value={{ user, fetchUser }}>
+    <AuthContext.Provider value={{ user, fetchUser, setUser }}>
       {children}
     </AuthContext.Provider>
   );

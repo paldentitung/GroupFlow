@@ -5,11 +5,27 @@ export const getMe = async () => {
 };
 
 export const updateProfile = async (profileData) => {
-  return request("/users/me", {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
+  return request(
+    "/users/me",
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profileData),
     },
-    body: JSON.stringify(profileData),
-  });
+    true,
+  );
+};
+
+export const changeAvatar = async (avatar) => {
+  return request(
+    "/users/me/avatar",
+    {
+      method: "PATCH",
+
+      body: avatar,
+    },
+    true,
+  );
 };
