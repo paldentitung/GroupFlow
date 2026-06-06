@@ -35,9 +35,16 @@ export const updateUserProfileController = async (req, res) => {
 };
 
 export const changeAvatarConroller = async (req, res) => {
-  const avatar = req.file?.path;
+  if (!req.file) {
+    return res.status(400).json({
+      success: false,
+      message: "No file uploaded",
+    });
+  }
 
-  const result = await changeAvatarService(req.user._id, avatar);
+  const avatarUrl = `${process.env.BASE_URL}/uploads/${req.file.filename}`;
+
+  const result = await changeAvatarService(req.user._id, avatarUrl);
 
   res.status(200).json({
     success: true,
@@ -45,7 +52,6 @@ export const changeAvatarConroller = async (req, res) => {
     data: result,
   });
 };
-
 export const removeAvatarConroller = async (req, res) => {
   const result = await removeAvatarService(req.user._id);
 

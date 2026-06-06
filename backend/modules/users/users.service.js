@@ -28,10 +28,10 @@ export const updateUserProfileService = async (
   return userResponseMapper(updatedUser);
 };
 
-export const changeAvatarService = async (userId, avatar) => {
+export const changeAvatarService = async (userId, avatarUrl) => {
   const updatedUser = await User.findByIdAndUpdate(
     userId,
-    { avatar },
+    { avatar: avatarUrl },
     { new: true, runValidators: true },
   );
   if (!updatedUser) {
