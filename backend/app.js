@@ -8,8 +8,10 @@ import commentRoute from "./modules/comments/comment.route.js";
 import membersRoute from "./modules/members/members.route.js";
 import historyRoute from "./modules/history/history.route.js";
 import notificationRoute from "./modules/notifications/notification.route.js";
+import usersRoute from "./modules/users/users.route.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
 import cookieParser from "cookie-parser";
+
 const app = express();
 
 // middlewares
@@ -23,6 +25,7 @@ app.use(
 );
 
 app.use(cookieParser());
+
 // routes
 app.use("/api/projects", ProjectsRoute);
 app.use("/api/auth", authRoute);
@@ -31,6 +34,7 @@ app.use("/api/comments", commentRoute);
 app.use("/api/members", membersRoute);
 app.use("/api/history", historyRoute);
 app.use("/api/notification", notificationRoute);
+app.use("/api/users", usersRoute);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });

@@ -40,6 +40,17 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    bio: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    phone: {
+      type: String,
+      trim: true,
+      default: "",
+    },
   },
   {
     timestamps: true,
