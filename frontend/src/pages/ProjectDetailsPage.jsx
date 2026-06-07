@@ -44,7 +44,7 @@ function TaskCard({
 
       <div className="flex items-center justify-between">
         <Avatar user={assignee} size={24} />
-        <span className="text-xs text-[#6b7280]">{date}</span>
+        <span className="text-xs text-[#6b7280]">{date || "Not Set"}</span>
       </div>
 
       {acceptanceStatus === "pending" && (
@@ -254,7 +254,7 @@ const ProjectDetailsPage = () => {
                         subtitle={t.description}
                         acceptanceStatus={t.acceptanceStatus}
                         onAccept={(taskId, response) =>
-                          handleRespondToTask(taskId, response)
+                          handleRespondToTask(taskId, response, project._id)
                         }
                         assignee={t.assigneeId || t.createdBy}
                         date={formatDate(t.dueDate)}

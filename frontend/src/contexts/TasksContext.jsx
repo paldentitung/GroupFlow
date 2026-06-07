@@ -36,6 +36,7 @@ export const TasksProvider = ({ children }) => {
     try {
       const response = await createTask(projectId, rest);
       setTasks((prev) => [...prev, response.data]);
+      await fetchTasks(projectId);
       return response;
     } catch (err) {
       toast.error(err.message);
@@ -70,7 +71,7 @@ export const TasksProvider = ({ children }) => {
       toast.error(err.message);
     }
   };
-  const handleRespondToTask = async (taskId, response) => {
+  const handleRespondToTask = async (taskId, response, projectId) => {
     try {
       const res = await respondToTask(taskId, response);
       if (res.success) {
@@ -80,6 +81,7 @@ export const TasksProvider = ({ children }) => {
         toast.success(
           response === "accepted" ? "Task accepted!" : "Task rejected",
         );
+        await fetchTasks(projectId);
       }
     } catch (err) {
       toast.error(err.message);
