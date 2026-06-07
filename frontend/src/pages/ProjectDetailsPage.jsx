@@ -28,6 +28,45 @@ function TaskCard({
   acceptanceStatus,
   onAccept,
 }) {
+  if (acceptanceStatus === "pending") {
+    return (
+      <div className="bg-white border border-[#e8eaed] rounded-xl p-4 mb-2.5 flex flex-col gap-2.5">
+        {/* same content but no Link */}
+        <div>
+          <p
+            className={`text-sm font-medium mb-0.5 ${done ? "line-through text-[#9ca3af]" : "text-[#111827]"}`}
+          >
+            {title}
+          </p>
+          <p className="text-xs text-[#6b7280]">{subtitle}</p>
+        </div>
+        <div className="flex items-center justify-between">
+          <Avatar user={assignee} size={24} />
+          <span className="text-xs text-[#6b7280]">{date || "Not Set"}</span>
+        </div>
+        <div className="flex gap-2 mt-1">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              onAccept(taskId, "accepted");
+            }}
+            className="flex-1 text-xs font-medium bg-[#4f46e5] text-white rounded-lg py-1.5 hover:bg-[#4338ca] transition-colors"
+          >
+            ✓ Accept
+          </button>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              onAccept(taskId, "rejected");
+            }}
+            className="flex-1 text-xs font-medium bg-white text-[#ef4444] border border-[#ef4444] rounded-lg py-1.5 hover:bg-[#fef2f2] transition-colors"
+          >
+            ✕ Reject
+          </button>
+        </div>
+      </div>
+    );
+  }
   return (
     <Link
       to={`/projects/${projectId}/task/${taskId}`}
