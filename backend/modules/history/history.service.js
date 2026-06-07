@@ -27,7 +27,7 @@ export const getTaskHistoryService = async (projectId, taskId) => {
 export const getUserHistoryService = async (userId, page, limit) => {
   const skip = (page - 1) * limit;
   const historys = await History.find({ user: userId })
-    .populate("user", "firstName lastName email")
+    .populate("user", "firstName lastName email avatar")
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);

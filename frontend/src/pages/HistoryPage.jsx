@@ -34,7 +34,7 @@ const HistoryItem = ({ item, isLast }) => {
         !isLast ? "border-b border-gray-100" : ""
       }`}
     >
-      <Avatar firstName={item.user?.firstName} lastName={item.user?.lastName} />
+      <Avatar user={item.user} />
 
       {/* Content */}
       <div className="flex-1 min-w-0">

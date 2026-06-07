@@ -201,11 +201,7 @@ const TaskTable = ({
 
                     {/* Assignee */}
                     <div className="flex items-center gap-2 min-w-0">
-                      <Avatar
-                        firstName={t.assigneeId?.firstName}
-                        lastName={t.assigneeId?.lastName}
-                        image={t.assigneeId?.avatar}
-                      />
+                      <Avatar user={t.assigneeId} />
                       <span className="text-[13px] text-gray-500 truncate">
                         {name || "Unassigned"}
                       </span>
