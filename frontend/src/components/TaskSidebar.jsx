@@ -6,6 +6,7 @@ import { useTasksContext } from "../contexts/TasksContext.jsx";
 import Avatar from "./Avatar.jsx";
 import { getInitials } from "../utils/getInitials.js";
 import { formatDate } from "../utils/formatDate.js";
+import { useComments } from "../hooks/useComments.js";
 
 function isOverdue(iso) {
   if (!iso) return false;
@@ -45,6 +46,7 @@ export default function TaskSidebar() {
   const navigate = useNavigate();
   const { projects } = useProjects();
   const { handleDeleteTask, handleUpdateTask } = useTasksContext(); // ✅ from context
+  const { comments } = useComments();
 
   const handleClose = () => navigate(`/projects/${task?.projectId}`);
 
@@ -144,25 +146,33 @@ export default function TaskSidebar() {
             Comments
           </p>
           <div className="flex flex-col gap-2.5">
-            {STATIC_COMMENTS.map((c) => (
-              <div
-                key={c.id}
-                className="bg-[#f7f8fa] border border-[#e8eaed] rounded-xl px-3.5 py-3"
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-2">
-                    <Avatar firstName={c.firstName} lastName={c.lastName} />
-                    <span className="text-[13px] font-medium text-[#111827]">
-                      {c.firstName} {c.lastName}
-                    </span>
+            {comments.length > 0 ? (
+              <>
+                {comments.map((c) => (
+                  <div
+                    key={c.id}
+                    className="bg-[#f7f8fa] border border-[#e8eaed] rounded-xl px-3.5 py-3"
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <div className="flex items-center gap-2">
+                        <Avatar firstName={c.firstName} lastName={c.lastName} />
+                        <span className="text-[13px] font-medium text-[#111827]">
+                          {c.firstName} {c.lastName}
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-[#6b7280]">
+                        {c.time}
+                      </span>
+                    </div>
+                    <p className="text-[13px] text-[#6b7280] leading-[1.55]">
+                      {c.body}
+                    </p>
                   </div>
-                  <span className="text-[11px] text-[#6b7280]">{c.time}</span>
-                </div>
-                <p className="text-[13px] text-[#6b7280] leading-[1.55]">
-                  {c.body}
-                </p>
-              </div>
-            ))}
+                ))}
+              </>
+            ) : (
+              <>no comments</>
+            )}
           </div>
         </div>
 

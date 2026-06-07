@@ -247,22 +247,25 @@ const ProjectDetailsPage = () => {
                       {colTasks.length}
                     </span>
                   </div>
-                  {colTasks.map((t) => (
-                    <TaskCard
-                      key={t._id}
-                      taskId={t._id}
-                      projectId={project._id}
-                      title={t.title}
-                      subtitle={t.description}
-                      acceptanceStatus={t.acceptanceStatus}
-                      onAccept={(taskId, response) =>
-                        handleRespondToTask(taskId, response)
-                      }
-                      assignee={t.assigneeId || t.createdBy}
-                      date={formatDate(t.dueDate)}
-                      done={t.status === "completed"}
-                    />
-                  ))}
+                  {colTasks.map((t) => {
+                    console.log("task id", t._id);
+                    return (
+                      <TaskCard
+                        key={t._id}
+                        taskId={t._id}
+                        projectId={project._id}
+                        title={t.title}
+                        subtitle={t.description}
+                        acceptanceStatus={t.acceptanceStatus}
+                        onAccept={(taskId, response) =>
+                          handleRespondToTask(taskId, response)
+                        }
+                        assignee={t.assigneeId || t.createdBy}
+                        date={formatDate(t.dueDate)}
+                        done={t.status === "completed"}
+                      />
+                    );
+                  })}{" "}
                 </div>
               );
             })}
