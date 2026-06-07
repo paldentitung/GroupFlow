@@ -18,7 +18,7 @@ function MyTasksPage() {
   return (
     <>
       <div className="min-h-screen bg-(--color-bg) text-(--color-text-primary)">
-        <Header title="Tasks" buttonName="New Task" />
+        <Header title="Tasks" showButton={false} />
 
         <div className="p-4 md:p-6">
           <TaskTable
