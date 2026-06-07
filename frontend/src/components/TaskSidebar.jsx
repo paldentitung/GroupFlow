@@ -7,6 +7,7 @@ import Avatar from "./Avatar.jsx";
 import { getInitials } from "../utils/getInitials.js";
 import { formatDate } from "../utils/formatDate.js";
 import { useComments } from "../hooks/useComments.js";
+import { useState } from "react";
 
 function isOverdue(iso) {
   if (!iso) return false;
@@ -46,7 +47,8 @@ export default function TaskSidebar() {
   const navigate = useNavigate();
   const { projects } = useProjects();
   const { handleDeleteTask, handleUpdateTask } = useTasksContext(); // ✅ from context
-  const { comments } = useComments();
+  const { comments, handleAddComment } = useComments(taskId);
+  const [content, setContent] = useState("");
 
   const handleClose = () => navigate(`/projects/${task?.projectId}`);
 
@@ -155,17 +157,17 @@ export default function TaskSidebar() {
                   >
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-2">
-                        <Avatar firstName={c.firstName} lastName={c.lastName} />
+                        <Avatar user={c.authorId} />
                         <span className="text-[13px] font-medium text-[#111827]">
-                          {c.firstName} {c.lastName}
+                          {c.authorId.firstName} {c.authorId.lastName}
                         </span>
                       </div>
                       <span className="text-[11px] text-[#6b7280]">
-                        {c.time}
+                        {formatDate(c.createdAt)}
                       </span>
                     </div>
                     <p className="text-[13px] text-[#6b7280] leading-[1.55]">
-                      {c.body}
+                      {c.content}
                     </p>
                   </div>
                 ))}
@@ -181,9 +183,13 @@ export default function TaskSidebar() {
           <textarea
             placeholder="Write a comment..."
             rows={1}
+            onChange={(e) => setContent(e.target.value)}
             className="flex-1 bg-[#f7f8fa] border border-[#e8eaed] rounded-lg px-3 py-2 text-[13px] text-[#111827] placeholder:text-[#6b7280] outline-none resize-none min-h-[38px] focus:border-indigo-500 transition-colors"
           />
-          <button className="bg-indigo-600 hover:bg-indigo-700 text-white text-[13px] font-medium rounded-lg px-4 h-[38px] shrink-0 transition-colors cursor-pointer">
+          <button
+            onClick={() => handleAddComment(content)}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white text-[13px] font-medium rounded-lg px-4 h-[38px] shrink-0 transition-colors cursor-pointer"
+          >
             Post
           </button>
         </div>

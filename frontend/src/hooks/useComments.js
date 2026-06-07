@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getComments } from "../services/comments.service";
+import { addComments, getComments } from "../services/comments.service";
 import { toast } from "react-hot-toast";
 import { useEffect } from "react";
 
@@ -12,9 +12,21 @@ export const useComments = (taskId) => {
     try {
       const res = await getComments(taskId);
       if (res.success) {
-        toast.success("comment fetched");
-
         setComments(res.data);
+      }
+    } catch (error) {
+      toast.error(error.message || "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleAddComment = async (content) => {
+    setLoading(true);
+    try {
+      const res = await addComments(taskId, content);
+      if (res.success) {
+        toast.success("comment Added");
+        setComments((prev) => [...prev, res.data]);
       }
     } catch (error) {
       toast.error(error.message || "error");
@@ -31,5 +43,6 @@ export const useComments = (taskId) => {
   return {
     comments,
     loading,
+    handleAddComment,
   };
 };
