@@ -10,13 +10,15 @@ import {
 
 export const getTasksController = async (req, res) => {
   const { projectId } = req.params;
+  const { page = 1, limit = 10 } = req.query;
 
-  const results = await getTasksService(projectId);
+  const results = await getTasksService(projectId, Number(page), Number(limit));
 
   res.status(200).json({
     success: true,
     message: "Tasks fetched",
-    data: results,
+    data: results.tasks,
+    pagination: results.pagination,
   });
 };
 

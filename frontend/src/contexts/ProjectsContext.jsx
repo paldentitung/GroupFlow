@@ -1,11 +1,16 @@
 import { createContext, useState, useEffect } from "react";
 import { getProjects, deleteProject } from "../services/projectsService";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const ProjectsContext = createContext();
 
 export const ProjectsProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
+  const [activeProject, setActiveProject] = useState(
+    () => JSON.parse(localStorage.getItem("activeProject")) || null,
+  );
+  const navigate = useNavigate();
 
   const addProject = (project) => {
     setProjects((prev) => [...prev, project]);
@@ -30,13 +35,26 @@ export const ProjectsProvider = ({ children }) => {
     }
   };
 
+  const handleSetActiveProject = (project) => {
+    setActiveProject(project);
+    localStorage.setItem("activeProject", JSON.stringify(project));
+    navigate(`/projects/${project._id}`);
+  };
+
   useEffect(() => {
     fetchProjects();
   }, []);
 
   return (
     <ProjectsContext.Provider
-      value={{ projects, addProject, fetchProjects, handleDeleteProject }}
+      value={{
+        projects,
+        addProject,
+        fetchProjects,
+        handleDeleteProject,
+        activeProject,
+        handleSetActiveProject,
+      }}
     >
       {children}
     </ProjectsContext.Provider>

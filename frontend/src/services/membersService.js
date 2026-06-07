@@ -1,5 +1,9 @@
 import request from "./api";
 
+export const getMembers = async (projectId) => {
+  return request(`/members/${projectId}/members`, {}, true);
+};
+
 export const inviteMember = async (projectId, email, role) => {
   return request(
     `/members/${projectId}/member/invite`,

@@ -1,9 +1,12 @@
 import request from "./api";
 
-export const getTasks = async (projectId) => {
-  return request(`/tasks/${projectId}/tasks`, {}, true);
+export const getTasks = async (projectId, page = 1, limit = 10) => {
+  return request(
+    `/tasks/${projectId}/tasks?page=${page}&limit=${limit}`,
+    {},
+    true,
+  );
 };
-
 export const getTaskById = async (taskId) => {
   return request(`/tasks/task/${taskId}`, {}, true);
 };

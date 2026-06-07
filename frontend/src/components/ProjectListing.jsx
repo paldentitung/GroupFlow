@@ -1,5 +1,7 @@
+import { useProjects } from "../hooks/useProjects";
 import ProjectCard from "./ProjectCard";
 export default function ProjectListing({ projects = [], loading }) {
+  const { handleSetActiveProject } = useProjects();
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
@@ -41,6 +43,7 @@ export default function ProjectListing({ projects = [], loading }) {
           due={p.dueDate}
           members={p.members}
           owner={p.owner}
+          onClick={() => handleSetActiveProject(p)}
         />
       ))}
     </div>

@@ -49,13 +49,15 @@ const ProjectCard = ({
   id,
   onDelete = () => {},
   owner,
+  onClick,
 }) => {
   const progressColor = PROGRESS_COLORS[status] ?? "#4f46e5";
   const { handleDeleteProject } = useContext(ProjectsContext);
 
   return (
-    <Link
-      to={`/projects/${id}`}
+    <div
+      // to={`/projects/${id}`}
+      onClick={onClick}
       className="bg-(--color-surface) border border-(--color-border) rounded-xl p-5 flex flex-col gap-3 min-w-0 hover:shadow-sm transition-shadow duration-200"
     >
       {/* Header */}
@@ -103,7 +105,7 @@ const ProjectCard = ({
           </span>
         )}
       </div>
-    </Link>
+    </div>
   );
 };
 

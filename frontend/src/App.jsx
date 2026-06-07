@@ -5,7 +5,7 @@ import MainLayout from "./mainlayout/MainLayout";
 import RegisterPage from "./pages/RegisterPage";
 import Dashboard from "./pages/Dashboard";
 import ProjectsPage from "./pages/ProjectsPage";
-import TasksPage from "./pages/TasksPage";
+import MyTasksPage from "./pages/MyTasksPage";
 import TeamPage from "./pages/TeamPage";
 import SettingsPage from "./pages/SettingsPage";
 import { SidebarProvider } from "./contexts/SidebarContext";
@@ -15,6 +15,7 @@ import ProjectDetailsPage from "./pages/ProjectDetailsPage";
 import AcceptInvitePage from "./pages/AcceptInvitePage";
 import { Toaster } from "react-hot-toast";
 import HistoryPage from "./pages/HistoryPage";
+import TasksPage from "./pages/TasksPage";
 const App = () => {
   return (
     <SidebarProvider>
@@ -78,6 +79,14 @@ const App = () => {
         >
           <Route path="task/:taskId" element={<TaskSidebar />} />
         </Route>
+        <Route
+          path="/my-tasks"
+          element={
+            <MainLayout>
+              <MyTasksPage />
+            </MainLayout>
+          }
+        />{" "}
         <Route
           path="/tasks"
           element={

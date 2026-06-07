@@ -4,13 +4,35 @@ import AppError from "../../utils/AppError.js";
 import { createHistoryService } from "../history/history.service.js";
 import { createNotificationService } from "../notifications/notification.service.js";
 
-export const getTasksService = async (projectId) => {
+// export const getTasksService = async (projectId) => {
+//   const tasks = await Task.find({ projectId })
+//     .populate("assigneeId", "firstName lastName avatar")
+//     .populate("createdBy", "firstName lastName avatar")
+//     .sort({ createdAt: -1 });
+
+//   return tasks;
+// };
+
+export const getTasksService = async (projectId, page = 1, limit = 10) => {
+  const skip = (page - 1) * limit;
+  const total = await Task.countDocuments({ projectId });
+
   const tasks = await Task.find({ projectId })
-    .populate("assigneeId", "firstName lastName avatar")
-    .populate("createdBy", "firstName lastName avatar")
+    .populate("assigneeId", "firstName lastName avatar bio phone")
+    .populate("createdBy", "firstName lastName avatar bio phone")
+    .skip(skip)
+    .limit(limit)
     .sort({ createdAt: -1 });
 
-  return tasks;
+  return {
+    tasks,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 export const getTaskByIdService = async (taskId) => {

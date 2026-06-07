@@ -2,14 +2,44 @@ import React from "react";
 import Header from "../components/Header";
 
 import teamMembers from "../data/team";
+import { useProjects } from "../hooks/useProjects";
+import { useEffect } from "react";
+import { useState } from "react";
+import { getMembers } from "../services/membersService";
+import toast from "react-hot-toast";
 const TeamPage = () => {
+  const { activeProject } = useProjects();
+  const [members, setMembers] = useState([]);
+
+  useEffect(() => {
+    const fetchedMembers = async () => {
+      const res = await getMembers(activeProject?._id);
+      console.log("members fetched", res);
+      if (res.success) {
+        const mapped = res.members.map((m) => ({
+          id: m._id,
+          name: `${m.user.firstName} ${m.user.lastName}`,
+          role: m.user.bio || "No bio",
+          position: m.role,
+          avatar: m.user.avatar,
+          projects: 0,
+          tasks: 0,
+          completed: 0,
+          color: "bg-indigo-100 text-indigo-600",
+        }));
+        setMembers(mapped);
+      }
+    };
+
+    fetchedMembers();
+  }, [activeProject._id]);
   return (
     <div className="min-h-screen ">
       <Header title="Team" showButton={false} />
 
       <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-          {teamMembers.map((member) => {
+          {members.map((member) => {
             const initials = member.name
               .split(" ")
               .map((word) => word[0])

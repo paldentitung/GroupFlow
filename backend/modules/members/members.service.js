@@ -10,7 +10,7 @@ import mongoose from "mongoose";
 export const getAllMembersService = async (projectId) => {
   const project = await Project.findById(projectId).populate(
     "members.user",
-    "firstName lastName avatar",
+    "firstName lastName avatar bio phone",
   );
 
   if (!project) {

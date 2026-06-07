@@ -4,9 +4,11 @@ import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext.jsx";
 
 import { toast } from "react-hot-toast";
+import { useProjects } from "./useProjects.js";
 
 export const useAuth = () => {
   const navigate = useNavigate();
+  const { setActiveProject } = useProjects();
 
   const { user, fetchUser, setUser } = useContext(AuthContext);
   const handleRegister = async (data) => {
@@ -49,6 +51,8 @@ export const useAuth = () => {
       if (res.success) {
         fetchUser();
         toast.success("Logout successful");
+        localStorage.removeItem("activeProject");
+        setActiveProject(null);
         navigate("/login");
       }
     } catch (err) {
