@@ -6,8 +6,8 @@ export const getProjectsService = async (userId) => {
   const projects = await Project.find({
     "members.user": userId,
   })
-    .populate("owner", "firstName lastName email")
-    .populate("members.user", "firstName lastName email");
+    .populate("owner", "firstName lastName email avatar")
+    .populate("members.user", "firstName lastName email avatar");
 
   return projects;
 };

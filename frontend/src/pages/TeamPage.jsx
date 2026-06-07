@@ -6,7 +6,8 @@ import { useProjects } from "../hooks/useProjects";
 import { useEffect } from "react";
 import { useState } from "react";
 import { getMembers } from "../services/membersService";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
+import Avatar from "../components/Avatar";
 const TeamPage = () => {
   const { activeProject } = useProjects();
   const [members, setMembers] = useState([]);
@@ -52,12 +53,7 @@ const TeamPage = () => {
               >
                 {/* Top */}
                 <div className="flex items-center gap-4 mb-5">
-                  {/* Initial Circle */}
-                  <div
-                    className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 font-bold text-lg ${member.color}`}
-                  >
-                    {initials}
-                  </div>
+                  <Avatar user={member} size={50} />
 
                   {/* Info */}
                   <div className="flex-1">

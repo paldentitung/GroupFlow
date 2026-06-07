@@ -23,7 +23,7 @@ export const getAllMembersService = async (projectId) => {
 export const getMemberDetailsService = async (projectId, memberId) => {
   const project = await Project.findById(projectId).populate(
     "members.user",
-    "firstName lastName avatar email",
+    "firstName lastName avatar email avatar",
   );
 
   if (!project) {

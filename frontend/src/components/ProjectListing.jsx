@@ -41,7 +41,7 @@ export default function ProjectListing({ projects = [], loading }) {
           status={p.status}
           progress={p.progress}
           due={p.dueDate}
-          members={p.members}
+          members={p.members.map((m) => m.user)}
           owner={p.owner}
           onClick={() => handleSetActiveProject(p)}
         />

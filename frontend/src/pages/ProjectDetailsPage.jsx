@@ -166,10 +166,7 @@ const ProjectDetailsPage = () => {
                 Owner
               </span>
               <div className="flex items-center gap-1.5">
-                <Avatar
-                  firstName={project?.owner?.firstName}
-                  lastName={project?.owner?.lastName}
-                />
+                <Avatar user={project.owner} />
                 <span className="text-[13px] font-medium text-[#111827]">
                   {project?.owner?.firstName}{" "}
                   {project?.owner?.lastName || "Not set"}
@@ -183,7 +180,6 @@ const ProjectDetailsPage = () => {
               </span>
               <div className="flex items-center gap-2">
                 <AvatarGroup members={project.members.map((m) => m.user)} />
-
                 <span className="text-[12px] text-[#9ca3af]">
                   {project.members.length} members
                 </span>

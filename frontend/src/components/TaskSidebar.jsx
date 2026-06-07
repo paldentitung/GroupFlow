@@ -123,10 +123,7 @@ export default function TaskSidebar() {
               Assigned to
             </p>
             <div className="flex items-center gap-1.5">
-              <Avatar
-                firstName={assignee?.firstName}
-                lastName={assignee?.lastName}
-              />
+              <Avatar user={assignee} />
               <span className="text-[13px] font-medium text-[#111827]">
                 {assignee?.firstName} {assignee?.lastName}
               </span>
