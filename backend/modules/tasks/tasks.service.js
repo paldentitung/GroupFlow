@@ -18,6 +18,7 @@ export const getTasksService = async (projectId, page = 1, limit = 10) => {
   const total = await Task.countDocuments({ projectId });
 
   const tasks = await Task.find({ projectId })
+    .populate("projectId", "name")
     .populate("assigneeId", "firstName lastName avatar bio phone")
     .populate("createdBy", "firstName lastName avatar bio phone")
     .skip(skip)

@@ -3,6 +3,7 @@ import Pagination from "./Pagination";
 import Avatar from "./Avatar";
 import { getInitials } from "../utils/getInitials";
 import { formatDate } from "../utils/formatDate";
+import { Link } from "react-router-dom";
 
 // ── Status Chip ───────────────────────────────────────────────────────────────
 const CHIP_CLASSES = {
@@ -94,6 +95,7 @@ const TaskTable = ({
   onPageChange,
   setStatus,
   setSearch,
+  projectId,
 }) => {
   return (
     <div className="font-sans overflow-auto">
@@ -178,7 +180,8 @@ const TaskTable = ({
                 const isOverdue = t.status === "overdue";
 
                 return (
-                  <div
+                  <Link
+                    to={`/projects/${t.projectId?._id || t.projectId}/task/${t._id}`}
                     key={t._id || i}
                     className={`grid grid-cols-[2fr_1.8fr_1.8fr_1.2fr_1fr_0.9fr] px-5 py-3.5 items-center hover:bg-gray-50/70 transition-colors ${
                       i < tasks.length - 1 ? "border-b border-gray-100" : ""
@@ -223,7 +226,7 @@ const TaskTable = ({
                     >
                       {due}
                     </div>
-                  </div>
+                  </Link>
                 );
               })
             ) : (

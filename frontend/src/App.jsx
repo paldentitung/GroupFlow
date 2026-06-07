@@ -86,7 +86,9 @@ const App = () => {
               <MyTasksPage />
             </MainLayout>
           }
-        />{" "}
+        >
+          <Route path="task/:taskId" element={<TaskSidebar />} />
+        </Route>
         <Route
           path="/tasks"
           element={
