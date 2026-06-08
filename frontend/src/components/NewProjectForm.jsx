@@ -15,7 +15,6 @@ const NewProjectForm = ({ onCancel }) => {
 
   const { handleCreateProject } = useProjects();
 
-  
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.name.trim()) return alert("Project name is required.");
