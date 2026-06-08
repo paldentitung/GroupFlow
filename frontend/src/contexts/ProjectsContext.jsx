@@ -1,11 +1,14 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import { getProjects, deleteProject } from "../services/projectsService";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import { AuthContext } from "./AuthContext";
 
 export const ProjectsContext = createContext();
 
 export const ProjectsProvider = ({ children }) => {
+  const { user } = useContext(AuthContext);
   const [projects, setProjects] = useState([]);
   const [activeProject, setActiveProject] = useState(
     () => JSON.parse(localStorage.getItem("activeProject")) || null,
@@ -18,10 +21,15 @@ export const ProjectsProvider = ({ children }) => {
 
   const fetchProjects = async () => {
     const projectsData = await getProjects();
-    console.log("projectsData:", projectsData);
     setProjects(projectsData.projects);
-  };
 
+    // sync activeProject with fresh data
+    setActiveProject((prev) => {
+      if (!prev) return projectsData.projects[0] ?? null;
+      const fresh = projectsData.projects.find((p) => p._id === prev._id);
+      return fresh ?? projectsData.projects[0] ?? null;
+    });
+  };
   const handleDeleteProject = async (projectId) => {
     try {
       const response = await deleteProject(projectId);
@@ -42,8 +50,14 @@ export const ProjectsProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    if (!user) {
+      setProjects([]);
+      setActiveProject(null);
+      localStorage.removeItem("activeProject");
+      return;
+    }
     fetchProjects();
-  }, []);
+  }, [user]);
 
   return (
     <ProjectsContext.Provider

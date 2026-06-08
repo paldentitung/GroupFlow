@@ -51,8 +51,7 @@ export const useAuth = () => {
       if (res.success) {
         fetchUser();
         toast.success("Logout successful");
-        localStorage.removeItem("activeProject");
-        setActiveProject(null);
+
         navigate("/login");
       }
     } catch (err) {

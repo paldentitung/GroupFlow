@@ -10,20 +10,20 @@ import mongoose from "mongoose";
 export const getAllMembersService = async (projectId) => {
   const project = await Project.findById(projectId).populate(
     "members.user",
-    "firstName lastName avatar bio phone",
+    "firstName lastName phone bio avatar",
   );
 
   if (!project) {
     throw new AppError("Project not found", 404);
   }
 
-  return project.members;
+  return project.members.filter((m) => m.user != null);
 };
 
 export const getMemberDetailsService = async (projectId, memberId) => {
   const project = await Project.findById(projectId).populate(
     "members.user",
-    "firstName lastName avatar email avatar",
+    "firstName lastName  email avatar",
   );
 
   if (!project) {

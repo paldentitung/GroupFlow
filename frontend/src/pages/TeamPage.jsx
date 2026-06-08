@@ -1,4 +1,4 @@
-import React from "react";
+import React, { act } from "react";
 import Header from "../components/Header";
 
 import teamMembers from "../data/team";
@@ -10,7 +10,8 @@ import { toast } from "react-hot-toast";
 import Avatar from "../components/Avatar";
 import { useMembers } from "../hooks/useMembers";
 const TeamPage = () => {
-  const { members } = useMembers();
+  const { activeProject } = useProjects();
+  const { members } = useMembers(activeProject?._id);
   return (
     <div className="min-h-screen ">
       <Header title="Team" showButton={false} />
@@ -18,11 +19,6 @@ const TeamPage = () => {
       <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {members.map((member) => {
-            const initials = member.name
-              .split(" ")
-              .map((word) => word[0])
-              .join("");
-
             return (
               <div
                 key={member.id}

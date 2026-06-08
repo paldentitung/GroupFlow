@@ -102,8 +102,8 @@ const StatCard = ({ icon, value, label, iconBg, iconColor }) => (
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 function Dashboard() {
   const { projects, activeProject } = useProjects();
-  const { tasks } = useProjectTasks(activeProject._id);
-  const { members } = useMembers(activeProject._id);
+  const { tasks } = useProjectTasks(activeProject?._id);
+  const { members } = useMembers(activeProject?._id);
   const { userTasks } = useUserTasks();
   const {
     loading,

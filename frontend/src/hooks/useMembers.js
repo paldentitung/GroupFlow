@@ -25,6 +25,7 @@ export const useMembers = (projectId) => {
     }
   };
   useEffect(() => {
+    if (!projectId) return;
     const fetchedMembers = async () => {
       const res = await getMembers(activeProject?._id);
       console.log("members fetched", res);
@@ -32,7 +33,8 @@ export const useMembers = (projectId) => {
         const mapped = res.members.map((m) => ({
           id: m._id,
           name: `${m.user.firstName} ${m.user.lastName}`,
-          role: m.user.bio || "No bio",
+          firstName: m.user.firstName, // ← add these
+          lastName: m.user.lastName, // ← add these
           position: m.role,
           avatar: m.user.avatar,
           projects: 0,
@@ -45,6 +47,6 @@ export const useMembers = (projectId) => {
     };
 
     fetchedMembers();
-  }, [activeProject._id]);
+  }, [activeProject?._id]);
   return { members, loading, error, handleInviteMember, members };
 };
