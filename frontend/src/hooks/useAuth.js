@@ -1,6 +1,6 @@
 import { register, verifyEmail, login, logout } from "../services/authService";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext.jsx";
 
 import { toast } from "react-hot-toast";
@@ -9,24 +9,33 @@ import { useProjects } from "./useProjects.js";
 export const useAuth = () => {
   const navigate = useNavigate();
   const { setActiveProject } = useProjects();
-
+  const [loading, setLoading] = useState(false);
   const { user, fetchUser, setUser } = useContext(AuthContext);
   const handleRegister = async (data) => {
     try {
       const res = await register(data);
 
-      toast.success(res.message);
+      if (res.success) {
+        toast.success(res.message);
+        navigate("/verify-email");
+      }
     } catch (err) {
       toast.error(err.message);
     }
   };
 
   const handleVerifyEmail = async (token) => {
+    setLoading(true);
     try {
       const res = await verifyEmail(token);
-      toast.success(res.message);
+      if (res.success) {
+        toast.success(res.message);
+      }
+      navigate("/login");
     } catch (err) {
       toast.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,5 +74,6 @@ export const useAuth = () => {
     handleLogout,
     user,
     setUser,
+    loading,
   };
 };

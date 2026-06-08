@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import { getMe } from "../services/users.service.js";
 import { toast } from "react-hot-toast";
+import { User } from "lucide-react";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -13,8 +14,7 @@ export const AuthProvider = ({ children }) => {
         setUser(response.user);
       }
     } catch (error) {
-      console.error("Error fetching user info:", error);
-      toast.error(error.message); // Show error toast on failure
+      setUser(null);
     }
   };
 

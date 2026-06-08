@@ -51,6 +51,7 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
         <Route path="/accept-invite/:token" element={<AcceptInvitePage />} />
         <Route

@@ -7,6 +7,9 @@ import { userResponseMapper } from "./userResponseMapper.js";
 
 export const getMeService = async (userId) => {
   const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError("User no longer exists", 404); // ← this is your error
+  }
 
   return userResponseMapper(user);
 };

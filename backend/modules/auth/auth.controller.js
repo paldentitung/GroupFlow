@@ -22,7 +22,7 @@ export const registerController = async (req, res) => {
 };
 
 export const verifyEmailController = async (req, res) => {
-  const { token } = req.params;
+  const token = decodeURIComponent(req.params.token);
 
   const result = await verifyEmailService(token);
 

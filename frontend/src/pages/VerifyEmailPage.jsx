@@ -2,16 +2,21 @@ import { Link } from "react-router-dom";
 import { Mail } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 const VerifyEmailPage = () => {
-  const { handleVerifyEmail } = useAuth();
+  const { handleVerifyEmail, loading } = useAuth();
   const { token } = useParams();
-
+  const [status, setStatus] = useState("loading"); // "loading" | "success" | "error"
+  const called = useRef(false);
   useEffect(() => {
-    if (token) {
-      handleVerifyEmail(token);
+    if (!token || called.current) return;
+    called.current = true;
+    handleVerifyEmail(token);
+    if (loading) {
+      return <div>Loading</div>;
     }
   }, [token]);
+
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4"

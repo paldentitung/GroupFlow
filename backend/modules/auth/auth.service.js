@@ -64,9 +64,10 @@ export const verifyEmailService = async (token) => {
     verificationTokenExpires: { $gt: new Date() },
   });
 
-  if (!user) {
-    throw new AppError("Invalid or expired verification token", 400);
-  }
+  if (!user) throw new AppError("Invalid or expired verification token", 400);
+  if (user.isEmailVerified) throw new AppError("Email already verified", 400);
+  if (user.verificationTokenExpires < new Date())
+    throw new AppError("Token expired, request a new one", 400);
 
   user.isEmailVerified = true;
   user.verificationToken = null;
