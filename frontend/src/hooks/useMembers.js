@@ -33,8 +33,8 @@ export const useMembers = (projectId) => {
         const mapped = res.members.map((m) => ({
           id: m._id,
           name: `${m.user.firstName} ${m.user.lastName}`,
-          firstName: m.user.firstName, // ← add these
-          lastName: m.user.lastName, // ← add these
+          firstName: m.user.firstName,
+          lastName: m.user.lastName,
           position: m.role,
           avatar: m.user.avatar,
           projects: 0,

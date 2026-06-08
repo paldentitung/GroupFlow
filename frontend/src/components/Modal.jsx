@@ -1,6 +1,6 @@
 import React from "react";
 
-const Modal = ({ isOpen, onClose, title, children, footer }) => {
+const Modal = ({ isOpen, onClose, title, children, footer, className }) => {
   // Don't render if modal is closed
   if (!isOpen) return null;
 
@@ -11,7 +11,9 @@ const Modal = ({ isOpen, onClose, title, children, footer }) => {
         className=" absolute bg-black/40 inset-0 z-40 backdrop-blur-xs"
       ></div>
       {/* Modal Box */}
-      <div className="w-full max-w-3xl rounded-2xl bg-white shadow-xl z-50">
+      <div
+        className={`w-full  rounded-2xl bg-white shadow-xl z-50 ${className}`}
+      >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-b-gray-300 px-5 py-4">
           <h2 className="text-lg font-semibold">{title}</h2>

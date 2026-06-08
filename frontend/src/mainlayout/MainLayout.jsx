@@ -32,6 +32,7 @@ const MainLayout = ({ children }) => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="New project"
+        className="max-w-md"
       >
         <div className="z-50">
           <NewProjectForm onCancel={() => setIsModalOpen(false)} />

@@ -5,6 +5,8 @@ import { History, LogOut } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { getInitials } from "../utils/getInitials.js";
 import Avatar from "./Avatar.jsx";
+import Modal from "./Modal.jsx";
+import MainButton from "./MainButton.jsx";
 const navItems = [
   {
     section: "Main",
@@ -61,7 +63,7 @@ const navItems = [
 
 export default function Sidebar() {
   const [active, setActive] = useState("Dashboard");
-
+  const [open, setOpen] = useState(false);
   const { isOpen, closeSidebar } = useSidebar();
 
   const { handleLogout, user } = useAuth();
@@ -173,7 +175,7 @@ export default function Sidebar() {
 
             {/* Logout */}
             <button
-              onClick={handleLogout}
+              onClick={() => setOpen(true)}
               className="p-2 rounded-md hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors"
             >
               <LogOut className="w-4 h-4" />
@@ -188,6 +190,39 @@ export default function Sidebar() {
           onClick={closeSidebar}
         />
       )}
+
+      <Modal isOpen={open} onClose={() => setOpen(false)} className="max-w-sm">
+        <div className="flex flex-col items-center gap-4 p-2">
+          <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
+            <LogOut className="w-5 h-5 text-red-500" />
+          </div>
+          <div className="text-center">
+            <h3 className="text-[15px] font-semibold text-[#111827]">
+              Sign out
+            </h3>
+            <p className="text-sm text-[#6b7280] mt-1">
+              Are you sure you want to sign out?
+            </p>
+          </div>
+          <div className="flex gap-3 w-full">
+            <button
+              onClick={() => setOpen(false)}
+              className="flex-1 px-4 py-2 rounded-lg border border-[#e5e7eb] text-sm font-medium text-[#374151] hover:bg-[#f9fafb] transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                handleLogout();
+                setOpen(false);
+              }}
+              className="flex-1 px-4 py-2 rounded-lg bg-red-500 text-sm font-medium text-white hover:bg-red-600 transition-colors"
+            >
+              Sign out
+            </button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }
