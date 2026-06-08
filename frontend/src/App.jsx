@@ -18,6 +18,7 @@ import HistoryPage from "./pages/HistoryPage";
 import TasksPage from "./pages/TasksPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 const App = () => {
   return (
     <SidebarProvider>
@@ -51,6 +52,8 @@ const App = () => {
         }}
       />
       <Routes>
+        {/* Public Routes */}
+
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
@@ -58,74 +61,86 @@ const App = () => {
         <Route path="/accept-invite/:token" element={<AcceptInvitePage />} />
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route
-          path="/"
-          element={
-            <MainLayout>
-              <Dashboard />
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/projects"
-          element={
-            <MainLayout>
-              <ProjectsPage />
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/projects/:id"
-          element={
-            <MainLayout>
-              <ProjectDetailsPage />
-            </MainLayout>
-          }
-        >
-          <Route path="task/:taskId" element={<TaskSidebar />} />
+
+        {/* Protected Routes */}
+
+        <Route element={<ProtectedRoute />}>
+          <Route
+            path="/"
+            element={
+              <MainLayout>
+                <Dashboard />
+              </MainLayout>
+            }
+          />
+
+          <Route
+            path="/projects"
+            element={
+              <MainLayout>
+                <ProjectsPage />
+              </MainLayout>
+            }
+          />
+
+          <Route
+            path="/projects/:id"
+            element={
+              <MainLayout>
+                <ProjectDetailsPage />
+              </MainLayout>
+            }
+          >
+            <Route path="task/:taskId" element={<TaskSidebar />} />
+          </Route>
+
+          <Route
+            path="/my-tasks"
+            element={
+              <MainLayout>
+                <MyTasksPage />
+              </MainLayout>
+            }
+          >
+            <Route path="task/:taskId" element={<TaskSidebar />} />
+          </Route>
+
+          <Route
+            path="/tasks"
+            element={
+              <MainLayout>
+                <TasksPage />
+              </MainLayout>
+            }
+          />
+
+          <Route
+            path="/team"
+            element={
+              <MainLayout>
+                <TeamPage />
+              </MainLayout>
+            }
+          />
+
+          <Route
+            path="/settings"
+            element={
+              <MainLayout>
+                <SettingsPage />
+              </MainLayout>
+            }
+          />
+
+          <Route
+            path="/history"
+            element={
+              <MainLayout>
+                <HistoryPage />
+              </MainLayout>
+            }
+          />
         </Route>
-        <Route
-          path="/my-tasks"
-          element={
-            <MainLayout>
-              <MyTasksPage />
-            </MainLayout>
-          }
-        >
-          <Route path="task/:taskId" element={<TaskSidebar />} />
-        </Route>
-        <Route
-          path="/tasks"
-          element={
-            <MainLayout>
-              <TasksPage />
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/team"
-          element={
-            <MainLayout>
-              <TeamPage />
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <MainLayout>
-              <SettingsPage />
-            </MainLayout>
-          }
-        />{" "}
-        <Route
-          path="/history"
-          element={
-            <MainLayout>
-              <HistoryPage />
-            </MainLayout>
-          }
-        />
       </Routes>
     </SidebarProvider>
   );

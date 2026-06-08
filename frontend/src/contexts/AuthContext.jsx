@@ -6,15 +6,20 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-
+  const [loading, setLoading] = useState(true);
   const fetchUser = async () => {
     try {
       const response = await getMe();
+
       if (response.success) {
         setUser(response.user);
+      } else {
+        setUser(null);
       }
-    } catch (error) {
+    } catch (err) {
       setUser(null);
+    } finally {
+      setLoading(false); // IMPORTANT
     }
   };
 
@@ -26,7 +31,7 @@ export const AuthProvider = ({ children }) => {
     console.log("User state updated:", user);
   }, [user]);
   return (
-    <AuthContext.Provider value={{ user, fetchUser, setUser }}>
+    <AuthContext.Provider value={{ user, fetchUser, setUser, loading }}>
       {children}
     </AuthContext.Provider>
   );
