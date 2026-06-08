@@ -64,6 +64,7 @@ export const logout = (req, res) => {
 };
 
 export const forgotPasswordController = async (req, res) => {
+  console.log(req.body);
   const { email } = req.body;
   const result = await forgotPasswordService(email);
 

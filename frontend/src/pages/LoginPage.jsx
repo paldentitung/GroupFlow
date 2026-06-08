@@ -249,13 +249,13 @@ const LoginPage = () => {
                 >
                   Password
                 </label>
-                <a
-                  href="#"
+                <Link
+                  to="/forgot-password"
                   className="text-xs font-medium hover:underline"
                   style={{ color: "var(--color-accent)" }}
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
               <div className="relative">
                 <input

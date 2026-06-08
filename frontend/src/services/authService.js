@@ -43,3 +43,19 @@ export const logout = async () => {
     false,
   );
 };
+
+export const forgotPassword = async (email) => {
+  return request("/auth/forgot-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+};
+
+export const resetPassword = async (token, newPassword) => {
+  return request(`/auth/reset-password/${token}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ newPassword }),
+  });
+};

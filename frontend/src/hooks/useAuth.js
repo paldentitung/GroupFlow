@@ -1,4 +1,11 @@
-import { register, verifyEmail, login, logout } from "../services/authService";
+import {
+  register,
+  verifyEmail,
+  login,
+  logout,
+  forgotPassword,
+  resetPassword,
+} from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext.jsx";
@@ -67,6 +74,29 @@ export const useAuth = () => {
       toast.error(err.message);
     }
   };
+
+  const handleForgotPassword = async (email) => {
+    try {
+      const res = await forgotPassword(email);
+      if (res.success) {
+        toast.success(res.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleResetPassword = async (token, newPassword) => {
+    try {
+      const res = await resetPassword(token, newPassword);
+
+      if (res.success) {
+        toast.success(res.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   return {
     handleRegister,
     handleVerifyEmail,
@@ -75,5 +105,7 @@ export const useAuth = () => {
     user,
     setUser,
     loading,
+    handleForgotPassword,
+    handleResetPassword,
   };
 };

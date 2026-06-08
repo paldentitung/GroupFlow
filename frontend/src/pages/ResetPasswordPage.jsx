@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Eye, EyeOff, Loader2, ArrowLeft, ShieldCheck } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
 
 const Logo = () => (
   <svg
@@ -77,6 +78,10 @@ const validators = {
 };
 
 const ResetPasswordPage = () => {
+  const { token } = useParams();
+
+  const { handleResetPassword } = useAuth();
+
   const [fields, setFields] = useState({ password: "", confirm: "" });
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -98,7 +103,7 @@ const ResetPasswordPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {
       password: validators.password(fields.password),
@@ -107,12 +112,17 @@ const ResetPasswordPage = () => {
     setTouched({ password: true, confirm: true });
     setErrors(newErrors);
     if (newErrors.password || newErrors.confirm) return;
+
     setLoading(true);
-    // placeholder — wire up real logic here
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await handleResetPassword(token, fields.password); // use fields.password, not confirm
       setDone(true);
-    }, 1200);
+    } catch (err) {
+      setErrors((er) => ({ ...er, password: err.message }));
+      setTouched((t) => ({ ...t, password: true }));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputCls = (key) =>

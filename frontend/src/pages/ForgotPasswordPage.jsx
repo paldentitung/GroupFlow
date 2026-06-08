@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Loader2, ArrowLeft, Mail } from "lucide-react";
-
+import { useAuth } from "../hooks/useAuth";
 const Logo = () => (
   <svg
     width="18"
@@ -33,24 +33,28 @@ const ForgotPasswordPage = () => {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
 
+  const { handleForgotPassword } = useAuth();
   const validate = (v) => {
     if (!v) return "Email is required.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return "Enter a valid email.";
     return null;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setTouched(true);
     const err = validate(email);
     setError(err);
     if (err) return;
     setLoading(true);
-    // placeholder — wire up real logic here
-    setTimeout(() => {
+    try {
+      await handleForgotPassword(email);
+    } catch (err) {
+      setError(err?.message || "Something went wrong. Please try again.");
+      setTouched(true);
+    } finally {
       setLoading(false);
-      setSent(true);
-    }, 1200);
+    }
   };
 
   const inputCls =
