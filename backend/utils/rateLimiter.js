@@ -62,3 +62,8 @@ export const changePasswordLimiter = createLimiter(
   2,
   "Too many change Passowrd sent. Please try again later.",
 );
+export const resetPasswordLimiter = createLimiter(
+  1,
+  2,
+  "Too many change Password send Please try again later",
+);

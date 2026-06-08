@@ -16,6 +16,8 @@ import AcceptInvitePage from "./pages/AcceptInvitePage";
 import { Toaster } from "react-hot-toast";
 import HistoryPage from "./pages/HistoryPage";
 import TasksPage from "./pages/TasksPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 const App = () => {
   return (
     <SidebarProvider>
@@ -54,6 +56,8 @@ const App = () => {
         <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
         <Route path="/accept-invite/:token" element={<AcceptInvitePage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route
           path="/"
           element={

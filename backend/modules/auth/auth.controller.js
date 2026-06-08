@@ -2,6 +2,8 @@ import {
   registerService,
   verifyEmailService,
   loginService,
+  forgotPasswordService,
+  resetPasswordService,
 } from "./auth.service.js";
 import User from "../users/User.js";
 export const registerController = async (req, res) => {
@@ -59,4 +61,19 @@ export const logout = (req, res) => {
   });
 
   res.status(200).json({ success: true, message: "Logged out" });
+};
+
+export const forgotPasswordController = async (req, res) => {
+  const { email } = req.body;
+  const result = await forgotPasswordService(email);
+
+  res.status(200).json(result);
+};
+
+export const resetPasswordController = async (req, res) => {
+  const token = decodeURIComponent(req.params.token);
+  const { newPassword } = req.body;
+
+  const result = await resetPasswordService(token, newPassword);
+  res.status(200).json(result);
 };

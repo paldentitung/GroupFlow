@@ -114,3 +114,41 @@ export const loginService = async (email, password) => {
     user: userResponse,
   };
 };
+
+export const forgotPasswordService = async (email) => {
+  const user = await User.findOne({ email: email.toLowerCase() });
+
+  if (!user) throw new AppError("No account with that email", 404);
+
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  user.resetPasswordToken = resetToken;
+  user.resetPasswordExpires = new Date(Date.now() + 1000 * 60 * 60); // 1hr
+  await user.save();
+
+  const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+
+  await sendEmail({
+    to: user.email,
+    subject: "Reset your password",
+    html: `Click to reset your password: <a href="${resetUrl}">${resetUrl}</a>. Expires in 1 hour.`,
+  });
+
+  return { success: true, message: "Reset email sent" };
+};
+
+export const resetPasswordService = async (token, newPassword) => {
+  const user = await User.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpires: { $gt: new Date() },
+  });
+
+  if (!user) throw new AppError("Invalid or expired reset token", 400);
+
+  user.password = await bcrypt.hash(newPassword, 10);
+  user.resetPasswordToken = null;
+  user.resetPasswordExpires = null;
+  await user.save();
+
+  return { success: true, message: "Password reset successfully" };
+};
