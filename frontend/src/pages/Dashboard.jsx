@@ -10,6 +10,9 @@ import { useEffect, useState } from "react";
 import { useUserTasks } from "../hooks/useUserTasks.js";
 import { useAddProject } from "../contexts/AddProjectContext.jsx";
 import ProjectListing from "../components/ProjectListing.jsx";
+import { useProjectTasks } from "../hooks/useProjectTasks.js";
+import { useMembers } from "../hooks/useMembers.js";
+import { User } from "lucide-react";
 
 const FolderIcon = () => (
   <svg
@@ -98,8 +101,10 @@ const StatCard = ({ icon, value, label, iconBg, iconColor }) => (
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 function Dashboard() {
-  const { projects } = useProjects();
-
+  const { projects, activeProject } = useProjects();
+  const { tasks } = useProjectTasks(activeProject._id);
+  const { members } = useMembers(activeProject._id);
+  const { userTasks } = useUserTasks();
   const {
     loading,
     pagination,
@@ -122,29 +127,29 @@ function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
             icon={<FolderIcon />}
-            value={6}
+            value={projects?.length}
             label="Total Projects"
             iconBg="#eef2ff"
             iconColor="#4f46e5"
           />
           <StatCard
             icon={<TaskIcon />}
-            value={14}
-            label="Active Tasks"
+            value={tasks?.length}
+            label="Active Project Tasks"
             iconBg="#e0f2fe"
             iconColor="#0891b2"
           />
           <StatCard
             icon={<TeamIcon />}
-            value={5}
+            value={members?.length}
             label="Team Members"
             iconBg="#f3e8ff"
             iconColor="#7c3aed"
           />
           <StatCard
-            icon={<CheckIcon />}
-            value={3}
-            label="Completed This Week"
+            icon={<User />}
+            value={userTasks?.length}
+            label="My Tasks"
             iconBg="#ecfdf5"
             iconColor="#059669"
           />
