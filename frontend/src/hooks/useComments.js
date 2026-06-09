@@ -26,7 +26,7 @@ export const useComments = (taskId) => {
       const res = await addComments(taskId, content);
       if (res.success) {
         toast.success("comment Added");
-        setComments((prev) => [...prev, res.data]);
+        await fetchComments();
       }
     } catch (error) {
       toast.error(error.message || "error");

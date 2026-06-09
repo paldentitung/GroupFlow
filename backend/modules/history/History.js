@@ -12,6 +12,10 @@ const historySchema = new mongoose.Schema(
       ref: "Project",
       required: true,
     },
+    taskId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Task",
+    },
     entity: {
       type: String,
       enum: ["task", "project", "comment", "member"],

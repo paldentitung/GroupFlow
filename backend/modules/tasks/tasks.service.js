@@ -109,6 +109,7 @@ export const createTaskService = async (
   await createHistoryService({
     userId,
     projectId,
+    taskId: task._id,
     entity: "task",
     entityId: task._id,
     action: "created",

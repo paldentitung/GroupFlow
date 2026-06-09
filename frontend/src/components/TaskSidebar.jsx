@@ -8,6 +8,7 @@ import { getInitials } from "../utils/getInitials.js";
 import { formatDate } from "../utils/formatDate.js";
 import { useComments } from "../hooks/useComments.js";
 import { useState } from "react";
+import { useTaskHistory } from "../hooks/useTaskHistory.js";
 
 function isOverdue(iso) {
   if (!iso) return false;
@@ -50,6 +51,7 @@ export default function TaskSidebar() {
   const { comments, handleAddComment } = useComments(taskId);
   const [content, setContent] = useState("");
   const [showHistory, setShowHistory] = useState(false);
+  const { taskHistory, taskLoading, fetchTaskHistory } = useTaskHistory();
 
   const handleClose = () => navigate(`/projects/${task?.projectId}`);
 
@@ -64,6 +66,12 @@ export default function TaskSidebar() {
   const markComplete = async () => {
     await handleUpdateTask(task._id, { status: "completed" });
   };
+
+  const openHistory = async () => {
+    setShowHistory(true);
+    await fetchTaskHistory(project._id, task._id);
+  };
+
   return (
     <>
       <div
@@ -181,11 +189,15 @@ export default function TaskSidebar() {
           <textarea
             placeholder="Write a comment..."
             rows={1}
+            value={content}
             onChange={(e) => setContent(e.target.value)}
             className="flex-1 bg-[#f7f8fa] border border-[#e8eaed] rounded-lg px-3 py-2 text-[13px] text-[#111827] placeholder:text-[#6b7280] outline-none resize-none min-h-[38px] focus:border-indigo-500 transition-colors"
           />
           <button
-            onClick={() => handleAddComment(content)}
+            onClick={async () => {
+              await handleAddComment(content);
+              setContent("");
+            }}
             className="bg-indigo-600 hover:bg-indigo-700 text-white text-[13px] font-medium rounded-lg px-4 h-[38px] shrink-0 transition-colors cursor-pointer"
           >
             Post
@@ -201,7 +213,7 @@ export default function TaskSidebar() {
             🗑 Delete
           </button>
           <button
-            onClick={() => setShowHistory(true)}
+            onClick={openHistory}
             className="flex items-center gap-1.5 border border-[#e8eaed] rounded-lg px-3.5 py-2 text-[13px] text-[#6b7280] hover:bg-[#f7f8fa]"
           >
             🕓 History
@@ -235,8 +247,23 @@ export default function TaskSidebar() {
             </div>
             <div className="px-[18px] py-3 flex flex-col divide-y divide-[#f0f1f3]">
               {/* static items for now */}
-              <div className="py-3 text-sm text-[#6b7280]">
-                History coming soon...
+              <div className="flex flex-col divide-y divide-[#e8eaed]">
+                {taskHistory?.map((item) => (
+                  <div key={item._id} className="flex gap-3 py-3">
+                    <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5">
+                      <Avatar user={item?.user} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-[#111827] leading-snug">
+                        {item.details}
+                      </p>
+                      <p className="text-xs text-[#6b7280] mt-1">
+                        {item.user.firstName} {item.user.lastName} ·{" "}
+                        {formatDate(item.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

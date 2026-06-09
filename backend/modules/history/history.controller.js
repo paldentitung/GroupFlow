@@ -19,12 +19,12 @@ export const getProjectHistoryController = async (req, res) => {
 export const getTaskHistoryController = async (req, res) => {
   const { projectId, taskId } = req.params;
 
-  const result = await getTaskHistoryService(projectId, taskId, req.query);
+  const result = await getTaskHistoryService(projectId, taskId);
 
   res.status(200).json({
     success: true,
     message: "Task history retrieved",
-    ...result,
+    data: result,
   });
 };
 export const getUserHistoryController = async (req, res) => {

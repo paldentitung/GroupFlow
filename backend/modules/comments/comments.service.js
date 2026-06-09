@@ -34,10 +34,11 @@ export const createCommentService = async (taskId, content, userId) => {
   await createHistoryService({
     userId,
     projectId: task.projectId,
+    taskId: task._id,
     entity: "comment",
     entityId: comment._id,
     action: "created",
-    details: `Comment added on task "${task.title}"`,
+    details: `Comment added on task "${task.title}" by`,
   });
 
   if (task.assigneeId && !task.assigneeId.equals(userId)) {

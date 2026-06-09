@@ -17,8 +17,7 @@ export const getProjectHistoryService = async (projectId, query) => {
 export const getTaskHistoryService = async (projectId, taskId) => {
   return await History.find({
     project: projectId,
-    entity: "task",
-    entityId: taskId,
+    taskId: taskId,
   })
     .populate("user", "firstName lastName email")
     .sort({ createdAt: -1 });
@@ -48,6 +47,7 @@ export const getUserHistoryService = async (userId, page, limit) => {
 export const createHistoryService = async ({
   userId,
   projectId,
+  taskId,
   entity,
   entityId,
   action,
@@ -56,6 +56,7 @@ export const createHistoryService = async ({
   return await History.create({
     user: userId,
     project: projectId,
+    taskId,
     entity,
     entityId,
     action,

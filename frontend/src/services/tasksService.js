@@ -69,3 +69,7 @@ export const getCurrentUserTasks = async (page, limit) => {
     pagination: res.pagination,
   };
 };
+
+export const getTasksHistory = async (projectId, taskId) => {
+  return request(`/history/projects/${projectId}/tasks/${taskId}`);
+};
