@@ -9,7 +9,8 @@ import {
 } from "../services/tasksService.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-
+import { useProjects } from "../hooks/useProjects.js";
+import { ProjectsContext } from "./ProjectsContext.jsx";
 const TasksContext = createContext(null);
 
 export const TasksProvider = ({ children }) => {
@@ -17,7 +18,7 @@ export const TasksProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
+  const { fetchProjects } = useContext(ProjectsContext);
   const fetchTasks = async (projectId) => {
     setLoading(true);
     setError(null);
@@ -48,6 +49,7 @@ export const TasksProvider = ({ children }) => {
       const response = await deleteTask(taskId);
       if (response.success) {
         setTasks((prev) => prev.filter((t) => t._id !== taskId));
+        await fetchProjects();
         navigate(`/projects/${projectId}`);
       }
     } catch (err) {
@@ -64,6 +66,8 @@ export const TasksProvider = ({ children }) => {
         );
 
         toast.success("Task updated");
+
+        if (updatedData.status) await fetchProjects();
 
         navigate(`/projects/${response.data.projectId}`);
       }

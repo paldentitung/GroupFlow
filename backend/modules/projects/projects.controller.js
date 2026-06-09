@@ -27,7 +27,11 @@ export const createProjectController = async (req, res) => {
 export const updateProjectController = async (req, res) => {
   const { projectId } = req.params;
 
-  const updatedProject = await updateProjectService(projectId, req.body);
+  const updatedProject = await updateProjectService(
+    projectId,
+    req.body,
+    req.user._id,
+  );
 
   res.status(200).json({
     success: true,

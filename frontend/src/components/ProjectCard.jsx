@@ -42,9 +42,9 @@ const ProjectCard = ({
   name = "Untitled Project",
   desc = "",
   status = "Active",
-  progress = 0,
   members = [],
   extra = 0,
+  progress,
   due = "",
   id,
   onDelete = () => {},
@@ -53,7 +53,6 @@ const ProjectCard = ({
 }) => {
   const progressColor = PROGRESS_COLORS[status] ?? "#4f46e5";
   const { handleDeleteProject } = useContext(ProjectsContext);
-
   return (
     <div
       // to={`/projects/${id}`}

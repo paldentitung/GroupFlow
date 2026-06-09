@@ -49,6 +49,7 @@ export default function TaskSidebar() {
   const { handleDeleteTask, handleUpdateTask } = useTasksContext(); // ✅ from context
   const { comments, handleAddComment } = useComments(taskId);
   const [content, setContent] = useState("");
+  const [showHistory, setShowHistory] = useState(false);
 
   const handleClose = () => navigate(`/projects/${task?.projectId}`);
 
@@ -200,6 +201,12 @@ export default function TaskSidebar() {
             🗑 Delete
           </button>
           <button
+            onClick={() => setShowHistory(true)}
+            className="flex items-center gap-1.5 border border-[#e8eaed] rounded-lg px-3.5 py-2 text-[13px] text-[#6b7280] hover:bg-[#f7f8fa]"
+          >
+            🕓 History
+          </button>
+          <button
             onClick={markComplete}
             className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[13px] font-medium rounded-lg px-4 py-2 transition-colors cursor-pointer"
           >
@@ -207,6 +214,34 @@ export default function TaskSidebar() {
           </button>
         </div>
       </div>
+
+      {showHistory && (
+        <div
+          className="fixed inset-0 z-60 bg-black/40 flex items-center justify-center"
+          onClick={() => setShowHistory(false)}
+        >
+          <div
+            className="bg-white rounded-xl border border-[#e8eaed] w-[340px] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-[18px] py-3.5 border-b border-[#e8eaed]">
+              <span className="text-sm font-medium">Task history</span>
+              <button
+                onClick={() => setShowHistory(false)}
+                className="text-[#6b7280] hover:text-[#111827]"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="px-[18px] py-3 flex flex-col divide-y divide-[#f0f1f3]">
+              {/* static items for now */}
+              <div className="py-3 text-sm text-[#6b7280]">
+                History coming soon...
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

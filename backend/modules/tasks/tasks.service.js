@@ -106,8 +106,6 @@ export const createTaskService = async (
     createdBy: userId,
   });
 
-  console.log("task created", task);
-
   await createHistoryService({
     userId,
     projectId,
@@ -116,8 +114,6 @@ export const createTaskService = async (
     action: "created",
     details: `Task "${task.title}" was created`,
   });
-
-  console.log("History saved!");
 
   if (assigneeId) {
     await createNotificationService({
