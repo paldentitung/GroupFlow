@@ -229,11 +229,11 @@ export default function TaskSidebar() {
 
       {showHistory && (
         <div
-          className="fixed inset-0 z-60 bg-black/40 flex items-center justify-center"
+          className="fixed inset-0 z-60 w-full bg-black/40 flex items-center justify-center p-2"
           onClick={() => setShowHistory(false)}
         >
           <div
-            className="bg-white rounded-xl border border-[#e8eaed] w-[340px] overflow-hidden"
+            className="bg-white rounded-xl border border-[#e8eaed] w-full max-w-lg mx-auto max-h-[80vh] overflow-hidden flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between px-[18px] py-3.5 border-b border-[#e8eaed]">
@@ -245,7 +245,7 @@ export default function TaskSidebar() {
                 ✕
               </button>
             </div>
-            <div className="px-[18px] py-3 flex flex-col divide-y divide-[#f0f1f3]">
+            <div className="px-[18px] py-3 flex flex-col divide-y divide-[#f0f1f3] overflow-y-auto">
               {/* static items for now */}
               <div className="flex flex-col divide-y divide-[#e8eaed]">
                 {taskHistory?.map((item) => (

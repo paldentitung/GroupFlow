@@ -10,9 +10,9 @@ export const ProjectsContext = createContext();
 export const ProjectsProvider = ({ children }) => {
   const { user } = useContext(AuthContext);
   const [projects, setProjects] = useState([]);
-  const [activeProject, setActiveProject] = useState(
-    () => JSON.parse(localStorage.getItem("activeProject")) || null,
-  );
+  const [activeProject, setActiveProject] = useState(() => {
+    return JSON.parse(localStorage.getItem("activeProject")) || null;
+  });
   const navigate = useNavigate();
 
   const addProject = (project) => {
@@ -23,11 +23,16 @@ export const ProjectsProvider = ({ children }) => {
     const projectsData = await getProjects();
     setProjects(projectsData.projects);
 
-    // sync activeProject with fresh data
     setActiveProject((prev) => {
-      if (!prev) return projectsData.projects[0] ?? null;
-      const fresh = projectsData.projects.find((p) => p._id === prev._id);
-      return fresh ?? projectsData.projects[0] ?? null;
+      const stored = JSON.parse(localStorage.getItem("activeProject"));
+
+      const base = stored || prev;
+
+      if (!base) return projectsData.projects[0] ?? null;
+
+      const fresh = projectsData.projects.find((p) => p._id === base._id);
+
+      return fresh ?? base ?? projectsData.projects[0] ?? null;
     });
   };
   const handleDeleteProject = async (projectId) => {
@@ -58,6 +63,12 @@ export const ProjectsProvider = ({ children }) => {
     }
     fetchProjects();
   }, [user]);
+
+  useEffect(() => {
+    if (activeProject) {
+      localStorage.setItem("activeProject", JSON.stringify(activeProject));
+    }
+  }, [activeProject]);
 
   return (
     <ProjectsContext.Provider

@@ -19,14 +19,19 @@ export function useProjectTasks(projectId) {
 
   useEffect(() => {
     if (!projectId) return;
+
     const load = async () => {
       setLoading(true);
+
       const res = await getTasks(projectId, page);
       console.log("tasks data", res);
+
       setTasks(res.data || []);
-      setPagination(res.data.pagination || null);
+      setPagination(res.pagination || null);
+
       setLoading(false);
     };
+
     load();
   }, [projectId, page]);
 
