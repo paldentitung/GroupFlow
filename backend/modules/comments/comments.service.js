@@ -1,9 +1,10 @@
 import Task from "../tasks/Task.js";
 import Comment from "./Comment.js";
 import AppError from "../../utils/AppError.js";
-
+import User from "../users/User.js";
 import { createHistoryService } from "../history/history.service.js";
 import { createNotificationService } from "../notifications/notification.service.js";
+import { extractUsernames } from "../../utils/extractUsernames.js";
 export const getCommentsService = async (taskId) => {
   const task = await Task.findById(taskId);
 
@@ -20,15 +21,20 @@ export const getCommentsService = async (taskId) => {
 
 export const createCommentService = async (taskId, content, userId) => {
   const task = await Task.findById(taskId);
+  if (!task) throw new AppError("Task not found", 404);
 
-  if (!task) {
-    throw new AppError("Task not found", 404);
-  }
+  const usernames = extractUsernames(content);
 
+  const mentionedUsers = await getMentionedUsers(usernames);
+
+  const mentionedUserIds = mentionedUsers.map((u) => u._id);
+  console.log("usernames:", usernames);
+  console.log("mentionedUsers:", mentionedUsers);
   const comment = await Comment.create({
     content,
     authorId: userId,
     taskId,
+    mentions: mentionedUserIds,
   });
 
   await createHistoryService({
@@ -38,18 +44,19 @@ export const createCommentService = async (taskId, content, userId) => {
     entity: "comment",
     entityId: comment._id,
     action: "created",
-    details: `Comment added on task "${task.title}" by`,
+    details: `Comment added with mentions`,
   });
 
-  if (task.assigneeId && !task.assigneeId.equals(userId)) {
+  for (const user of mentionedUsers) {
     await createNotificationService({
-      recipientId: task.assigneeId,
+      recipientId: user._id,
       senderId: userId,
       projectId: task.projectId,
-      type: "comment_added",
-      message: `New comment added on task "${task.title}"`,
+      type: "mention",
+      message: `You were mentioned in task "${task.title}"`,
     });
   }
+
   return comment;
 };
 
@@ -82,4 +89,12 @@ export const deleteCommentService = async (commentId, userId) => {
   }
 
   await comment.deleteOne();
+};
+
+const getMentionedUsers = async (usernames) => {
+  const users = await User.find({
+    $or: [{ firstName: { $in: usernames } }, { lastName: { $in: usernames } }],
+  });
+
+  return users;
 };

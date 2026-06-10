@@ -25,6 +25,7 @@ const notificationSchema = new mongoose.Schema(
         "comment_added",
         "member_invited",
         "project_updated",
+        "mention",
       ],
       required: true,
     },
