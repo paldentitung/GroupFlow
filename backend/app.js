@@ -17,13 +17,18 @@ const app = express();
 // middlewares
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:4173",
+  process.env.CLIENT_URL,
+];
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
   }),
 );
-
 app.use(cookieParser());
 
 // routes
