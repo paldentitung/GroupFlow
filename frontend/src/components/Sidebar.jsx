@@ -11,6 +11,7 @@ import { useProjects } from "../hooks/useProjects.js";
 import { useUserTasks } from "../hooks/useUserTasks.js";
 import { useTask } from "../hooks/useTask.js";
 import { useProjectTasks } from "../hooks/useProjectTasks.js";
+import { useTasksContext } from "../contexts/TasksContext.jsx";
 
 export default function Sidebar() {
   const [active, setActive] = useState("Dashboard");
@@ -18,10 +19,10 @@ export default function Sidebar() {
   const { isOpen, closeSidebar } = useSidebar();
 
   const { handleLogout, user } = useAuth();
-  const { activeProject } = useProjects();
-  const { projects } = useProjects();
+  const { activeProject, projects } = useProjects();
   const { userTasks } = useUserTasks();
   const { filteredTasks } = useProjectTasks(activeProject?._id);
+  const { tasks } = useTasksContext();
   const navItems = [
     {
       section: "Main",
@@ -47,7 +48,7 @@ export default function Sidebar() {
         {
           name: "Tasks",
           icon: "M4 6h16M4 10h16M4 14h10",
-          badge: filteredTasks?.length,
+          badge: tasks?.length,
           link: "/tasks",
         },
         {
