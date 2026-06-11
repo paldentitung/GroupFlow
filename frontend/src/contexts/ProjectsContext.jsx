@@ -40,6 +40,12 @@ export const ProjectsProvider = ({ children }) => {
       const response = await deleteProject(projectId);
       if (response.success) {
         setProjects((prev) => prev.filter((p) => p._id !== projectId));
+
+        if (activeProject?._id === projectId) {
+          setActiveProject(null);
+          localStorage.removeItem("activeProject");
+          navigate("/projects");
+        }
         toast.success(response.message || "Project deleted successfully");
       }
     } catch (error) {

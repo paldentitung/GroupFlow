@@ -55,28 +55,26 @@ export const getCurrentUserTasksService = async (
 ) => {
   const skip = (page - 1) * limit;
 
-  const tasks = await Task.find({
-    assigneeId: userId,
-  })
+  const tasks = await Task.find({ assigneeId: userId })
     .populate("assigneeId", "firstName lastName avatar")
     .populate("projectId", "name")
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(limit);
+    .sort({ createdAt: -1 });
 
-  const total = await Task.countDocuments({ assigneeId: userId });
+  // filter out orphaned tasks (project was deleted)
+  const validTasks = tasks.filter((t) => t.projectId !== null);
+
+  const paginated = validTasks.slice(skip, skip + limit);
 
   return {
-    tasks,
+    tasks: paginated,
     pagination: {
-      total,
+      total: validTasks.length,
       page,
       limit,
-      totalPages: Math.ceil(total / limit),
+      totalPages: Math.ceil(validTasks.length / limit),
     },
   };
 };
-
 export const createTaskService = async (
   projectId,
   title,

@@ -3,6 +3,8 @@ import AppError from "../../utils/AppError.js";
 import { createHistoryService } from "../history/history.service.js";
 import Task from "../tasks/Task.js";
 import mongoose from "mongoose";
+import History from "../history/History.js";
+import Notification from "../notifications/Notification.js";
 // Only return projects where the user is a member
 export const getProjectsService = async (userId) => {
   const projects = await Project.find({ "members.user": userId })
@@ -98,6 +100,11 @@ export const deleteProjectService = async (projectId, userId) => {
     action: "deleted",
     details: `Project "${project.name}" was deleted`,
   });
+
+  // cascade
+  await Task.deleteMany({ project: projectId });
+  await History.deleteMany({ project: projectId });
+  await Notification.deleteMany({ project: projectId });
 
   await project.deleteOne();
   return project;
