@@ -5,6 +5,7 @@ import {
   removeAvatarConroller,
   updateUserProfileController,
   getMeController,
+  updateNotificationPreferences,
 } from "./users.controller.js";
 import auth from "../../middleware/auth.middleware.js";
 import asyncHandler from "../../utils/asyncHandler.js";
@@ -26,4 +27,10 @@ Router.patch(
 Router.delete("/me/avatar", auth, asyncHandler(removeAvatarConroller));
 
 Router.patch("/me/password", auth, asyncHandler(changePasswordController));
+
+Router.patch(
+  "/me/notification-preferences",
+  auth,
+  updateNotificationPreferences,
+);
 export default Router;

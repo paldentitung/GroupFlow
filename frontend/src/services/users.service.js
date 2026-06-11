@@ -53,3 +53,17 @@ export const changePassword = async ({ newPassword, password }) => {
     true,
   );
 };
+
+export const updateNotificationPreferences = async (updated) => {
+  return request(
+    "/users/me/notification-preferences",
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updated),
+    },
+    true,
+  );
+};

@@ -15,7 +15,7 @@ import Header from "../components/Header";
 import { useProfile } from "../hooks/useProfile";
 import { useAuth } from "../hooks/useAuth.js";
 import Avatar from "../components/Avatar.jsx";
-
+import { updateNotificationPreferences } from "../services/users.service.js";
 import { toast } from "react-hot-toast";
 
 const NAV_ITEMS = [
@@ -358,13 +358,25 @@ function SecuritySection() {
   );
 }
 function NotificationsSection() {
-  const [notifs, setNotifs] = useState({
-    taskAssigned: true,
-    deadlineReminder: true,
-    newComment: false,
-    projectStatus: true,
-  });
+  const { user } = useAuth();
 
+  const [notifs, setNotifs] = useState({
+    taskAssigned: user?.notificationPreferences?.taskAssigned ?? true,
+    deadlineReminder: user?.notificationPreferences?.deadlineReminder ?? true,
+    newComment: user?.notificationPreferences?.newComment ?? false,
+    projectStatus: user?.notificationPreferences?.projectStatus ?? true,
+  });
+  const handleToggle = async (key, val) => {
+    const updated = { ...notifs, [key]: val };
+    setNotifs(updated);
+
+    try {
+      await updateNotificationPreferences(updated);
+    } catch (error) {
+      setNotifs(notifs);
+      toast.error("Failed to save preferences");
+    }
+  };
   const items = [
     {
       key: "taskAssigned",
@@ -409,7 +421,7 @@ function NotificationsSection() {
             </div>
             <Toggle
               enabled={notifs[item.key]}
-              onChange={(val) => setNotifs((p) => ({ ...p, [item.key]: val }))}
+              onChange={(val) => handleToggle(item.key, val)}
             />
           </div>
         ))}

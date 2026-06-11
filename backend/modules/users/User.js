@@ -53,6 +53,12 @@ const userSchema = new mongoose.Schema(
     },
     resetPasswordToken: { type: String, default: null },
     resetPasswordExpires: { type: Date, default: null },
+    notificationPreferences: {
+      taskAssigned: { type: Boolean, default: true },
+      deadlineReminder: { type: Boolean, default: true },
+      newComment: { type: Boolean, default: false },
+      projectStatus: { type: Boolean, default: true },
+    },
   },
   {
     timestamps: true,

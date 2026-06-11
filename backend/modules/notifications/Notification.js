@@ -33,10 +33,6 @@ const notificationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    link: {
-      type: String, // "/projects/:id/tasks/:id"
-      default: null,
-    },
     isRead: {
       type: Boolean,
       default: false,

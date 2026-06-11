@@ -11,5 +11,6 @@ export const userResponseMapper = (user) => {
     phone: user.phone,
     isEmailVerified: user.isEmailVerified,
     createdAt: user.createdAt,
+    notificationPreferences: user.notificationPreferences,
   };
 };

@@ -6,7 +6,7 @@ import {
   changePasswordService,
   getMeService,
 } from "./users.service.js";
-
+import User from "./User.js";
 export const getMeController = async (req, res) => {
   const user = await getMeService(req.user._id);
 
@@ -75,4 +75,13 @@ export const changePasswordController = async (req, res) => {
     message: "Password change",
     data: result,
   });
+};
+
+export const updateNotificationPreferences = async (req, res) => {
+  const user = await User.findByIdAndUpdate(
+    req.user.id,
+    { notificationPreferences: req.body },
+    { new: true },
+  );
+  res.json({ success: true, data: user.notificationPreferences });
 };

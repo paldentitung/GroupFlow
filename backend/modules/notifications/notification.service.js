@@ -1,5 +1,6 @@
 import Notification from "./Notification.js";
 import AppError from "../../utils/AppError.js";
+import User from "../users/User.js";
 export const getUserNotificatonService = async (userId) => {
   return await Notification.find({ recipient: userId });
 };
@@ -28,17 +29,31 @@ export const markAllAsReadService = async (userId) => {
 export const createNotificationService = async ({
   recipientId,
   senderId,
-  projectId = null,
+  projectId,
   type,
   message,
-  link = null,
+  link,
 }) => {
-  return await Notification.create({
+  const recipient = await User.findById(recipientId);
+
+  // check preference before creating
+  const prefs = recipient?.notificationPreferences;
+
+  if (prefs) {
+    if (type === "task_assigned" && !prefs.taskAssigned) return;
+    if (type === "task_completed" && !prefs.projectStatus) return;
+    if (type === "new_comment" && !prefs.newComment) return;
+    if (type === "deadline_reminder" && !prefs.deadlineReminder) return;
+  }
+
+  const notification = await Notification.create({
     recipient: recipientId,
     sender: senderId,
-    project: projectId,
+    projectId,
     type,
     message,
     link,
   });
+
+  return notification;
 };
