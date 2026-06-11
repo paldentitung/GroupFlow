@@ -383,11 +383,7 @@ function NotificationsSection() {
       label: "Task assigned",
       sub: "When a task is assigned to you",
     },
-    {
-      key: "deadlineReminder",
-      label: "Deadline reminder",
-      sub: "24 hours before a task is due",
-    },
+
     {
       key: "newComment",
       label: "Mentions",
