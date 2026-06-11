@@ -5,6 +5,7 @@ import Task from "../tasks/Task.js";
 import mongoose from "mongoose";
 import History from "../history/History.js";
 import Notification from "../notifications/Notification.js";
+import { createNotificationService } from "../notifications/notification.service.js";
 // Only return projects where the user is a member
 export const getProjectsService = async (userId) => {
   const projects = await Project.find({ "members.user": userId })
@@ -74,6 +75,24 @@ export const updateProjectService = async (projectId, updateData, userId) => {
     throw new AppError("You are not the owner of this project", 403);
   }
 
+  const updated = await Project.findByIdAndUpdate(projectId, updateData, {
+    new: true,
+  });
+
+  if (updateData.status && updateData.status !== project.status) {
+    const members = project.members.filter((m) => !m.user.equals(userId));
+
+    for (const member of members) {
+      await createNotificationService({
+        recipientId: member.user,
+        senderId: userId,
+        projectId,
+        type: "project_status",
+        message: `Project "${project.name}" status changed to ${updateData.status}`,
+      });
+    }
+  }
+
   await createHistoryService({
     userId,
     projectId,
@@ -83,7 +102,7 @@ export const updateProjectService = async (projectId, updateData, userId) => {
     details: `Project "${project.name}" was updated`,
   });
 
-  return await Project.findByIdAndUpdate(projectId, updateData, { new: true });
+  return updated;
 };
 
 export const deleteProjectService = async (projectId, userId) => {
