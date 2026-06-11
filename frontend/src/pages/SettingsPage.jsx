@@ -390,8 +390,8 @@ function NotificationsSection() {
     },
     {
       key: "newComment",
-      label: "New comment",
-      sub: "When someone comments on your task",
+      label: "Mentions",
+      sub: "When someone mentions you in a comment",
     },
     {
       key: "projectStatus",

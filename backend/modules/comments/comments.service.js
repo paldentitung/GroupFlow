@@ -24,8 +24,9 @@ export const createCommentService = async (taskId, content, userId) => {
   if (!task) throw new AppError("Task not found", 404);
 
   const usernames = extractUsernames(content);
-
+  console.log("usernames:", usernames);
   const mentionedUsers = await getMentionedUsers(usernames);
+  console.log("mentionedUsers:", mentionedUsers);
 
   const mentionedUserIds = mentionedUsers.map((u) => u._id);
   console.log("usernames:", usernames);
@@ -93,8 +94,22 @@ export const deleteCommentService = async (commentId, userId) => {
 
 const getMentionedUsers = async (usernames) => {
   const users = await User.find({
-    $or: [{ firstName: { $in: usernames } }, { lastName: { $in: usernames } }],
+    $or: usernames.map((u) => ({
+      $expr: {
+        $regexMatch: {
+          input: {
+            $toLower: {
+              $replaceAll: {
+                input: { $concat: ["$firstName", "$lastName"] },
+                find: " ",
+                replacement: "",
+              },
+            },
+          },
+          regex: u.toLowerCase(),
+        },
+      },
+    })),
   });
-
   return users;
 };

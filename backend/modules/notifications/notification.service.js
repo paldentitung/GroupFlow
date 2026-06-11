@@ -42,7 +42,7 @@ export const createNotificationService = async ({
   if (prefs) {
     if (type === "task_assigned" && !prefs.taskAssigned) return;
     if (type === "task_completed" && !prefs.projectStatus) return;
-    if (type === "new_comment" && !prefs.newComment) return;
+    if (type === "mention" && !prefs.newComment) return;
     if (type === "deadline_reminder" && !prefs.deadlineReminder) return;
   }
 
