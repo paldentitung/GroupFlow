@@ -1,5 +1,9 @@
 import { createContext, useState, useEffect, useContext } from "react";
-import { getProjects, deleteProject } from "../services/projectsService";
+import {
+  getProjects,
+  deleteProject,
+  updateProject,
+} from "../services/projectsService";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
@@ -60,6 +64,26 @@ export const ProjectsProvider = ({ children }) => {
     navigate(`/projects/${project._id}`);
   };
 
+  const handleUpdateProject = async (projectId, updateData) => {
+    const previous = projects.find((p) => p._id === projectId);
+
+    setProjects((prev) =>
+      prev.map((p) => (p._id === projectId ? { ...p, ...updateData } : p)),
+    );
+
+    try {
+      const response = await updateProject(projectId, updateData);
+      if (response.success) {
+        toast.success(response.message || "Project updated successfully");
+      }
+    } catch (error) {
+      setProjects((prev) =>
+        prev.map((p) => (p._id === projectId ? previous : p)),
+      );
+      toast.error(error.message || "Failed to update project");
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       setProjects([]);
@@ -85,6 +109,7 @@ export const ProjectsProvider = ({ children }) => {
         handleDeleteProject,
         activeProject,
         handleSetActiveProject,
+        handleUpdateProject,
       }}
     >
       {children}

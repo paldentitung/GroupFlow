@@ -70,7 +70,9 @@ export const updateProjectService = async (projectId, updateData, userId) => {
   const project = await Project.findById(projectId);
   if (!project) throw new AppError("Project not found", 404);
 
-  Object.assign(project, updateData);
+  if (!project.owner.equals(userId)) {
+    throw new AppError("You are not the owner of this project", 403);
+  }
 
   await createHistoryService({
     userId,
@@ -81,7 +83,7 @@ export const updateProjectService = async (projectId, updateData, userId) => {
     details: `Project "${project.name}" was updated`,
   });
 
-  return await project.save();
+  return await Project.findByIdAndUpdate(projectId, updateData, { new: true });
 };
 
 export const deleteProjectService = async (projectId, userId) => {

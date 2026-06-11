@@ -5,8 +5,13 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 export const useProjects = () => {
-  const { addProject, projects, activeProject, handleSetActiveProject } =
-    useContext(ProjectsContext);
+  const {
+    addProject,
+    projects,
+    activeProject,
+    handleSetActiveProject,
+    handleUpdateProject,
+  } = useContext(ProjectsContext);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const handleCreateProject = async (projectData) => {
@@ -34,5 +39,6 @@ export const useProjects = () => {
     loading,
     activeProject,
     handleSetActiveProject,
+    handleUpdateProject,
   };
 };

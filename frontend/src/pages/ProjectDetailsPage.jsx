@@ -10,7 +10,7 @@ import { useMembers } from "../hooks/useMembers.js";
 import { toast } from "react-hot-toast";
 import Avatar from "../components/Avatar.jsx";
 import AvatarGroup from "../components/AvatarGroup.jsx";
-
+import Modal from "../components/Modal.jsx";
 const STATUS_STYLES = {
   Active: "text-[#059669] bg-[#d1fae5]",
   Completed: "text-[#4f46e5] bg-[#eef2ff]",
@@ -121,17 +121,39 @@ const ProjectDetailsPage = () => {
   const [activeTab, setActiveTab] = useState("Task Board");
   const [showAddTask, setShowAddTask] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
+  const { handleUpdateProject } = useProjects();
   const { tasks, handleCreateTask, fetchTasks, handleRespondToTask } =
-    useTasksContext(); // ✅ from context
+    useTasksContext();
   const { handleInviteMember } = useMembers(id);
-
+  const handleEdit = async () => {
+    await handleUpdateProject(project._id, editData);
+    setShowEditModal(false);
+  };
   const project = projects.find((p) => p._id === id);
+  const [editData, setEditData] = useState({
+    name: "",
+    description: "",
+    status: "",
+    dueDate: "",
+    startDate: "",
+  });
 
   useEffect(() => {
     if (id) fetchTasks(id); // ✅ moved above early return
   }, [id]);
-
+  useEffect(() => {
+    if (project) {
+      setEditData({
+        name: project.name ?? "",
+        description: project.description ?? "",
+        status: project.status ?? "",
+        dueDate: project.dueDate?.slice(0, 10) ?? "",
+        startDate: project.startDate?.slice(0, 10) ?? "",
+      });
+    }
+  }, [project]);
   if (!project) return <div className="p-6">Project not found</div>;
 
   return (
@@ -167,7 +189,10 @@ const ProjectDetailsPage = () => {
             </p>
           </div>
           <div className="flex gap-2.5">
-            <button className="flex items-center gap-1.5 bg-white border border-[#e8eaed] rounded-lg px-4 py-2 text-sm text-[#111827]">
+            <button
+              onClick={() => setShowEditModal(true)}
+              className="flex items-center gap-1.5 bg-white border border-[#e8eaed] rounded-lg px-4 py-2 text-sm text-[#111827]"
+            >
               ✎ Edit
             </button>
             <button
@@ -384,6 +409,116 @@ const ProjectDetailsPage = () => {
         projectId={project._id}
         onSubmit={handleInviteMember}
       />
+
+      {showEditModal && (
+        <Modal
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          className="max-w-md"
+          title="Edit project"
+        >
+          <div className="flex flex-col gap-4 p-2">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[11px] font-medium uppercase tracking-wide text-[#6b7280]">
+                Project name
+              </label>
+              <input
+                className="border border-[#e8eaed] rounded-lg px-3 py-2 text-sm"
+                value={editData.name}
+                onChange={(e) =>
+                  setEditData((prev) => ({ ...prev, name: e.target.value }))
+                }
+                placeholder="Project name"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[11px] font-medium uppercase tracking-wide text-[#6b7280]">
+                Description
+              </label>
+              <textarea
+                rows={3}
+                className="border border-[#e8eaed] rounded-lg px-3 py-2 text-sm resize-none"
+                value={editData.description}
+                onChange={(e) =>
+                  setEditData((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
+                placeholder="What is this project about?"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-medium uppercase tracking-wide text-[#6b7280]">
+                  Status
+                </label>
+                <select
+                  className="border border-[#e8eaed] rounded-lg px-3 py-2 text-sm"
+                  value={editData.status}
+                  onChange={(e) =>
+                    setEditData((prev) => ({ ...prev, status: e.target.value }))
+                  }
+                >
+                  <option>Active</option>
+                  <option>On Hold</option>
+                  <option>Completed</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-medium uppercase tracking-wide text-[#6b7280]">
+                  Due date
+                </label>
+                <input
+                  type="date"
+                  className="border border-[#e8eaed] rounded-lg px-3 py-2 text-sm"
+                  value={editData.dueDate}
+                  onChange={(e) =>
+                    setEditData((prev) => ({
+                      ...prev,
+                      dueDate: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[11px] font-medium uppercase tracking-wide text-[#6b7280]">
+                Start date
+              </label>
+              <input
+                type="date"
+                className="border border-[#e8eaed] rounded-lg px-3 py-2 text-sm"
+                value={editData.startDate}
+                onChange={(e) =>
+                  setEditData((prev) => ({
+                    ...prev,
+                    startDate: e.target.value,
+                  }))
+                }
+              />
+            </div>
+
+            <div className="flex gap-2.5 justify-end pt-1 border-t border-[#e8eaed]">
+              <button
+                onClick={() => setShowEditModal(false)}
+                className="px-4 py-2 rounded-lg border border-[#e8eaed] text-sm text-[#374151] hover:bg-[#f9fafb]"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleEdit}
+                className="px-4 py-2 rounded-lg bg-[#4f46e5] text-sm font-medium text-white hover:bg-[#4338ca]"
+              >
+                Save changes
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </>
   );
 };

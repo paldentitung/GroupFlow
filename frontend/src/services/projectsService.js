@@ -25,3 +25,15 @@ export const deleteProject = async (projectId) => {
     true,
   );
 };
+
+export const updateProject = async (projectId, updateData) => {
+  return request(
+    `/projects/${projectId}`,
+    {
+      method: "put",
+      body: JSON.stringify(updateData),
+      headers: { "Content-Type": "application/json" },
+    },
+    true,
+  );
+};
