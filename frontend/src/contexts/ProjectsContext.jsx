@@ -97,6 +97,8 @@ export const ProjectsProvider = ({ children }) => {
   useEffect(() => {
     if (activeProject) {
       localStorage.setItem("activeProject", JSON.stringify(activeProject));
+    } else {
+      localStorage.removeItem("activeProject"); // 👈 remove when null
     }
   }, [activeProject]);
 

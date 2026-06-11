@@ -27,26 +27,32 @@ export const useMembers = (projectId) => {
   useEffect(() => {
     if (!projectId) return;
     const fetchedMembers = async () => {
-      const res = await getMembers(activeProject?._id);
-      console.log("members fetched", res);
-      if (res.success) {
-        const mapped = res.members.map((m) => ({
-          id: m._id,
-          name: `${m.user.firstName} ${m.user.lastName}`,
-          firstName: m.user.firstName,
-          lastName: m.user.lastName,
-          position: m.role,
-          avatar: m.user.avatar,
-          projects: 0,
-          tasks: 0,
-          completed: 0,
-          color: "bg-indigo-100 text-indigo-600",
-        }));
-        setMembers(mapped);
+      try {
+        const res = await getMembers(projectId);
+        console.log("members fetched", res);
+        if (res.success) {
+          const mapped = res.members.map((m) => ({
+            id: m._id,
+            name: `${m.user.firstName} ${m.user.lastName}`,
+            firstName: m.user.firstName,
+            lastName: m.user.lastName,
+            position: m.role,
+            avatar: m.user.avatar,
+            projects: 0,
+            tasks: 0,
+            completed: 0,
+            color: "bg-indigo-100 text-indigo-600",
+          }));
+          setMembers(mapped);
+        }
+      } catch (error) {
+        console.log("member fetch error:", error.message); // 👈 check exact message
+        if (error.message === "Project not found") return;
+        toast.error("Failed to fetch members");
       }
     };
 
     fetchedMembers();
-  }, [activeProject?._id]);
+  }, [projectId]);
   return { members, loading, error, handleInviteMember, members };
 };
