@@ -29,7 +29,6 @@ GroupFlow is a MERN-stack project management application designed for team colla
 | Auth          | JWT, bcrypt                     |
 | Email         | Nodemailer (Gmail App Password) |
 | Image Storage | Cloudinary                      |
-| Testing       | Jest, Supertest                 |
 | DevOps        | Docker, Docker Compose          |
 
 ---
