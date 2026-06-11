@@ -62,10 +62,10 @@ const ProjectCard = ({
       {/* Header */}
       <div className="flex justify-between items-start gap-3">
         <div className="min-w-0">
-          <p className="font-bold text-[15.5px] text-(--color-text-primary) truncate">
+          <p className="font-bold text-[16.5px] text-(--color-text-primary) truncate">
             {name}
           </p>
-          <p className="text-[13px] text-(--color-text-muted) mt-0.5 line-clamp-1">
+          <p className="text-[14x] text-(--color-text-muted) mt-0.5 line-clamp-1">
             {desc}
           </p>
         </div>
@@ -86,7 +86,7 @@ const ProjectCard = ({
 
       {/* Progress */}
       <div>
-        <div className="flex justify-between text-[12.5px] mb-1.5">
+        <div className="flex justify-between text-[14.5px] mb-1.5">
           <span className="text-(--color-text-muted)">Progress</span>
           <span className="font-semibold text-(--color-text-primary)">
             {progress}%

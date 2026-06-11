@@ -38,16 +38,16 @@ const HistoryItem = ({ item, isLast }) => {
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <p className="text-[13.5px] text-gray-800 truncate">{item.details}</p>
+        <p className="text-[14.5px] text-gray-800 truncate">{item.details}</p>
 
         <div className="flex items-center gap-2 mt-1 flex-wrap">
           <span
-            className={`text-[11px] px-2 py-0.5 rounded-full font-semibold ${badgeStyle}`}
+            className={`text-[12px] px-2 py-0.5 rounded-full font-semibold ${badgeStyle}`}
           >
             {item.action}
           </span>
 
-          <span className="text-[11px] text-gray-400">
+          <span className="text-[12px] text-gray-400">
             {formatDate(item.createdAt)} · {item.user?.firstName}{" "}
             {item.user?.lastName}
           </span>
@@ -108,7 +108,7 @@ function HistoryPage() {
               value={searchItem}
               onChange={(e) => setSearchItem(e.target.value)}
               placeholder="Search history..."
-              className="w-full pl-9 pr-4 py-2 text-sm border rounded-lg focus:outline-none focus:border-indigo-400"
+              className="w-full pl-9 pr-4 py-2 text-[14.5px] rounded-lg border border-gray-200 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50 transition-all"
             />
           </div>
 

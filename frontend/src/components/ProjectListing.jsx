@@ -18,8 +18,10 @@ export default function ProjectListing({ projects = [], loading }) {
   if (!projects || projects.length === 0) {
     return (
       <div className="text-center py-12 bg-white border border-[#e8eaed] rounded-xl">
-        <p className="text-sm font-medium text-[#111827]">No projects found</p>
-        <p className="text-xs text-[#6b7280] mt-1">
+        <p className="md:text-lg font-bold  text-[#111827]">
+          No projects found
+        </p>
+        <p className="text-md text-[#6b7280] mt-1">
           Start by creating your first project
         </p>
 

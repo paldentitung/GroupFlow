@@ -17,6 +17,7 @@ import { useAuth } from "../hooks/useAuth.js";
 import Avatar from "../components/Avatar.jsx";
 import { updateNotificationPreferences } from "../services/users.service.js";
 import { toast } from "react-hot-toast";
+import MainButton from "../components/MainButton.jsx";
 
 const NAV_ITEMS = [
   { key: "profile", label: "Profile", icon: User },
@@ -152,21 +153,16 @@ function ProfileSection() {
 
         <div className="flex flex-col gap-2">
           <div className="flex gap-2">
-            <button
-              onClick={handleAvatarClick}
-              className="flex items-center gap-1.5 bg-indigo-600 text-white text-xs font-medium px-3 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              <Camera size={13} />
-              Change Photo
-            </button>
-
             <input
               type="file"
               className="hidden"
               ref={avatarRef}
               onChange={(e) => setAvatar(e.target.files[0])}
             />
-
+            <MainButton onClick={handleAvatarClick}>
+              <Camera size={15} />
+              Change Photo
+            </MainButton>
             <button
               onClick={() => {
                 window.confirm(" are you sure");
@@ -174,7 +170,7 @@ function ProfileSection() {
               }}
               className="flex items-center gap-1.5 border border-gray-200 text-red-500 text-xs font-medium px-3 py-2 rounded-lg hover:bg-red-50 transition-colors"
             >
-              <Trash2 size={13} />
+              <Trash2 />
               Remove
             </button>
           </div>
@@ -214,17 +210,10 @@ function ProfileSection() {
 
       <InputField label="Email Address" value={user?.email} disabled />
 
-      <button
-        onClick={handleSave}
-        className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
-          saved
-            ? "bg-emerald-600 text-white"
-            : "bg-indigo-600 text-white hover:bg-indigo-700"
-        }`}
-      >
+      <MainButton onClick={handleSave}>
         {saved ? <Check size={15} /> : <Save size={15} />}
         {saved ? "Saved!" : "Save Changes"}
-      </button>
+      </MainButton>
     </div>
   );
 }
@@ -347,13 +336,10 @@ function SecuritySection() {
         </div>
       </div>
 
-      <button
-        onClick={handleSave}
-        className="flex items-center gap-2 bg-indigo-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-indigo-700 transition-colors"
-      >
+      <MainButton onClick={handleSave}>
         <Lock size={14} />
         Update Password
-      </button>
+      </MainButton>
     </div>
   );
 }
@@ -412,8 +398,8 @@ function NotificationsSection() {
             className="flex items-center justify-between py-4"
           >
             <div>
-              <p className="text-sm font-medium text-gray-800">{item.label}</p>
-              <p className="text-xs text-gray-500 mt-0.5">{item.sub}</p>
+              <p className="text-md font-medium text-gray-800">{item.label}</p>
+              <p className="text-sm text-gray-500 mt-0.5">{item.sub}</p>
             </div>
             <Toggle
               enabled={notifs[item.key]}

@@ -1,6 +1,6 @@
 import React from "react";
 import MainButton from "./MainButton";
-
+import { ChevronLeft, ChevronRight } from "lucide-react";
 const Pagination = ({
   page = 1,
   totalPages = 1,
@@ -20,7 +20,7 @@ const Pagination = ({
     <div className="flex items-center justify-between px-5 py-4 border-t border-gray-100 bg-gray-50/40 flex-wrap gap-3">
       {/* Info */}
       {showInfo && (
-        <span className="text-[12px] text-gray-400">
+        <span className="text-[14px] text-gray-400">
           Page <span className="font-semibold text-gray-600">{page}</span> of{" "}
           <span className="font-semibold text-gray-600">{totalPages}</span>
           {total !== null && (
@@ -37,8 +37,13 @@ const Pagination = ({
 
       {/* Controls */}
       <div className="flex items-center gap-2 ml-auto">
-        <MainButton onClick={goPrev}>←</MainButton>
-        <MainButton onClick={goNext}>→</MainButton>
+        <MainButton onClick={goPrev}>
+          <ChevronLeft size={18} />
+        </MainButton>
+
+        <MainButton onClick={goNext}>
+          <ChevronRight size={18} />
+        </MainButton>
       </div>
     </div>
   );

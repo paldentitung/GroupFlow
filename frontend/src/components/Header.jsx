@@ -15,7 +15,7 @@ const Header = ({ title, buttonName, onClick, showButton = true }) => {
         <span className="block md:hidden p-1.5 rounded-lg text-[#6b7280] hover:bg-[#f7f8fa] cursor-pointer transition-colors">
           <Menu size={20} onClick={toggleSidebar} />
         </span>
-        <h1 className="text-[17px] font-semibold tracking-tight text-[#111827]">
+        <h1 className="text-[20px] font-semibold tracking-tight text-[#111827]">
           {title}
         </h1>
       </div>

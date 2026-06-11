@@ -16,7 +16,7 @@ const MainButton = ({
       whileHover={{ y: -2, scale: 1.02 }}
       whileTap={{ scale: 0.97 }}
       transition={{ type: "spring", stiffness: 400, damping: 20 }}
-      className={`flex items-center justify-center gap-2 py-2 px-4 rounded-[10px] text-white text-xs md:text-sm font-semibold text-nowrap disabled:opacity-70 disabled:cursor-not-allowed hover:cursor-pointer ${className}`}
+      className={`flex items-center justify-center gap-2 py-2 px-4 rounded-[10px] text-white text-sm md:text-md font-semibold text-nowrap disabled:opacity-70 disabled:cursor-not-allowed hover:cursor-pointer ${className}`}
       style={{
         background: "var(--color-accent)",
         boxShadow: "0 4px 16px rgba(79,70,229,.35)",

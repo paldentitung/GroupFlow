@@ -99,7 +99,7 @@ export default function Sidebar() {
                 />
               </svg>
             </div>
-            <span className="text-[15px] font-semibold tracking-tight text-[#111827]">
+            <span className="md:*:text-[20px] font-semibold tracking-tight text-[#111827]">
               Group Flow
             </span>
           </div>
@@ -127,7 +127,7 @@ export default function Sidebar() {
                           setActive(name);
                           closeSidebar();
                         }}
-                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-all duration-150 hover:cursor-pointer ${
+                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-md transition-all duration-150 hover:cursor-pointer ${
                           isActive
                             ? "bg-[#eef2ff] text-[#4f46e5] font-medium"
                             : "text-[#6b7280] hover:bg-[#f7f8fa] hover:text-[#111827]"

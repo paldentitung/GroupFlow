@@ -82,11 +82,11 @@ const CheckIcon = () => (
 // ── Stat Card ────────────────────────────────────────────────────────────────
 const StatCard = ({ icon, value, label, iconBg, iconColor }) => (
   <div className="flex-1 min-w-0 bg-(--color-surface) border border-(--color-border) rounded-xl p-5 flex flex-col gap-2">
-    <span className="text-[13.5px] font-medium text-(--color-text-muted)">
+    <span className="text-[14px] font-medium text-(--color-text-muted)">
       {label}
     </span>
     <div className="flex items-center justify-between">
-      <span className="text-[28px] font-bold leading-none text-(--color-text-primary)">
+      <span className="text-[32px] font-bold leading-none text-(--color-text-primary)">
         {value}
       </span>
       <span
@@ -155,11 +155,11 @@ function Dashboard() {
           />
         </div>
 
-        <h2 className="text-base font-bold mb-4">My Projects</h2>
+        <h2 className="text-base font-bold mb-4 md:text-lg">My Projects</h2>
 
         <ProjectListing projects={projects} loading={loading} />
 
-        <h2 className="text-base font-bold mb-4">Recent Tasks</h2>
+        <h2 className="text-base font-bold mb-4 md:text-lg">Recent Tasks</h2>
         <TaskTable
           tasks={filteredTasks}
           pagination={pagination}
