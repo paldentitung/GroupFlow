@@ -144,7 +144,7 @@ const ProjectDetailsPage = () => {
   const { handleUpdateProject } = useProjects();
   const { tasks, handleCreateTask, fetchTasks, handleRespondToTask } =
     useTasksContext();
-  const { handleInviteMember } = useMembers(id);
+  const { handleInviteMember, loading } = useMembers(id);
   const handleEdit = async () => {
     await handleUpdateProject(project._id, editData);
     setShowEditModal(false);
@@ -512,6 +512,7 @@ const ProjectDetailsPage = () => {
         onClose={() => setShowInviteModal(false)}
         projectId={project._id}
         onSubmit={handleInviteMember}
+        loading={loading}
       />
 
       {showEditModal && (

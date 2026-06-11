@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 import { useProjects } from "./useProjects.js";
 export const useMembers = (projectId) => {
   const [members, setMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { activeProject } = useProjects();
 

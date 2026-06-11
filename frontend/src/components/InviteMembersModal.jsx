@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import MainButton from "./MainButton";
+import { X } from "lucide-react";
 
-function InviteMembersModal({ isOpen, onClose, onSubmit }) {
+function InviteMembersModal({ isOpen, onClose, onSubmit, loading }) {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("Member");
 
@@ -11,72 +12,81 @@ function InviteMembersModal({ isOpen, onClose, onSubmit }) {
     e.preventDefault();
     if (!email) return;
     await onSubmit({ email, role });
-    setEmail(""); // Reset form
+    setEmail("");
     setRole("Member");
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      {/* Modal Card */}
-      <div className="w-full max-w-md overflow-hidden rounded-lg bg-white p-6 shadow-xl transition-all border border-gray-100">
-        <h3 className="text-lg font-semibold text-gray-900 mb-1">
-          Invite a new member
-        </h3>
-        <p className="text-sm text-gray-500 mb-6">
-          Send an invitation to join your workspace.
-        </p>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Email Input */}
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-md rounded-xl bg-white p-6 border border-[#e8eaed] shadow-lg"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-start justify-between mb-5">
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <h3 className="text-[15px] font-medium text-[#111827]">
+              Invite a member
+            </h3>
+            <p className="text-[13px] text-[#6b7280] mt-0.5">
+              They'll receive an email invitation to join.
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-[#f3f4f6] text-[#9ca3af] hover:text-[#111827] transition-colors"
+          >
+            <X size={15} />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[11px] font-medium uppercase tracking-wide text-[#6b7280]">
               Email address
             </label>
             <input
               type="email"
-              id="email"
               required
               placeholder="name@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-[#e8eaed] px-3 py-2 text-sm text-[#111827] placeholder-[#9ca3af] focus:border-[#4f46e5] focus:outline-none focus:ring-1 focus:ring-[#4f46e5]"
             />
           </div>
 
-          {/* Role Select Input */}
-          <div>
-            <label
-              htmlFor="role"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[11px] font-medium uppercase tracking-wide text-[#6b7280]">
               Role
             </label>
             <select
-              id="role"
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white"
+              className="w-full rounded-lg border border-[#e8eaed] px-3 py-2 text-sm text-[#111827] focus:border-[#4f46e5] focus:outline-none focus:ring-1 focus:ring-[#4f46e5] bg-white"
             >
               <option value="Member">Member</option>
-              <option value="Admin">Admin</option>
-              <option value="Viewer">Viewer</option>
+              <option value="Team Lead">Team Lead</option>
+              <option value="Developer">Developer</option>
+              <option value="UI/UX">UI/UX</option>
+              <option value="DevOps">DevOps</option>
             </select>
           </div>
 
-          {/* Action Buttons */}
-          <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <div className="flex justify-end gap-2.5 pt-4 border-t border-[#f0f1f3]">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none"
+              className="px-4 py-2 rounded-lg border border-[#e8eaed] text-sm text-[#374151] hover:bg-[#f9fafb] transition-colors"
             >
               Cancel
             </button>
-            <MainButton type="submit">Submit</MainButton>
+            <MainButton type="submit" disabled={loading}>
+              {loading ? "Inviting..." : "Invite"}
+            </MainButton>
           </div>
         </form>
       </div>
