@@ -4,7 +4,7 @@ import { Trash2 } from "lucide-react";
 import { ProjectsContext } from "../contexts/ProjectsContext.jsx";
 import { useContext } from "react";
 import AvatarGroup from "./AvatarGroup.jsx";
-
+import { formatDate } from "../utils/formatDate.js";
 const PROGRESS_COLORS = {
   Active: "#4f46e5",
   Completed: "#059669",
@@ -100,7 +100,7 @@ const ProjectCard = ({
         <AvatarGroup members={members} />
         {due && (
           <span className="text-[12.5px] text-(--color-text-muted)">
-            Due {due}
+            Due {formatDate(due)}
           </span>
         )}
       </div>
