@@ -17,49 +17,11 @@ import { useAuth } from "../hooks/useAuth.js";
 import Avatar from "../components/Avatar.jsx";
 
 import { toast } from "react-hot-toast";
-const MEMBERS = [
-  {
-    initials: "AK",
-    name: "Alex Kim",
-    email: "alex@example.com",
-    role: "Owner",
-    color: "bg-indigo-100 text-indigo-600",
-  },
-  {
-    initials: "MJ",
-    name: "Maya Johnson",
-    email: "maya@example.com",
-    role: "Developer",
-    color: "bg-emerald-100 text-emerald-600",
-  },
-  {
-    initials: "SR",
-    name: "Sam Rivera",
-    email: "sam@example.com",
-    role: "Member",
-    color: "bg-amber-100 text-amber-600",
-  },
-  {
-    initials: "NP",
-    name: "Nina Park",
-    email: "nina@example.com",
-    role: "UI/UX",
-    color: "bg-red-100 text-red-600",
-  },
-  {
-    initials: "LT",
-    name: "Leo Torres",
-    email: "leo@example.com",
-    role: "DevOps",
-    color: "bg-blue-100 text-blue-600",
-  },
-];
 
 const NAV_ITEMS = [
   { key: "profile", label: "Profile", icon: User },
   { key: "security", label: "Security", icon: Lock },
   { key: "notifications", label: "Notifications", icon: Bell },
-  { key: "team", label: "Team", icon: Users },
 ];
 
 function Toggle({ enabled, onChange }) {
@@ -186,7 +148,7 @@ function ProfileSection() {
 
       {/* Avatar */}
       <div className="flex items-center gap-4 pb-6 border-b border-gray-100">
-        <Avatar user={user} />
+        <Avatar user={user} size={50} />
 
         <div className="flex flex-col gap-2">
           <div className="flex gap-2">
@@ -456,43 +418,10 @@ function NotificationsSection() {
   );
 }
 
-function TeamSection() {
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-base font-medium text-gray-900">Team</h2>
-          <p className="text-sm text-gray-500 mt-0.5">
-            Manage your project team members
-          </p>
-        </div>
-        <button className="text-xs font-medium bg-indigo-600 text-white px-3 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-1.5">
-          <Users size={13} />
-          Invite Member
-        </button>
-      </div>
-
-      <div className="divide-y divide-gray-100">
-        {MEMBERS.map((m) => (
-          <div key={m.email} className="flex items-center gap-3 py-3.5">
-            <Avatar initials={m.initials} colorClass={m.color} />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900">{m.name}</p>
-              <p className="text-xs text-gray-500 truncate">{m.email}</p>
-            </div>
-            <RoleBadge role={m.role} />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 const SECTIONS = {
   profile: <ProfileSection />,
   security: <SecuritySection />,
   notifications: <NotificationsSection />,
-  team: <TeamSection />,
 };
 
 export default function SettingsPage() {
