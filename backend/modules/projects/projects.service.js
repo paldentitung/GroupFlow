@@ -102,7 +102,7 @@ export const deleteProjectService = async (projectId, userId) => {
   });
 
   // cascade
-  await Task.deleteMany({ project: projectId });
+  await Task.deleteMany({ projectId });
   await History.deleteMany({ project: projectId });
   await Notification.deleteMany({ project: projectId });
 

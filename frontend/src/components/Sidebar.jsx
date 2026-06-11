@@ -36,19 +36,16 @@ export default function Sidebar() {
         {
           name: "Projects",
           icon: "M3 7a2 2 0 012-2h4l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z",
-          badge: projects.length,
           link: "/projects",
         },
         {
           name: "My Tasks",
           icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z",
-          badge: userTasks?.length,
           link: "/my-tasks",
         },
         {
           name: "Tasks",
           icon: "M4 6h16M4 10h16M4 14h10",
-          badge: tasks?.length,
           link: "/tasks",
         },
         {
@@ -150,11 +147,6 @@ export default function Sidebar() {
                           />
                         </svg>
                         <span className="flex-1 text-left">{name}</span>
-                        {badge && (
-                          <span className="ml-auto text-[11px] font-semibold bg-[#4f46e5] text-white rounded-full px-2 py-0.5 leading-none">
-                            {badge}
-                          </span>
-                        )}
                       </Link>
                     </div>
                   );
