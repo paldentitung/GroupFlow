@@ -206,4 +206,4 @@ All endpoints are prefixed with `/api`.
 
 ## 📄 License
 
-MIT ??
+This project is licensed under the MIT License.
