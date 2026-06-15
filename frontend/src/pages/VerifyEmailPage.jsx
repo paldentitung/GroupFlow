@@ -122,14 +122,7 @@ const VerifyEmailPage = () => {
             className="text-sm leading-relaxed max-w-[320px] mb-2"
             style={{ color: "var(--color-text-muted)" }}
           >
-            We sent a verification link to
-          </p>
-
-          <p
-            className="text-sm font-semibold mb-6"
-            style={{ color: "var(--color-text-primary)" }}
-          >
-            jane@company.com
+            We sent a verification link to your Email
           </p>
 
           <p
