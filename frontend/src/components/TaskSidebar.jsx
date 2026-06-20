@@ -179,7 +179,11 @@ export default function TaskSidebar() {
                 ))}
               </>
             ) : (
-              <>no comments</>
+              <div className="flex flex-col items-center justify-center py-8">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  No comments yet
+                </p>
+              </div>
             )}
           </div>
         </div>
