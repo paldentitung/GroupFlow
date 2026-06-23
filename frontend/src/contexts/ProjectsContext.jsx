@@ -48,9 +48,9 @@ export const ProjectsProvider = ({ children }) => {
         if (activeProject?._id === projectId) {
           setActiveProject(null);
           localStorage.removeItem("activeProject");
-          navigate("/projects");
         }
         toast.success(response.message || "Project deleted successfully");
+        navigate("/");
       }
     } catch (error) {
       console.error("Error deleting project:", error);
