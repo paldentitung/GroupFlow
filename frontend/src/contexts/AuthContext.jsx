@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       setUser(null);
     } finally {
-      setLoading(false); // IMPORTANT
+      setLoading(false);
     }
   };
 
@@ -31,7 +31,9 @@ export const AuthProvider = ({ children }) => {
     console.log("User state updated:", user);
   }, [user]);
   return (
-    <AuthContext.Provider value={{ user, fetchUser, setUser, loading }}>
+    <AuthContext.Provider
+      value={{ user, fetchUser, setUser, loading, fetchUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

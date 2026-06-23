@@ -3,6 +3,7 @@ import { ProjectsContext } from "../contexts/ProjectsContext.jsx";
 import { createProject } from "../services/projectsService.js";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext.jsx";
 
 export const useProjects = () => {
   const {
@@ -14,6 +15,7 @@ export const useProjects = () => {
   } = useContext(ProjectsContext);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { fetchUser } = useContext(AuthContext);
   const handleCreateProject = async (projectData) => {
     try {
       setLoading(true);
@@ -22,6 +24,7 @@ export const useProjects = () => {
         console.log("created project response:", response);
         addProject(response.project);
         toast.success(response.message || "Project Created");
+        await fetchUser();
         navigate("/projects");
       }
       return response;
