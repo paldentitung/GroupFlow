@@ -158,7 +158,7 @@ export default function TaskSidebar() {
               <>
                 {comments.map((c) => (
                   <div
-                    key={c.id}
+                    key={c._id}
                     className="bg-[#f7f8fa] border border-[#e8eaed] rounded-xl px-3.5 py-3"
                   >
                     <div className="flex items-center justify-between mb-1.5">

@@ -10,7 +10,7 @@ export const getProjectHistoryService = async (projectId, query) => {
   if (user) filter.user = user;
 
   return await History.find(filter)
-    .populate("user", "firstName lastName email")
+    .populate("user", "firstName lastName email avatar")
     .sort({ createdAt: -1 });
 };
 
@@ -19,7 +19,7 @@ export const getTaskHistoryService = async (projectId, taskId) => {
     project: projectId,
     taskId: taskId,
   })
-    .populate("user", "firstName lastName email")
+    .populate("user", "firstName lastName email avatar")
     .sort({ createdAt: -1 });
 };
 
