@@ -130,7 +130,7 @@ function HistoryPage() {
           {/* Pagination */}
         </div>
         <Pagination
-          currentPage={pagination?.page || 1}
+          page={pagination?.page || 1}
           totalPages={pagination?.totalPages || 1}
           total={pagination?.total || historyData.length}
           onPageChange={setPage}
