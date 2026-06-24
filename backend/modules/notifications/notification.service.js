@@ -4,7 +4,7 @@ import User from "../users/User.js";
 import { getIO, getSocketId } from "../../config/socket.js";
 
 export const getUserNotificatonService = async (userId) => {
-  return await Notification.find({ recipient: userId });
+  return await Notification.find({ recipient: userId }).sort({ createdAt: -1 });
 };
 
 export const markAsReadService = async (notificationId, userId) => {
