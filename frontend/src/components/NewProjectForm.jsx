@@ -11,15 +11,33 @@ const defaultForm = {
 
 const NewProjectForm = ({ onCancel }) => {
   const [form, setForm] = useState(defaultForm);
+  const [formError, setFormError] = useState("");
+  const [errors, setErrors] = useState({});
   const set = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 
   const { handleCreateProject } = useProjects();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name.trim()) return alert("Project name is required.");
-    handleCreateProject(form);
-    onCancel();
+
+    try {
+      if (!form.name.trim()) {
+        setErrors({
+          name: "Project name is required",
+        });
+        return;
+      }
+      if (!form.description.trim()) {
+        setErrors({
+          description: "Project description is required",
+        });
+        return;
+      }
+      await handleCreateProject(form);
+      onCancel();
+    } catch (error) {
+      setFormError(error?.message || "Something went wrong");
+    }
   };
 
   return (
@@ -35,6 +53,8 @@ const NewProjectForm = ({ onCancel }) => {
           value={form.name}
           onChange={(e) => set("name", e.target.value)}
         />
+
+        {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -48,6 +68,9 @@ const NewProjectForm = ({ onCancel }) => {
           value={form.description}
           onChange={(e) => set("description", e.target.value)}
         />
+        {errors.description && (
+          <p className="text-xs text-red-500">{errors.description}</p>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-3">
