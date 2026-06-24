@@ -55,7 +55,7 @@ const App = () => {
       />
       <Routes>
         {/* Public Routes */}
-        <Route path="/home" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
@@ -69,7 +69,7 @@ const App = () => {
 
         <Route element={<ProtectedRoute />}>
           <Route
-            path="/"
+            path="/Dashboard"
             element={
               <MainLayout>
                 <Dashboard />

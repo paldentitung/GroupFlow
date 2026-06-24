@@ -53,7 +53,7 @@ export const useAuth = () => {
       if (res.success) {
         await fetchUser();
         toast.success(res.message || "Login successful");
-        navigate("/");
+        navigate("/dashboard");
       }
     } catch (err) {
       toast.error(err.message);
