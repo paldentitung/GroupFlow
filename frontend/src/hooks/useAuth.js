@@ -108,5 +108,6 @@ export const useAuth = () => {
     handleForgotPassword,
     handleResetPassword,
     fetchUser,
+    loading,
   };
 };

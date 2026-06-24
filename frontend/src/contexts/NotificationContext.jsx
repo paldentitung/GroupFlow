@@ -1,67 +1,79 @@
-import { useState, createContext, useContext, useEffect } from "react";
+import { useState, createContext, useContext, useEffect, useRef } from "react";
+import { io } from "socket.io-client";
 import {
   getUserNotification,
   markAllReadNotification,
   markAsReadNotification,
 } from "../services/notificationsService";
 import toast from "react-hot-toast";
+import { useAuth } from "../hooks/useAuth";
+import { AuthContext } from "./AuthContext";
 
 const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
-
-  const toggleNotification = () => setOpen((prev) => !prev);
+  const socketRef = useRef(null);
+  const { user, loading } = useContext(AuthContext);
+  console.log("NotificationProvider:", { user, loading });
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      const res = await getUserNotification();
-      console.log("notification data", res);
-      if (res.success) {
-        setNotifications(res.data);
-      }
+    if (loading) return;
+    if (!user?._id) return;
+    const socket = io(import.meta.env.VITE_SOCKET_URL, {
+      query: { userId: user._id },
+      withCredentials: true,
+    });
+
+    socketRef.current = socket;
+
+    socket.on("connect", () => {
+      getUserNotification().then((res) => {
+        if (res.success) setNotifications(res.data);
+      });
+    });
+
+    socket.on("new_notification", (notification) => {
+      setNotifications((prev) => [notification, ...prev]);
+      toast.success(notification.message || "New notification");
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("new_notification");
+      socket.disconnect();
     };
-    fetchNotifications();
-  }, []);
+  }, [user?._id, loading]);
 
   const handleMarkAsReadNotification = async (notificationId) => {
     try {
       const res = await markAsReadNotification(notificationId);
-
       if (res.success) {
         toast.success("Notification read");
-
         setNotifications((prev) =>
           prev.map((n) =>
             n._id === notificationId ? { ...n, isRead: true } : n,
           ),
         );
       }
-      console.log("update notification", res);
-      return;
     } catch (error) {
       toast.error(error.message || "error");
     }
   };
+
   const handleMarkAllReadNotification = async () => {
     try {
       const res = await markAllReadNotification();
-
       if (res.success) {
         toast.success("All notifications marked as read");
-
-        setNotifications((prev) =>
-          prev.map((n) => ({
-            ...n,
-            isRead: true,
-          })),
-        );
+        setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
       }
     } catch (error) {
       toast.error(error.message || "error");
     }
   };
+  const toggleNotification = () => setOpen((prev) => !prev);
   return (
     <NotificationContext.Provider
       value={{

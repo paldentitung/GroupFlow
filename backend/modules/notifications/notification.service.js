@@ -1,6 +1,8 @@
 import Notification from "./Notification.js";
 import AppError from "../../utils/AppError.js";
 import User from "../users/User.js";
+import { getIO, getSocketId } from "../../config/socket.js";
+
 export const getUserNotificatonService = async (userId) => {
   return await Notification.find({ recipient: userId });
 };
@@ -35,8 +37,6 @@ export const createNotificationService = async ({
   link,
 }) => {
   const recipient = await User.findById(recipientId);
-
-  // check preference before creating
   const prefs = recipient?.notificationPreferences;
 
   if (prefs) {
@@ -54,6 +54,12 @@ export const createNotificationService = async ({
     message,
     link,
   });
+
+  // emit to recipient if online
+  const socketId = getSocketId(recipientId.toString());
+  if (socketId) {
+    getIO().to(socketId).emit("new_notification", notification);
+  }
 
   return notification;
 };

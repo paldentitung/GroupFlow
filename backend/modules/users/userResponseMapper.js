@@ -2,7 +2,7 @@ export const userResponseMapper = (user) => {
   if (!user) return null;
 
   return {
-    id: user._id,
+    _id: user._id,
     firstName: user.firstName,
     lastName: user.lastName,
     email: user.email,
