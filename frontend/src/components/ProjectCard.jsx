@@ -52,7 +52,7 @@ const ProjectCard = ({
   onClick,
 }) => {
   const progressColor = PROGRESS_COLORS[status] ?? "#4f46e5";
-  const { handleDeleteProject } = useContext(ProjectsContext);
+
   return (
     <div
       // to={`/projects/${id}`}
@@ -74,8 +74,8 @@ const ProjectCard = ({
 
           <button
             onClick={(e) => {
-              e.preventDefault();
-              handleDeleteProject(id);
+              e.stopPropagation();
+              onDelete();
             }}
             className="text-[#9ca3af] hover:text-[#ef4444] transition-colors p-1 cursor-pointer"
           >

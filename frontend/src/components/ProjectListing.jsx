@@ -1,6 +1,10 @@
 import { useProjects } from "../hooks/useProjects";
 import ProjectCard from "./ProjectCard";
-export default function ProjectListing({ projects = [], loading }) {
+export default function ProjectListing({
+  projects = [],
+  loading,
+  onDeleteClick,
+}) {
   const { handleSetActiveProject } = useProjects();
   if (loading) {
     return (
@@ -46,6 +50,7 @@ export default function ProjectListing({ projects = [], loading }) {
           members={p.members.map((m) => m.user)}
           owner={p.owner}
           onClick={() => handleSetActiveProject(p)}
+          onDelete={() => onDeleteClick(p)}
         />
       ))}
     </div>
