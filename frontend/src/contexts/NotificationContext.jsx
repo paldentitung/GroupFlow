@@ -8,6 +8,7 @@ import {
 import toast from "react-hot-toast";
 import { useAuth } from "../hooks/useAuth";
 import { AuthContext } from "./AuthContext";
+import { playNotificationSound } from "../utils/playNotificationSound";
 
 const NotificationContext = createContext();
 
@@ -36,6 +37,7 @@ export const NotificationProvider = ({ children }) => {
 
     socket.on("new_notification", (notification) => {
       setNotifications((prev) => [notification, ...prev]);
+      playNotificationSound();
       toast.success(notification.message || "New notification");
     });
 
