@@ -52,7 +52,7 @@ export default function TaskSidebar() {
   const [content, setContent] = useState("");
   const [showHistory, setShowHistory] = useState(false);
   const { taskHistory, taskLoading, fetchTaskHistory } = useTaskHistory();
-
+  const [errors, setErrors] = useState({});
   const handleClose = () => navigate(`/projects/${task?.projectId}`);
 
   if (loading) return <div className="p-6">Loading...</div>;
@@ -189,23 +189,48 @@ export default function TaskSidebar() {
         </div>
 
         {/* Comment input */}
-        <div className="flex gap-2.5 items-end px-[22px] py-4 mt-3.5 border-t border-[#e8eaed]">
-          <textarea
-            placeholder="Write a comment..."
-            rows={1}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="flex-1 bg-[#f7f8fa] border border-[#e8eaed] rounded-lg px-3 py-2 text-[13px] text-[#111827] placeholder:text-[#6b7280] outline-none resize-none min-h-[38px] focus:border-indigo-500 transition-colors"
-          />
-          <button
-            onClick={async () => {
-              await handleAddComment(content);
-              setContent("");
-            }}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white text-[13px] font-medium rounded-lg px-4 h-[38px] shrink-0 transition-colors cursor-pointer"
-          >
-            Post
-          </button>
+        <div className="px-[22px] py-4 mt-3.5 border-t border-[#e8eaed]">
+          <div className="flex gap-2.5 items-end">
+            <textarea
+              placeholder="Write a comment..."
+              rows={1}
+              value={content}
+              onChange={(e) => {
+                setContent(e.target.value);
+
+                if (errors.content) {
+                  setErrors({});
+                }
+              }}
+              className="flex-1 bg-[#f7f8fa] border border-[#e8eaed] rounded-lg px-3 py-2 text-[13px] text-[#111827] placeholder:text-[#6b7280] outline-none resize-none min-h-[38px] focus:border-indigo-500 transition-colors"
+            />
+
+            <button
+              onClick={async () => {
+                if (!content.trim()) {
+                  setErrors({
+                    content: "Content is required",
+                  });
+                  return;
+                }
+
+                try {
+                  await handleAddComment(content);
+                  setContent("");
+                  setErrors({});
+                } catch (error) {
+                  console.error(error);
+                }
+              }}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white text-[13px] font-medium rounded-lg px-4 h-[38px] shrink-0 transition-colors cursor-pointer"
+            >
+              Post
+            </button>
+          </div>
+
+          {errors.content && (
+            <p className="mt-1 ml-2 text-xs text-red-500">{errors.content}</p>
+          )}
         </div>
 
         {/* Actions */}
