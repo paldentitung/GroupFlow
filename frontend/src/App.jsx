@@ -19,6 +19,7 @@ import TasksPage from "./pages/TasksPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PageNotFound from "./pages/PageNotFound";
 const App = () => {
   return (
     <SidebarProvider>
@@ -61,6 +62,7 @@ const App = () => {
         <Route path="/accept-invite/:token" element={<AcceptInvitePage />} />
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="*" element={<PageNotFound />} />
 
         {/* Protected Routes */}
 
