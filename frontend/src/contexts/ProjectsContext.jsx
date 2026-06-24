@@ -50,7 +50,7 @@ export const ProjectsProvider = ({ children }) => {
           localStorage.removeItem("activeProject");
         }
         toast.success(response.message || "Project deleted successfully");
-        navigate("/");
+        navigate("/projects");
       }
     } catch (error) {
       console.error("Error deleting project:", error);
