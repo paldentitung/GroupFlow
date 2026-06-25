@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import { inviteMember, getMembers } from "../services/membersService.js";
 import { toast } from "react-hot-toast";
-import { useProjects } from "./useProjects.js";
 export const useMembers = (projectId) => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { activeProject } = useProjects();
 
   const handleInviteMember = async (member) => {
     try {
@@ -26,6 +24,7 @@ export const useMembers = (projectId) => {
   };
   useEffect(() => {
     if (!projectId) return;
+    console.log("useMembers effect fired", projectId);
     const fetchedMembers = async () => {
       try {
         const res = await getMembers(projectId);
@@ -54,5 +53,8 @@ export const useMembers = (projectId) => {
 
     fetchedMembers();
   }, [projectId]);
-  return { members, loading, error, handleInviteMember, members };
+  useEffect(() => {
+    console.log("Members changed:", members);
+  }, [members]);
+  return { members, loading, error, handleInviteMember };
 };

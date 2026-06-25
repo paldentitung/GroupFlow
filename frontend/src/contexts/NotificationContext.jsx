@@ -17,11 +17,11 @@ export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const socketRef = useRef(null);
   const { user, loading } = useContext(AuthContext);
-  console.log("NotificationProvider:", { user, loading });
 
   useEffect(() => {
     if (loading) return;
     if (!user?._id) return;
+    if (socketRef.current?.connected) return;
     const socket = io(import.meta.env.VITE_SOCKET_URL, {
       query: { userId: user._id },
       withCredentials: true,
