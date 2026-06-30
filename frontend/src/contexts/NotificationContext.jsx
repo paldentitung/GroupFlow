@@ -6,7 +6,6 @@ import {
   markAsReadNotification,
 } from "../services/notificationsService";
 import toast from "react-hot-toast";
-import { useAuth } from "../hooks/useAuth";
 import { AuthContext } from "./AuthContext";
 import { playNotificationSound } from "../utils/playNotificationSound";
 
@@ -15,13 +14,15 @@ const NotificationContext = createContext();
 export const NotificationProvider = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [connected, setConnected] = useState(false);
   const socketRef = useRef(null);
   const { user, loading } = useContext(AuthContext);
 
   useEffect(() => {
     if (loading) return;
     if (!user?._id) return;
-    if (socketRef.current?.connected) return;
+    if (socketRef.current) return; // already created, don't recreate
+
     const socket = io(import.meta.env.VITE_SOCKET_URL, {
       query: { userId: user._id },
       withCredentials: true,
@@ -30,9 +31,14 @@ export const NotificationProvider = ({ children }) => {
     socketRef.current = socket;
 
     socket.on("connect", () => {
+      setConnected(true);
       getUserNotification().then((res) => {
         if (res.success) setNotifications(res.data);
       });
+    });
+
+    socket.on("disconnect", () => {
+      setConnected(false);
     });
 
     socket.on("new_notification", (notification) => {
@@ -43,8 +49,11 @@ export const NotificationProvider = ({ children }) => {
 
     return () => {
       socket.off("connect");
+      socket.off("disconnect");
       socket.off("new_notification");
       socket.disconnect();
+      socketRef.current = null;
+      setConnected(false);
     };
   }, [user?._id, loading]);
 
@@ -75,7 +84,9 @@ export const NotificationProvider = ({ children }) => {
       toast.error(error.message || "error");
     }
   };
+
   const toggleNotification = () => setOpen((prev) => !prev);
+
   return (
     <NotificationContext.Provider
       value={{
@@ -85,6 +96,8 @@ export const NotificationProvider = ({ children }) => {
         notifications,
         handleMarkAsReadNotification,
         handleMarkAllReadNotification,
+        socketRef,
+        connected,
       }}
     >
       {children}

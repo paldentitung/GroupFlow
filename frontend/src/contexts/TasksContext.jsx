@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import {
   getTasks,
   createTask,
@@ -9,8 +9,9 @@ import {
 } from "../services/tasksService.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { useProjects } from "../hooks/useProjects.js";
 import { ProjectsContext } from "./ProjectsContext.jsx";
+import { useNotifications } from "./NotificationContext.jsx";
+
 const TasksContext = createContext(null);
 
 export const TasksProvider = ({ children }) => {
@@ -19,9 +20,13 @@ export const TasksProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { fetchProjects } = useContext(ProjectsContext);
+  const { socketRef, connected } = useNotifications();
+  const currentProjectIdRef = useRef(null);
+
   const fetchTasks = async (projectId) => {
     setLoading(true);
     setError(null);
+    currentProjectIdRef.current = projectId; // remember which project's board is active
     try {
       const tasksData = await getTasks(projectId);
       setTasks(tasksData.data);
@@ -31,6 +36,31 @@ export const TasksProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+  // Join the active project's room and listen for taskCreated
+  useEffect(() => {
+    const socket = socketRef.current;
+    const projectId = currentProjectIdRef.current;
+    if (!socket || !connected || !projectId) return;
+
+    socket.emit("joinProjectRoom", projectId);
+
+    const handleTaskCreated = (newTask) => {
+      if (newTask.projectId !== currentProjectIdRef.current) return;
+      setTasks((prev) => {
+        if (prev.some((t) => t._id === newTask._id)) return prev;
+        return [newTask, ...prev];
+      });
+    };
+
+    socket.on("taskCreated", handleTaskCreated);
+
+    return () => {
+      socket.emit("leaveProjectRoom", projectId);
+      socket.off("taskCreated", handleTaskCreated);
+    };
+  }, [socketRef, connected, tasks.length]);
+  // re-runs when fetchTasks sets a new project context (tasks.length changes on fetch)
 
   const handleCreateTask = async (taskData) => {
     const { projectId, ...rest } = taskData;
@@ -44,6 +74,7 @@ export const TasksProvider = ({ children }) => {
       throw err;
     }
   };
+
   const handleDeleteTask = async (taskId, projectId) => {
     try {
       const response = await deleteTask(taskId);
@@ -64,17 +95,15 @@ export const TasksProvider = ({ children }) => {
         setTasks((prev) =>
           prev.map((t) => (t._id === taskId ? { ...t, ...updatedData } : t)),
         );
-
         toast.success("Task updated");
-
         if (updatedData.status) await fetchProjects();
-
         navigate(`/projects/${response.data.projectId}`);
       }
     } catch (err) {
       toast.error(err.message);
     }
   };
+
   const handleRespondToTask = async (taskId, response, projectId) => {
     try {
       const res = await respondToTask(taskId, response);
@@ -95,17 +124,16 @@ export const TasksProvider = ({ children }) => {
   const fetchCurrentUserTasks = async (page = 1, limit = 10) => {
     try {
       const response = await getCurrentUserTasks(page, limit);
-
       return {
         tasks: response.tasks || [],
         pagination: response.pagination || null,
       };
     } catch (error) {
       toast.error(error.message || "Failed to fetch tasks");
-
       return { tasks: [], pagination: null };
     }
   };
+
   return (
     <TasksContext.Provider
       value={{

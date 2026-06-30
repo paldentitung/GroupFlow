@@ -3,6 +3,7 @@ import Project from "../projects/Project.js";
 import AppError from "../../utils/AppError.js";
 import { createHistoryService } from "../history/history.service.js";
 import { createNotificationService } from "../notifications/notification.service.js";
+import { getIO } from "../../config/socket.js";
 
 // export const getTasksService = async (projectId) => {
 //   const tasks = await Task.find({ projectId })
@@ -124,6 +125,21 @@ export const createTaskService = async (
       link: `/projects/${projectId}/tasks/${task._id}`,
     });
   }
+  const populatedTask = await Task.findById(task._id)
+    .populate("assigneeId", "firstName lastName avatar")
+    .populate("createdBy", "firstName lastName avatar");
+  const room = `project:${projectId}`;
+  const roomSockets = await getIO().in(room).fetchSockets();
+  console.log(
+    "[createTaskService] emitting to room:",
+    room,
+    "| sockets in room:",
+    roomSockets.length,
+  );
+
+  getIO().to(room).emit("taskCreated", populatedTask);
+
+  getIO().to(`project:${projectId}`).emit("taskCreated", populatedTask);
   return task;
 };
 

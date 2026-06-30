@@ -13,7 +13,7 @@ const AvatarGroup = ({ members = [], max = 3 }) => {
   return (
     <div className="flex items-center">
       {visible.map((m, i) => {
-        console.log("member", m); // ← log here
+        // console.log("member", m); // ← log here
         return <Avatar key={m._id || i} user={m} />;
       })}
 

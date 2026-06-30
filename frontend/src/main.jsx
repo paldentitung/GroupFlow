@@ -14,13 +14,13 @@ createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <AuthProvider>
         <ProjectsProvider>
-          <TasksProvider>
-            <AddProjectProvider>
-              <NotificationProvider>
+          <NotificationProvider>
+            <TasksProvider>
+              <AddProjectProvider>
                 <App />
-              </NotificationProvider>
-            </AddProjectProvider>
-          </TasksProvider>
+              </AddProjectProvider>
+            </TasksProvider>
+          </NotificationProvider>
         </ProjectsProvider>
       </AuthProvider>
     </BrowserRouter>

@@ -12,24 +12,29 @@ export const initSocket = (httpServer) => {
   });
 
   io.on("connection", (socket) => {
-    console.log("✅ client connected:", socket.id);
     const userId = socket.handshake.query.userId;
 
     if (userId) {
       onlineUsers.set(userId, socket.id);
-      socket.join(`user:${userId}`); // optional but useful for direct notifications too
     }
 
     socket.on("joinTaskRoom", (taskId) => {
       socket.join(`task:${taskId}`);
-      console.log(`Socket ${socket.id} joined task:${taskId}`);
     });
 
     socket.on("leaveTaskRoom", (taskId) => {
       socket.leave(`task:${taskId}`);
-      console.log(`Socket ${socket.id} left task:${taskId}`);
     });
 
+    socket.on("joinProjectRoom", (projectId) => {
+      socket.join(`project:${projectId}`);
+      console.log(`[socket] ${socket.id} joined project:${projectId}`);
+    });
+
+    socket.on("leaveProjectRoom", (projectId) => {
+      socket.leave(`project:${projectId}`);
+      console.log(`[socket] ${socket.id} left project:${projectId}`);
+    });
     socket.on("disconnect", () => {
       onlineUsers.delete(userId);
     });
