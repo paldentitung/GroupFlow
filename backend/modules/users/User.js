@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema(
     notificationPreferences: {
       taskAssigned: { type: Boolean, default: true },
       deadlineReminder: { type: Boolean, default: true },
-      newComment: { type: Boolean, default: false },
+      newComment: { type: Boolean, default: true },
       projectStatus: { type: Boolean, default: true },
     },
   },

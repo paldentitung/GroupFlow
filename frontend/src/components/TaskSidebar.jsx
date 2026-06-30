@@ -10,6 +10,11 @@ import { useComments } from "../hooks/useComments.js";
 import { useState } from "react";
 import { useTaskHistory } from "../hooks/useTaskHistory.js";
 
+import { useEffect } from "react";
+import { useSocket } from "../hooks/useSocket.js";
+import { useAuth } from "../hooks/useAuth.js";
+import toast from "react-hot-toast";
+
 function isOverdue(iso) {
   if (!iso) return false;
   return new Date(iso) < new Date();
@@ -48,12 +53,40 @@ export default function TaskSidebar() {
   const navigate = useNavigate();
   const { projects } = useProjects();
   const { handleDeleteTask, handleUpdateTask } = useTasksContext(); // ✅ from context
-  const { comments, handleAddComment } = useComments(taskId);
+  const { comments, handleAddComment, setComments } = useComments(taskId);
   const [content, setContent] = useState("");
   const [showHistory, setShowHistory] = useState(false);
   const { taskHistory, taskLoading, fetchTaskHistory } = useTaskHistory();
   const [errors, setErrors] = useState({});
   const handleClose = () => navigate(`/projects/${task?.projectId}`);
+  const { user } = useAuth();
+
+  const socketRef = useSocket(user._id);
+
+  useEffect(() => {
+    const socket = socketRef.current;
+    if (!socket || !taskId) return;
+    socket.emit("joinTaskRoom", taskId);
+
+    const handleNewComment = (payload) => {
+      if (payload.taskId !== taskId) return;
+
+      setComments((prev) => {
+        if (prev.some((c) => c._id === payload.comment._id)) return prev;
+        return [...prev, payload.comment];
+      });
+
+      const author = payload.comment.authorId;
+      toast.success(
+        author?.firstName ? `${author.firstName} commented` : "New comment",
+      );
+    };
+    socket.on("commentCreated", handleNewComment);
+    return () => {
+      socket.emit("leaveTaskRoom", taskId);
+      socket.off("commentCreated", handleNewComment);
+    };
+  }, [socketRef.current, taskId]);
 
   if (loading) return <div className="p-6">Loading...</div>;
   if (!task) return <div className="p-6">Task not found</div>;

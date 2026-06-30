@@ -25,8 +25,8 @@ export const createCommentService = async (taskId, content, userId) => {
 
   const usernames = extractUsernames(content);
   const mentionedUsers = await getMentionedUsers(usernames);
-
   const mentionedUserIds = mentionedUsers.map((u) => u._id);
+
   const comment = await Comment.create({
     content,
     authorId: userId,
@@ -54,9 +54,13 @@ export const createCommentService = async (taskId, content, userId) => {
     });
   }
 
-  return comment;
-};
+  const populatedComment = await Comment.findById(comment._id).populate(
+    "authorId",
+    "firstName lastName avatar",
+  );
 
+  return { comment: populatedComment, projectId: task.projectId };
+};
 export const updateCommentService = async (commentId, content, userId) => {
   const comment = await Comment.findById(commentId);
 

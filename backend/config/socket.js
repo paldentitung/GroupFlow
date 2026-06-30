@@ -1,8 +1,6 @@
 import { Server } from "socket.io";
 
 let io;
-
-// userId -> socketId map
 const onlineUsers = new Map();
 
 export const initSocket = (httpServer) => {
@@ -19,7 +17,18 @@ export const initSocket = (httpServer) => {
 
     if (userId) {
       onlineUsers.set(userId, socket.id);
+      socket.join(`user:${userId}`); // optional but useful for direct notifications too
     }
+
+    socket.on("joinTaskRoom", (taskId) => {
+      socket.join(`task:${taskId}`);
+      console.log(`Socket ${socket.id} joined task:${taskId}`);
+    });
+
+    socket.on("leaveTaskRoom", (taskId) => {
+      socket.leave(`task:${taskId}`);
+      console.log(`Socket ${socket.id} left task:${taskId}`);
+    });
 
     socket.on("disconnect", () => {
       onlineUsers.delete(userId);

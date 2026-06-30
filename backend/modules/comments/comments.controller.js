@@ -1,3 +1,4 @@
+import { getIO } from "../../config/socket.js";
 import {
   getCommentsService,
   createCommentService,
@@ -21,12 +22,22 @@ export const createCommentController = async (req, res) => {
   const { taskId } = req.params;
   const { content } = req.body;
 
-  const result = await createCommentService(taskId, content, req.user._id);
+  const { comment, projectId } = await createCommentService(
+    taskId,
+    content,
+    req.user._id,
+  );
+
+  const io = getIO();
+  io.to(`task:${taskId}`).emit("commentCreated", {
+    taskId,
+    comment,
+  });
 
   res.status(201).json({
     success: true,
     message: "Comment created",
-    data: result,
+    data: comment,
   });
 };
 
