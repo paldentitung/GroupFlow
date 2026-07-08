@@ -60,7 +60,6 @@ export const TasksProvider = ({ children }) => {
       socket.off("taskCreated", handleTaskCreated);
     };
   }, [socketRef, connected, tasks.length]);
-  // re-runs when fetchTasks sets a new project context (tasks.length changes on fetch)
 
   const handleCreateTask = async (taskData) => {
     const { projectId, ...rest } = taskData;
@@ -97,6 +96,7 @@ export const TasksProvider = ({ children }) => {
         );
         toast.success("Task updated");
         if (updatedData.status) await fetchProjects();
+        await fetchTasks(response.data.projectId);
         navigate(`/projects/${response.data.projectId}`);
       }
     } catch (err) {

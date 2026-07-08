@@ -21,14 +21,18 @@ const AddTaskModal = ({
   projectId,
   createdBy,
   members = [],
+  initialData = null, // pass this to switch into edit mode
 }) => {
+  const isEdit = Boolean(initialData);
+
   const [form, setForm] = useState({
-    title: "",
-    description: "",
-    status: "todo",
-    priority: "medium",
-    dueDate: "",
-    assigneeId: "",
+    title: initialData?.title ?? "",
+    description: initialData?.description ?? "",
+    status: initialData?.status ?? "todo",
+    priority: initialData?.priority ?? "medium",
+    dueDate: initialData?.dueDate ?? "",
+    assigneeId: initialData?.assigneeId ?? "",
+    status: initialData?.status ?? "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -49,13 +53,23 @@ const AddTaskModal = ({
     if (Object.keys(e).length) return setErrors(e);
     setLoading(true);
     try {
-      await onSubmit({
-        ...form,
-        projectId,
-        createdBy,
-        dueDate: form.dueDate || undefined,
-        assigneeId: form.assigneeId || undefined,
-      });
+      if (isEdit) {
+        // edit mode: onSubmit is expected to be (updatedFields) => Promise
+        await onSubmit({
+          ...form,
+          dueDate: form.dueDate || undefined,
+          assigneeId: form.assigneeId || undefined,
+        });
+      } else {
+        // create mode: onSubmit is expected to be (taskData) => Promise
+        await onSubmit({
+          ...form,
+          projectId,
+          createdBy,
+          dueDate: form.dueDate || undefined,
+          assigneeId: form.assigneeId || undefined,
+        });
+      }
       onClose();
     } catch (err) {
       console.error(err);
@@ -78,10 +92,12 @@ const AddTaskModal = ({
         <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#f0f1f3]">
           <div>
             <h2 className="text-[17px] font-semibold text-[#111827]">
-              Add Task
+              {isEdit ? "Edit Task" : "Add Task"}
             </h2>
             <p className="text-[12px] text-[#9ca3af] mt-0.5">
-              Fill in the details for the new task
+              {isEdit
+                ? "Update the details for this task"
+                : "Fill in the details for the new task"}
             </p>
           </div>
           <button
@@ -218,7 +234,7 @@ const AddTaskModal = ({
             disabled={loading}
             className="px-5 py-2 text-[13.5px] font-semibold text-white bg-[#4f46e5] hover:bg-[#4338ca] disabled:opacity-60 disabled:cursor-not-allowed rounded-lg transition-colors"
           >
-            {loading ? "Adding..." : "Add Task"}
+            {loading ? "Saving..." : isEdit ? "Save Changes" : "Add Task"}
           </button>
         </div>
       </div>

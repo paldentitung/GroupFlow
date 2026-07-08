@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useTask } from "../hooks/useTask.js";
 import { useProjects } from "../hooks/useProjects.js";
 import { useTasksContext } from "../contexts/TasksContext.jsx";
-
+import AddTaskModal from "./AddTaskModal.jsx";
 import Avatar from "./Avatar.jsx";
 import { getInitials } from "../utils/getInitials.js";
 import { formatDate } from "../utils/formatDate.js";
@@ -60,7 +60,7 @@ export default function TaskSidebar() {
   const [errors, setErrors] = useState({});
   const handleClose = () => navigate(`/projects/${task?.projectId}`);
   const { user } = useAuth();
-
+  const [showEditTask, setShowEditTask] = useState(false);
   const socketRef = useSocket(user._id);
 
   useEffect(() => {
@@ -104,7 +104,10 @@ export default function TaskSidebar() {
     setShowHistory(true);
     await fetchTaskHistory(project._id, task._id);
   };
-
+  const handleEditSubmit = async (updatedData) => {
+    await handleUpdateTask(task._id, updatedData);
+    setShowEditTask(false);
+  };
   return (
     <>
       <div
@@ -114,27 +117,39 @@ export default function TaskSidebar() {
       <div className="fixed top-0 right-0 h-screen w-[420px] bg-white border-l border-[#e8eaed] flex flex-col overflow-y-auto z-50 shadow-xl">
         {/* Header */}
         <div className="px-[22px] pt-5 pb-4 border-b border-[#e8eaed]">
-          <div className="flex items-start justify-between gap-3 mb-2.5">
-            <span className="text-[15px] font-medium text-[#111827] leading-snug">
-              {task.title}
-            </span>
-            <button
-              onClick={handleClose}
-              className="w-7 h-7 flex items-center justify-center rounded-md text-[#6b7280] hover:bg-[#f7f8fa] text-base shrink-0 transition-colors"
-            >
-              ✕
-            </button>
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <span className="text-[15px] font-medium text-[#111827] leading-snug block mb-2">
+                {task.title}
+              </span>
+              <span
+                className={`inline-flex items-center gap-1.5 bg-[#f7f8fa] border border-[#e8eaed] rounded-full px-2.5 py-[3px] text-[11px] ${status.text}`}
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${status.dot} inline-block`}
+                />
+                {status.label}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                onClick={() => setShowEditTask(true)}
+                className="flex items-center gap-1 rounded-md px-2.5 py-1.5 text-[13px] text-[#6b7280] hover:bg-[#f7f8fa] hover:text-[#111827] transition-colors"
+              >
+                ✎ Edit
+              </button>
+              <button
+                onClick={handleClose}
+                className="w-7 h-7 flex items-center justify-center rounded-md text-[#6b7280] hover:bg-[#f7f8fa] text-base transition-colors"
+              >
+                ✕
+              </button>
+            </div>
           </div>
-          <span
-            className={`inline-flex items-center gap-1.5 bg-[#f7f8fa] border border-[#e8eaed] rounded-full px-2.5 py-[3px] text-[11px] ${status.text}`}
-          >
-            <span
-              className={`w-1.5 h-1.5 rounded-full ${status.dot} inline-block`}
-            />
-            {status.label}
-          </span>
+
           {task.description && (
-            <p className="text-[13px] text-[#6b7280] leading-relaxed mt-2.5">
+            <p className="text-[13px] text-[#6b7280] leading-relaxed mt-3">
               {task.description}
             </p>
           )}
@@ -330,6 +345,24 @@ export default function TaskSidebar() {
             </div>
           </div>
         </div>
+      )}
+
+      {showEditTask && (
+        <AddTaskModal
+          onClose={() => setShowEditTask(false)}
+          onSubmit={handleEditSubmit}
+          projectId={task.projectId}
+          createdBy={task.createdBy?._id}
+          members={project?.members}
+          initialData={{
+            title: task.title,
+            description: task.description,
+            dueDate: task.dueDate?.slice(0, 10),
+            priority: task.priority,
+            assigneeId: task.assigneeId?._id,
+            status: task.status,
+          }}
+        />
       )}
     </>
   );
