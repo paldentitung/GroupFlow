@@ -1,27 +1,38 @@
 # 🗂️ GroupFlow
 
-> A full-stack team collaboration and project management app built with the MERN stack.
-
-GroupFlow is a MERN-stack project management application designed for team collaboration. Users can create projects, invite members, assign tasks, track activity history, receive notifications, and discuss work through task comments. The application features secure authentication, email-based workflows, profile management, testing, and Dockerized deployment.
+A full-stack MERN project management app for team collaboration. Users can create projects, invite members, assign tasks, track activity through an audit log, and discuss work through per-task comments — all backed by real-time-feeling notifications and a fully Dockerized setup.
 
 ---
 
-## ✨ Features
+## Screenshots
 
-- 🔐 **Auth** — Register, login, email verification, forgot/reset password
-- 📁 **Projects** — Create and manage projects, invite members via email
-- ✅ **Tasks** — Assign tasks, update status, accept or reject assignments
-- 💬 **Comments** — Per-task comment threads
-- 📜 **History** — Project-wide audit log of all activity
-- 🔔 **Notifications** — User-specific alerts with read/unread state
-- 🖼️ **Profile** — Avatar upload and account settings
-- 🐳 **Docker** — Fully containerized, runs with a single command
+<!--
+Add 2-4 screenshots here (dashboard, task board, project view, etc.) so
+visitors can see the app without needing a live demo. Example layout:
+
+| Dashboard | Task Board | Project View |
+|-----------|------------|--------------|
+| ![Dashboard](./frontend/src/assets/dashboard.png) | ![Tasks](./frontend/src/assets/tasks.png) | ![Project](./frontend/src/assets/project.png) |
+-->
 
 ---
 
-## 🛠️ Tech Stack
+## Features
 
-| Layer         | Tech                            |
+- **Auth** — Register, login, email verification, forgot/reset password.
+- **Projects** — Create and manage projects, invite members via email.
+- **Tasks** — Assign tasks, update status, accept or reject assignments.
+- **Comments** — Per-task comment threads for discussing work in context.
+- **History** — Project-wide audit log recording who did what and when, across tasks, members, and project changes.
+- **Notifications** — User-specific alerts with read/unread state.
+- **Profile** — Avatar upload and account settings.
+- **Docker** — Fully containerized, runs with a single command.
+
+---
+
+## Tech Stack
+
+| Layer         | Technology                      |
 | ------------- | ------------------------------- |
 | Frontend      | React 18, Vite, Tailwind CSS    |
 | Backend       | Node.js, Express.js             |
@@ -33,7 +44,7 @@ GroupFlow is a MERN-stack project management application designed for team colla
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 groupflow/
@@ -55,7 +66,7 @@ groupflow/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -64,8 +75,6 @@ groupflow/
 - A Gmail account with a configured [App Password](https://support.google.com/accounts/answer/185833) for email features
 - A [Cloudinary](https://cloudinary.com/) account for image uploads
 
----
-
 ### 1. Clone the repo
 
 ```bash
@@ -73,18 +82,18 @@ git clone https://github.com/paldentitung/GroupFlow.git
 cd GroupFlow
 ```
 
----
-
 ### 2. Configure environment variables
 
-Both `backend` and `frontend` have a `.env.example` file. There are two env files you need depending on how you run the app:
+Both `backend` and `frontend` have a `.env.example` file. Which one you fill in depends on how you plan to run the app:
 
 | File               | Used for                     |
 | ------------------ | ---------------------------- |
 | `.env.development` | Manual `npm run dev`         |
 | `.env.production`  | Docker (`docker-compose up`) |
 
-> ⚠️ Never commit your `.env.development` or `.env.production` files — they contain real secrets. The `.env.example` files are safe to commit and serve as a reference for other developers.
+Keeping these separate means a Docker run and a local dev run can point at different databases, URLs, or credentials without one config clobbering the other.
+
+> ⚠️ Never commit `.env.development` or `.env.production` — they contain real secrets. The `.env.example` files are safe to commit and serve as a reference.
 
 **Backend:**
 
@@ -120,7 +129,6 @@ EMAIL_PASS=your_gmail_app_password
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
-
 ```
 
 **Frontend:**
@@ -140,8 +148,6 @@ Then fill in:
 VITE_API_URL=http://localhost:8000/api
 ```
 
----
-
 ### 3. Run with Docker 🐳
 
 ```bash
@@ -152,8 +158,6 @@ docker-compose up --build
 | -------- | --------------------- |
 | Frontend | http://localhost:4173 |
 | Backend  | http://localhost:8000 |
-
----
 
 ### 4. Run manually (without Docker)
 
@@ -177,7 +181,7 @@ Frontend runs on `http://localhost:5173` in dev mode.
 
 ---
 
-## 📡 API Overview
+## API Overview
 
 All endpoints are prefixed with `/api`.
 
@@ -194,15 +198,22 @@ All endpoints are prefixed with `/api`.
 
 ---
 
-## 🔮 Future Improvements
+## Challenges & Decisions
 
-- 🌐 **Live deployment** — Deploy to Railway (backend) and Vercel (frontend)
-- ⚡ **Real-time updates** — Replace polling with WebSockets via Socket.io for live notifications and task updates
-- 🔷 **TypeScript** — Migrate frontend to TypeScript for better type safety and DX
-- ☁️ **Cloudinary migration** — Move all avatar/image storage fully to Cloudinary (currently local uploads)
+- **Implementing Socket.io** — Getting real-time notifications working was one of the trickier parts of the build. The initial setup had the socket connection firing before the auth context had finished hydrating, so events would occasionally get missed on first load. It also took some trial and error to figure out how to scope rooms per authenticated user so notifications only went to the right person instead of broadcasting more broadly. Settled on delaying socket initialization until auth state was confirmed, then joining a user-specific room right after connecting.
+
+- **Global state management** — With auth, projects, tasks, and notifications all needing to be accessible across different parts of the app, deciding how to structure global state took some iteration. Putting everything in one large context led to unrelated components re-rendering whenever any piece of state changed. Splitting state into separate contexts per domain (auth, projects, tasks, notifications) fixed the unnecessary re-renders, at the cost of needing to compose multiple providers at the root of the app.
 
 ---
 
-## 📄 License
+## Future Improvements
 
-This project is licensed under the MIT License.
+- **Live deployment** — Deploy to Railway (backend) and Vercel (frontend).
+- **TypeScript** — Migrate the frontend to TypeScript for better type safety and DX.
+- **Cloudinary migration** — Move all avatar/image storage fully to Cloudinary (currently local uploads for some assets).
+
+---
+
+## License
+
+MIT License
