@@ -6,14 +6,14 @@ A full-stack MERN project management app for team collaboration. Users can creat
 
 ## Screenshots
 
-<!--
+
 Add 2-4 screenshots here (dashboard, task board, project view, etc.) so
 visitors can see the app without needing a live demo. Example layout:
 
 | Dashboard | Task Board | Project View |
 |-----------|------------|--------------|
-| ![Dashboard](./frontend/src/assets/dashboard.png) | ![Tasks](./frontend/src/assets/tasks.png) | ![Project](./frontend/src/assets/project.png) |
--->
+| ![Dashboard](./frontend/src/assets/Dashboard.png) | ![Tasks](./frontend/src/assets/tasks.png) | ![Projects](./frontend/src/assets/projects.png) |
+
 
 ---
 
