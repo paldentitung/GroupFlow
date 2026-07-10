@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { useSocket } from "../hooks/useSocket.js";
 import { useAuth } from "../hooks/useAuth.js";
 import toast from "react-hot-toast";
+import DeleteTaskModal from "./DeleteTaskModal.jsx";
 
 function isOverdue(iso) {
   if (!iso) return false;
@@ -62,7 +63,8 @@ export default function TaskSidebar() {
   const { user } = useAuth();
   const [showEditTask, setShowEditTask] = useState(false);
   const socketRef = useSocket(user._id);
-
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
   useEffect(() => {
     const socket = socketRef.current;
     if (!socket || !taskId) return;
@@ -284,7 +286,10 @@ export default function TaskSidebar() {
         {/* Actions */}
         <div className="flex items-center justify-between px-[22px] pb-[18px] border-t border-[#e8eaed] pt-3.5 mt-auto">
           <button
-            onClick={() => handleDeleteTask(task._id, task.projectId)} // ✅ no more useOutletContext
+            onClick={() => {
+              setSelectedTask(task);
+              setIsDeleteOpen(true);
+            }}
             className="flex items-center gap-1.5 border border-[#e8eaed] rounded-lg px-3.5 py-2 text-[13px] text-[#dc2626] hover:bg-red-50 transition-colors cursor-pointer"
           >
             🗑 Delete
@@ -364,6 +369,16 @@ export default function TaskSidebar() {
           }}
         />
       )}
+
+      <DeleteTaskModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        loading={loading}
+        onDelete={async () => {
+          await handleDeleteTask(selectedTask._id, selectedTask.projectId);
+          setIsDeleteOpen(false);
+        }}
+      />
     </>
   );
 }

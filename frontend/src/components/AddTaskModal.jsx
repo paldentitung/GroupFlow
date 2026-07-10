@@ -28,7 +28,6 @@ const AddTaskModal = ({
   const [form, setForm] = useState({
     title: initialData?.title ?? "",
     description: initialData?.description ?? "",
-    status: initialData?.status ?? "todo",
     priority: initialData?.priority ?? "medium",
     dueDate: initialData?.dueDate ?? "",
     assigneeId: initialData?.assigneeId ?? "",
@@ -45,9 +44,9 @@ const AddTaskModal = ({
   const validate = () => {
     const e = {};
     if (!form.title.trim()) e.title = "Title is required";
+    if (!form.dueDate) e.dueDate = "Due date is required";
     return e;
   };
-
   const handleSubmit = async () => {
     const e = validate();
     if (Object.keys(e).length) return setErrors(e);
@@ -146,24 +145,7 @@ const AddTaskModal = ({
           </div>
 
           {/* Status + Priority */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[12px] font-medium text-[#374151] uppercase tracking-wide">
-                Status
-              </label>
-              <select
-                value={form.status}
-                onChange={(e) => set("status", e.target.value)}
-                className="w-full px-3.5 py-2.5 text-[13.5px] rounded-lg border border-[#e8eaed] bg-[#f9fafb] outline-none focus:border-[#4f46e5] focus:bg-white transition-colors text-[#111827] cursor-pointer"
-              >
-                {STATUSES.map((s) => (
-                  <option key={s} value={s}>
-                    {STATUS_LABELS[s]}
-                  </option>
-                ))}
-              </select>
-            </div>
-
+          <div className="grid grid-cols-1 gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-[12px] font-medium text-[#374151] uppercase tracking-wide">
                 Priority
@@ -191,14 +173,23 @@ const AddTaskModal = ({
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-[12px] font-medium text-[#374151] uppercase tracking-wide">
-                Due Date
+                Due Date <span className="text-red-400">*</span>
               </label>
               <input
                 type="date"
                 value={form.dueDate}
                 onChange={(e) => set("dueDate", e.target.value)}
-                className="w-full px-3.5 py-2.5 text-[13.5px] rounded-lg border border-[#e8eaed] bg-[#f9fafb] outline-none focus:border-[#4f46e5] focus:bg-white transition-colors text-[#111827] cursor-pointer"
+                className={`w-full px-3.5 py-2.5 text-[13.5px] rounded-lg border outline-none transition-colors text-[#111827] cursor-pointer ${
+                  errors.dueDate
+                    ? "border-red-300 bg-red-50 focus:border-red-400"
+                    : "border-[#e8eaed] bg-[#f9fafb] focus:border-[#4f46e5] focus:bg-white"
+                }`}
               />
+              {errors.dueDate && (
+                <span className="text-[11.5px] text-red-500">
+                  {errors.dueDate}
+                </span>
+              )}
             </div>
 
             <div className="flex flex-col gap-1.5">
