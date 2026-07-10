@@ -21,6 +21,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PageNotFound from "./pages/PageNotFound";
 import HomePage from "./pages/HomePage";
+import RedirectIfAuthed from "./components/RedirectIfAuthed";
 const App = () => {
   return (
     <SidebarProvider>
@@ -55,7 +56,14 @@ const App = () => {
       />
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/"
+          element={
+            <RedirectIfAuthed>
+              <HomePage />
+            </RedirectIfAuthed>
+          }
+        />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/verify-email" element={<VerifyEmailPage />} />

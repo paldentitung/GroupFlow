@@ -40,7 +40,7 @@ export const logout = async () => {
     {
       method: "POST",
     },
-    false,
+    true,
   );
 };
 
