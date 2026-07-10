@@ -15,9 +15,7 @@ export const useMembers = (projectId) => {
         toast.success("Member invited successfully!");
       }
     } catch (err) {
-      console.error("Failed to invite member:", err);
-      setError("Failed to invite member. Please try again.");
-      toast.error("Failed to invite member.");
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
