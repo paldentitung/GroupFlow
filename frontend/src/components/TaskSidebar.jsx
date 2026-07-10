@@ -9,12 +9,11 @@ import { formatDate } from "../utils/formatDate.js";
 import { useComments } from "../hooks/useComments.js";
 import { useState } from "react";
 import { useTaskHistory } from "../hooks/useTaskHistory.js";
-
+import ConfirmModal from "./ConfirmModal.jsx";
 import { useEffect } from "react";
 import { useSocket } from "../hooks/useSocket.js";
 import { useAuth } from "../hooks/useAuth.js";
 import toast from "react-hot-toast";
-import DeleteTaskModal from "./DeleteTaskModal.jsx";
 
 function isOverdue(iso) {
   if (!iso) return false;
@@ -370,14 +369,18 @@ export default function TaskSidebar() {
         />
       )}
 
-      <DeleteTaskModal
+      <ConfirmModal
         isOpen={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}
-        loading={loading}
-        onDelete={async () => {
+        onConfirm={async () => {
           await handleDeleteTask(selectedTask._id, selectedTask.projectId);
           setIsDeleteOpen(false);
+          handleClose();
         }}
+        title="Delete Task"
+        message="Are you sure you want to delete this task? This action cannot be undone."
+        confirmText="Delete Task"
+        danger
       />
     </>
   );

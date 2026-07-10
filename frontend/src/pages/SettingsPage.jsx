@@ -11,6 +11,7 @@ import {
   Eye,
   AlertCircle,
   CheckCircle2,
+  Loader2,
 } from "lucide-react";
 import Header from "../components/Header";
 import { useProfile } from "../hooks/useProfile";
@@ -18,6 +19,7 @@ import { useAuth } from "../hooks/useAuth.js";
 import Avatar from "../components/Avatar.jsx";
 import { updateNotificationPreferences } from "../services/users.service.js";
 import MainButton from "../components/MainButton.jsx";
+import ConfirmModal from "../components/ConfirmModal.jsx";
 
 const NAV_ITEMS = [
   { key: "profile", label: "Profile", icon: User },
@@ -126,9 +128,12 @@ function ProfileSection() {
   });
   const [fieldErrors, setFieldErrors] = useState({});
   const [formError, setFormError] = useState("");
+  const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [avatarError, setAvatarError] = useState("");
-
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarRemoving, setAvatarRemoving] = useState(false);
+  const [removeAvatarOpen, setRemoveAvatarOpen] = useState(false);
   const avatarRef = useRef(null);
 
   useEffect(() => {
@@ -159,16 +164,18 @@ function ProfileSection() {
       return;
     }
     setFieldErrors({});
+    setSaving(true);
     try {
-      setSaved(true);
       await handleUpdateProfile(form);
+      setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (err) {
-      setSaved(false);
       setFormError(
         err?.response?.data?.message ||
           "Failed to update profile. Please try again.",
       );
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -186,115 +193,159 @@ function ProfileSection() {
       return;
     }
 
+    setAvatarUploading(true);
     try {
       const formData = new FormData();
       formData.append("avatar", file);
       await handleChangeAvatar(formData);
     } catch (err) {
       setAvatarError("Failed to upload photo. Please try again.");
+    } finally {
+      setAvatarUploading(false);
+      if (avatarRef.current) avatarRef.current.value = "";
     }
   };
 
   const handleRemove = async () => {
-    if (!window.confirm("Are you sure you want to remove your photo?")) return;
     setAvatarError("");
+    setAvatarRemoving(true);
     try {
       await handleRemoveAvatar();
+      setRemoveAvatarOpen(false);
     } catch (err) {
       setAvatarError("Failed to remove photo. Please try again.");
+    } finally {
+      setAvatarRemoving(false);
     }
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-base font-medium text-gray-900">Profile</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
-          Update your personal information
-        </p>
-      </div>
-
-      {/* Avatar */}
-      <div className="pb-6 border-b border-gray-100">
-        <div className="flex items-center gap-4">
-          <Avatar user={user} size={50} />
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-2">
-              <input
-                type="file"
-                className="hidden"
-                ref={avatarRef}
-                accept="image/jpeg,image/png,image/gif"
-                onChange={handleAvatarChange}
-              />
-              <MainButton onClick={() => avatarRef.current?.click()}>
-                <Camera size={15} />
-                Change Photo
-              </MainButton>
-              <button
-                onClick={handleRemove}
-                className="flex items-center gap-1.5 border border-gray-200 text-red-500 text-xs font-medium px-3 py-2 rounded-lg hover:bg-red-50 transition-colors"
-              >
-                <Trash2 size={14} />
-                Remove
-              </button>
-            </div>
-            <p className="text-xs text-gray-400">JPG, PNG or GIF — max 2 MB</p>
-          </div>
-        </div>
-        {avatarError && (
-          <p className="flex items-center gap-1.5 text-xs text-red-500 mt-3">
-            <AlertCircle size={12} className="flex-shrink-0" />
-            {avatarError}
+    <>
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-base font-medium text-gray-900">Profile</h2>
+          <p className="text-sm text-gray-500 mt-0.5">
+            Update your personal information
           </p>
-        )}
+        </div>
+
+        {/* Avatar */}
+        <div className="pb-6 border-b border-gray-100">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <Avatar user={user} size={50} />
+              {(avatarUploading || avatarRemoving) && (
+                <div className="absolute inset-0 flex items-center justify-center bg-white/70 rounded-full">
+                  <Loader2 size={18} className="animate-spin text-indigo-600" />
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-2">
+                <input
+                  type="file"
+                  className="hidden"
+                  ref={avatarRef}
+                  accept="image/jpeg,image/png,image/gif"
+                  onChange={handleAvatarChange}
+                  disabled={avatarUploading || avatarRemoving}
+                />
+                <MainButton
+                  onClick={() => avatarRef.current?.click()}
+                  disabled={avatarUploading || avatarRemoving}
+                >
+                  {avatarUploading ? (
+                    <Loader2 size={15} className="animate-spin" />
+                  ) : (
+                    <Camera size={15} />
+                  )}
+                  {avatarUploading ? "Uploading..." : "Change Photo"}
+                </MainButton>
+                <button
+                  onClick={() => setRemoveAvatarOpen(true)}
+                  disabled={avatarUploading || avatarRemoving}
+                  className="flex items-center gap-1.5 border border-gray-200 text-red-500 text-xs font-medium px-3 py-2 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Trash2 size={14} />
+                  Remove
+                </button>
+              </div>
+              <p className="text-xs text-gray-400">
+                JPG, PNG or GIF — max 2 MB
+              </p>
+            </div>
+          </div>
+          {avatarError && (
+            <p className="flex items-center gap-1.5 text-xs text-red-500 mt-3">
+              <AlertCircle size={12} className="flex-shrink-0" />
+              {avatarError}
+            </p>
+          )}
+        </div>
+
+        {/* Fields */}
+        <div className="grid grid-cols-2 gap-4">
+          <InputField
+            label="First Name"
+            value={form.firstName}
+            error={fieldErrors.firstName}
+            onChange={(e) => {
+              setForm((p) => ({ ...p, firstName: e.target.value }));
+              setFieldErrors((p) => ({ ...p, firstName: "" }));
+            }}
+          />
+          <InputField
+            label="Last Name"
+            value={form.lastName}
+            error={fieldErrors.lastName}
+            onChange={(e) => {
+              setForm((p) => ({ ...p, lastName: e.target.value }));
+              setFieldErrors((p) => ({ ...p, lastName: "" }));
+            }}
+          />
+          <InputField
+            label="Bio"
+            value={form.bio}
+            onChange={(e) => setForm((p) => ({ ...p, bio: e.target.value }))}
+          />
+          <InputField
+            label="Phone"
+            value={form.phone}
+            error={fieldErrors.phone}
+            onChange={(e) => {
+              setForm((p) => ({ ...p, phone: e.target.value }));
+              setFieldErrors((p) => ({ ...p, phone: "" }));
+            }}
+          />
+        </div>
+
+        <InputField label="Email Address" value={user?.email} disabled />
+
+        <FormError message={formError} />
+
+        <MainButton onClick={handleSave} disabled={saving}>
+          {saving ? (
+            <Loader2 size={15} className="animate-spin" />
+          ) : saved ? (
+            <Check size={15} />
+          ) : (
+            <Save size={15} />
+          )}
+          {saving ? "Saving..." : saved ? "Saved!" : "Save Changes"}
+        </MainButton>
       </div>
 
-      {/* Fields */}
-      <div className="grid grid-cols-2 gap-4">
-        <InputField
-          label="First Name"
-          value={form.firstName}
-          error={fieldErrors.firstName}
-          onChange={(e) => {
-            setForm((p) => ({ ...p, firstName: e.target.value }));
-            setFieldErrors((p) => ({ ...p, firstName: "" }));
-          }}
-        />
-        <InputField
-          label="Last Name"
-          value={form.lastName}
-          error={fieldErrors.lastName}
-          onChange={(e) => {
-            setForm((p) => ({ ...p, lastName: e.target.value }));
-            setFieldErrors((p) => ({ ...p, lastName: "" }));
-          }}
-        />
-        <InputField
-          label="Bio"
-          value={form.bio}
-          onChange={(e) => setForm((p) => ({ ...p, bio: e.target.value }))}
-        />
-        <InputField
-          label="Phone"
-          value={form.phone}
-          error={fieldErrors.phone}
-          onChange={(e) => {
-            setForm((p) => ({ ...p, phone: e.target.value }));
-            setFieldErrors((p) => ({ ...p, phone: "" }));
-          }}
-        />
-      </div>
-
-      <InputField label="Email Address" value={user?.email} disabled />
-
-      <FormError message={formError} />
-
-      <MainButton onClick={handleSave}>
-        {saved ? <Check size={15} /> : <Save size={15} />}
-        {saved ? "Saved!" : "Save Changes"}
-      </MainButton>
-    </div>
+      <ConfirmModal
+        isOpen={removeAvatarOpen}
+        onClose={() => setRemoveAvatarOpen(false)}
+        onConfirm={handleRemove}
+        loading={avatarRemoving}
+        title="Remove Profile Image"
+        message="Are you sure you want to remove your profile image? You can upload a new one at any time."
+        confirmText="Remove Image"
+        danger
+      />
+    </>
   );
 }
 
@@ -531,61 +582,63 @@ export default function SettingsPage() {
   const ActiveSection = SECTIONS[active];
 
   return (
-    <div
-      className="min-h-screen bg-[#F7F8FA] pb-20 md:pb-0"
-      style={{ fontFamily: "'DM Sans', sans-serif" }}
-    >
-      <Header title="Settings" showButton={false} />
+    <>
+      <div
+        className="min-h-screen bg-[#F7F8FA] pb-20 md:pb-0"
+        style={{ fontFamily: "'DM Sans', sans-serif" }}
+      >
+        <Header title="Settings" showButton={false} />
 
-      <div className="p-4 md:p-8">
-        {/* Desktop */}
-        <div className="hidden md:flex gap-6 items-start">
-          <nav className="w-48 flex-shrink-0 bg-white border border-gray-200 rounded-xl p-2">
-            {NAV_ITEMS.map(({ key, label, icon: Icon }) => (
-              <button
-                key={key}
-                onClick={() => setActive(key)}
-                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-all mb-0.5 last:mb-0 ${
-                  active === key
-                    ? "bg-indigo-50 text-indigo-600 font-medium"
-                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                }`}
-              >
-                <Icon size={15} className="flex-shrink-0" />
-                {label}
-              </button>
-            ))}
-          </nav>
+        <div className="p-4 md:p-8">
+          {/* Desktop */}
+          <div className="hidden md:flex gap-6 items-start">
+            <nav className="w-48 flex-shrink-0 bg-white border border-gray-200 rounded-xl p-2">
+              {NAV_ITEMS.map(({ key, label, icon: Icon }) => (
+                <button
+                  key={key}
+                  onClick={() => setActive(key)}
+                  className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-all mb-0.5 last:mb-0 ${
+                    active === key
+                      ? "bg-indigo-50 text-indigo-600 font-medium"
+                      : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                  }`}
+                >
+                  <Icon size={15} className="flex-shrink-0" />
+                  {label}
+                </button>
+              ))}
+            </nav>
 
-          <div className="flex-1 bg-white border border-gray-200 rounded-xl p-6 min-h-[420px]">
+            <div className="flex-1 bg-white border border-gray-200 rounded-xl p-6 min-h-[420px]">
+              <ActiveSection />
+            </div>
+          </div>
+
+          {/* Mobile */}
+          <div className="md:hidden bg-white border border-gray-200 rounded-xl p-5 min-h-[420px]">
             <ActiveSection />
           </div>
         </div>
 
-        {/* Mobile */}
-        <div className="md:hidden bg-white border border-gray-200 rounded-xl p-5 min-h-[420px]">
-          <ActiveSection />
-        </div>
+        {/* Mobile bottom tab bar */}
+        <nav className="fixed bottom-0 left-0 right-0 z-40 flex bg-white border-t border-gray-200 md:hidden pb-safe">
+          {NAV_ITEMS.map(({ key, label, icon: Icon }) => (
+            <button
+              key={key}
+              onClick={() => setActive(key)}
+              className={`relative flex-1 flex flex-col items-center justify-center py-2.5 gap-1 text-xs transition-colors ${
+                active === key ? "text-indigo-600 font-medium" : "text-gray-400"
+              }`}
+            >
+              <Icon size={20} />
+              <span>{label}</span>
+              {active === key && (
+                <span className="absolute bottom-0 w-6 h-0.5 bg-indigo-600 rounded-full" />
+              )}
+            </button>
+          ))}
+        </nav>
       </div>
-
-      {/* Mobile bottom tab bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 flex bg-white border-t border-gray-200 md:hidden pb-safe">
-        {NAV_ITEMS.map(({ key, label, icon: Icon }) => (
-          <button
-            key={key}
-            onClick={() => setActive(key)}
-            className={`relative flex-1 flex flex-col items-center justify-center py-2.5 gap-1 text-xs transition-colors ${
-              active === key ? "text-indigo-600 font-medium" : "text-gray-400"
-            }`}
-          >
-            <Icon size={20} />
-            <span>{label}</span>
-            {active === key && (
-              <span className="absolute bottom-0 w-6 h-0.5 bg-indigo-600 rounded-full" />
-            )}
-          </button>
-        ))}
-      </nav>
-    </div>
+    </>
   );
 }

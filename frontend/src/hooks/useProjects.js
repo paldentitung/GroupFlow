@@ -12,6 +12,7 @@ export const useProjects = () => {
     activeProject,
     handleSetActiveProject,
     handleUpdateProject,
+    handleDeleteProject,
   } = useContext(ProjectsContext);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -43,5 +44,6 @@ export const useProjects = () => {
     activeProject,
     handleSetActiveProject,
     handleUpdateProject,
+    handleDeleteProject,
   };
 };

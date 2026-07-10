@@ -12,12 +12,12 @@ import Avatar from "../components/Avatar.jsx";
 import AvatarGroup from "../components/AvatarGroup.jsx";
 import Modal from "../components/Modal.jsx";
 import { Calendar, Check, X } from "lucide-react";
+import ConfirmModal from "../components/ConfirmModal.jsx";
 const STATUS_STYLES = {
   Active: "text-[#059669] bg-[#d1fae5]",
   Completed: "text-[#4f46e5] bg-[#eef2ff]",
   "On Hold": "text-[#d97706] bg-[#fef3c7]",
 };
-
 function TaskCard({
   title,
   subtitle,
@@ -134,13 +134,13 @@ const TABS = ["Task Board", "Members"];
 const ProjectDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { projects } = useProjects();
+  const { projects, handleDeleteProject } = useProjects();
   const [activeTab, setActiveTab] = useState("Task Board");
   const [showAddTask, setShowAddTask] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [activeCol, setActiveCol] = useState("todo");
-
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const { handleUpdateProject } = useProjects();
   const { tasks, handleCreateTask, fetchTasks, handleRespondToTask } =
     useTasksContext();
@@ -207,6 +207,13 @@ const ProjectDetailsPage = () => {
             </p>
           </div>
           <div className="flex gap-2.5 shrink-0 self-start">
+            {" "}
+            <button
+              onClick={() => setDeleteModalOpen(true)}
+              className="flex cursor-pointer items-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 hover:border-red-300"
+            >
+              🗑 Delete
+            </button>
             <button
               onClick={() => setShowEditModal(true)}
               className="flex items-center gap-1.5 bg-white border border-[#e8eaed] rounded-lg px-4 py-2 text-sm text-[#111827]"
@@ -624,6 +631,19 @@ const ProjectDetailsPage = () => {
           </div>
         </Modal>
       )}
+
+      <ConfirmModal
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={() => {
+          handleDeleteProject(project._id);
+          setDeleteModalOpen(false);
+        }}
+        title="Delete Project"
+        message={`Are you sure you want to delete "${project.name}"? This action cannot be undone.`}
+        confirmText="Delete Project"
+        danger
+      />
     </>
   );
 };
