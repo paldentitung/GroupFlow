@@ -59,7 +59,7 @@ export const TasksProvider = ({ children }) => {
       socket.emit("leaveProjectRoom", projectId);
       socket.off("taskCreated", handleTaskCreated);
     };
-  }, [socketRef, connected, tasks.length]);
+  }, [socketRef, connected]);
 
   const handleCreateTask = async (taskData) => {
     const { projectId, ...rest } = taskData;

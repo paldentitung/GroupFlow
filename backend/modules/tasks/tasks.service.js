@@ -4,7 +4,7 @@ import AppError from "../../utils/AppError.js";
 import { createHistoryService } from "../history/history.service.js";
 import { createNotificationService } from "../notifications/notification.service.js";
 import { getIO } from "../../config/socket.js";
-
+import mongoose from "mongoose";
 // export const getTasksService = async (projectId) => {
 //   const tasks = await Task.find({ projectId })
 //     .populate("assigneeId", "firstName lastName avatar")
@@ -18,16 +18,38 @@ export const getTasksService = async (projectId, page = 1, limit = 10) => {
   const skip = (page - 1) * limit;
   const total = await Task.countDocuments({ projectId });
 
-  const tasks = await Task.find({ projectId })
-    .populate("projectId", "name")
-    .populate("assigneeId", "firstName lastName avatar bio phone")
-    .populate("createdBy", "firstName lastName avatar bio phone")
-    .skip(skip)
-    .limit(limit)
-    .sort({ createdAt: -1 });
+  const priorityOrder = { high: 1, medium: 2, low: 3 };
+
+  const tasks = await Task.aggregate([
+    { $match: { projectId: new mongoose.Types.ObjectId(projectId) } },
+    {
+      $addFields: {
+        priorityRank: {
+          $switch: {
+            branches: [
+              { case: { $eq: ["$priority", "high"] }, then: 1 },
+              { case: { $eq: ["$priority", "medium"] }, then: 2 },
+              { case: { $eq: ["$priority", "low"] }, then: 3 },
+            ],
+            default: 4,
+          },
+        },
+      },
+    },
+    { $sort: { priorityRank: 1, createdAt: -1 } },
+    { $skip: skip },
+    { $limit: limit },
+  ]);
+
+  // aggregate doesn't run populate, so populate manually afterward
+  const populatedTasks = await Task.populate(tasks, [
+    { path: "projectId", select: "name" },
+    { path: "assigneeId", select: "firstName lastName avatar bio phone" },
+    { path: "createdBy", select: "firstName lastName avatar bio phone" },
+  ]);
 
   return {
-    tasks,
+    tasks: populatedTasks,
     pagination: {
       total,
       page,
@@ -36,7 +58,6 @@ export const getTasksService = async (projectId, page = 1, limit = 10) => {
     },
   };
 };
-
 export const getTaskByIdService = async (taskId) => {
   const task = await Task.findById(taskId)
     .populate("assigneeId", "firstName lastName avatar")
@@ -55,14 +76,16 @@ export const getCurrentUserTasksService = async (
   limit = 10,
 ) => {
   const skip = (page - 1) * limit;
+  const priorityOrder = { high: 1, medium: 2, low: 3 };
 
   const tasks = await Task.find({ assigneeId: userId })
     .populate("assigneeId", "firstName lastName avatar")
     .populate("projectId", "name")
     .sort({ createdAt: -1 });
 
-  // filter out orphaned tasks (project was deleted)
-  const validTasks = tasks.filter((t) => t.projectId !== null);
+  const validTasks = tasks
+    .filter((t) => t.projectId !== null)
+    .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
 
   const paginated = validTasks.slice(skip, skip + limit);
 
@@ -89,11 +112,6 @@ export const createTaskService = async (
   if (!project) {
     throw new AppError("Project not found", 404);
   }
-
-  //   const isMember = project.members.some((m) => m.user.equals(userId));
-  //   if (!isMember) {
-  //     throw new Error("You are not a member of this project");
-  //   }
 
   const task = await Task.create({
     title,
@@ -125,21 +143,14 @@ export const createTaskService = async (
       link: `/projects/${projectId}/tasks/${task._id}`,
     });
   }
+
   const populatedTask = await Task.findById(task._id)
     .populate("assigneeId", "firstName lastName avatar")
     .populate("createdBy", "firstName lastName avatar");
+
   const room = `project:${projectId}`;
-  const roomSockets = await getIO().in(room).fetchSockets();
-  console.log(
-    "[createTaskService] emitting to room:",
-    room,
-    "| sockets in room:",
-    roomSockets.length,
-  );
+  getIO().to(room).emit("taskCreated", populatedTask); // single emit only
 
-  getIO().to(room).emit("taskCreated", populatedTask);
-
-  getIO().to(`project:${projectId}`).emit("taskCreated", populatedTask);
   return task;
 };
 
