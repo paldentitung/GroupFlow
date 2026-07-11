@@ -154,12 +154,37 @@ const RegisterPage = () => {
         {/* RIGHT PANEL */}
         <div className="flex-1 flex flex-col justify-center px-8 py-12 lg:px-14">
           <div className="lg:hidden mb-8">
-            <span
-              className="font-medium text-base"
-              style={{ color: "var(--color-text-primary)" }}
-            >
-              GroupFlow
-            </span>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-[#4f46e5] flex items-center justify-center shrink-0 text-white">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <circle cx="6.5" cy="6.5" r="3.2" fill="currentColor" />
+                  <circle
+                    cx="13.5"
+                    cy="6.5"
+                    r="2.3"
+                    fill="currentColor"
+                    fillOpacity=".6"
+                  />
+                  <circle
+                    cx="6.5"
+                    cy="13.5"
+                    r="2.3"
+                    fill="currentColor"
+                    fillOpacity=".6"
+                  />
+                  <circle cx="13.5" cy="13.5" r="3.2" fill="currentColor" />
+                </svg>
+              </div>
+              <span className="md:*:text-[20px] font-semibold tracking-tight text-[#111827]">
+                Group Flow
+              </span>
+            </div>
           </div>
 
           <h1
