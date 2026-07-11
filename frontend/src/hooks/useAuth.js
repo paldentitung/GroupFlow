@@ -5,6 +5,7 @@ import {
   logout,
   forgotPassword,
   resetPassword,
+  resendVerifyEmail,
 } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
@@ -24,7 +25,11 @@ export const useAuth = () => {
 
       if (res.success) {
         toast.success(res.message);
-        navigate("/verify-email");
+        navigate("/verify-email", {
+          state: {
+            email: data.email,
+          },
+        });
       }
     } catch (err) {
       toast.error(err.message);
@@ -97,6 +102,15 @@ export const useAuth = () => {
       toast.error(error.message);
     }
   };
+
+  const handleResendEmailVerification = async (email) => {
+    try {
+      const res = await resendVerifyEmail(email);
+      if (res.success) {
+        toast.success(res.message);
+      }
+    } catch (error) {}
+  };
   return {
     handleRegister,
     handleVerifyEmail,
@@ -108,5 +122,6 @@ export const useAuth = () => {
     handleForgotPassword,
     handleResetPassword,
     fetchUser,
+    handleResendEmailVerification,
   };
 };

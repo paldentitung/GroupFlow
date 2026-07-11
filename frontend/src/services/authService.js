@@ -59,3 +59,14 @@ export const resetPassword = async (token, newPassword) => {
     body: JSON.stringify({ newPassword }),
   });
 };
+export const resendVerifyEmail = async (email) => {
+  return request(
+    `/auth/resend-verification`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    },
+    false,
+  );
+};

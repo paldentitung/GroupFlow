@@ -1,13 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Mail } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
+import MainButton from "../components/MainButton";
 const VerifyEmailPage = () => {
-  const { handleVerifyEmail, loading } = useAuth();
+  const { handleVerifyEmail, loading, handleResendEmailVerification } =
+    useAuth();
   const { token } = useParams();
   const [status, setStatus] = useState("loading"); // "loading" | "success" | "error"
   const called = useRef(false);
+  const location = useLocation();
+  const email = location.state?.email;
   useEffect(() => {
     if (!token || called.current) return;
     called.current = true;
@@ -144,17 +148,12 @@ const VerifyEmailPage = () => {
             <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>
               Didn't receive it?
             </p>
-            <button
-              className="text-xs font-semibold hover:underline"
-              style={{
-                color: "#4f46e5",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-              }}
+            <MainButton
+              disabled={!email}
+              onClick={() => handleResendEmailVerification(email)}
             >
-              Resend email
-            </button>
+              Resend{" "}
+            </MainButton>
           </div>
 
           <p
