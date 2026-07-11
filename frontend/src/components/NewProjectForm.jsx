@@ -20,19 +20,22 @@ const NewProjectForm = ({ onCancel }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const newErrors = {};
+    if (!form.name.trim()) newErrors.name = "Project name is required";
+    if (!form.description.trim())
+      newErrors.description = "Project description is required";
+    if (!form.startDate.trim())
+      newErrors.startDate = "Project starting date is required";
+    if (!form.dueDate.trim())
+      newErrors.dueDate = "Project due date is required";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    setErrors({});
+
     try {
-      if (!form.name.trim()) {
-        setErrors({
-          name: "Project name is required",
-        });
-        return;
-      }
-      if (!form.description.trim()) {
-        setErrors({
-          description: "Project description is required",
-        });
-        return;
-      }
       await handleCreateProject(form);
       onCancel();
     } catch (error) {
@@ -88,6 +91,9 @@ const NewProjectForm = ({ onCancel }) => {
               value={form[key]}
               onChange={(e) => set(key, e.target.value)}
             />
+            {errors[key] && (
+              <p className="text-xs text-red-500">{errors[key]}</p>
+            )}
           </div>
         ))}
       </div>
