@@ -49,9 +49,37 @@ const VerifyEmailPage = () => {
             }}
           />
           <div className="relative z-10">
-            <span className="text-white font-medium text-base tracking-tight">
-              GroupFlow
-            </span>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-[#4f46e5] flex items-center justify-center shrink-0 text-white">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <circle cx="6.5" cy="6.5" r="3.2" fill="currentColor" />
+                  <circle
+                    cx="13.5"
+                    cy="6.5"
+                    r="2.3"
+                    fill="currentColor"
+                    fillOpacity=".6"
+                  />
+                  <circle
+                    cx="6.5"
+                    cy="13.5"
+                    r="2.3"
+                    fill="currentColor"
+                    fillOpacity=".6"
+                  />
+                  <circle cx="13.5" cy="13.5" r="3.2" fill="currentColor" />
+                </svg>
+              </div>
+              <span className="md:*:text-[20px] font-semibold tracking-tight text-white">
+                Group Flow
+              </span>
+            </div>
           </div>
           <div className="relative z-10 flex-1 flex flex-col justify-center mt-8">
             <p className="text-indigo-300 text-[11px] font-semibold uppercase tracking-widest mb-4">
