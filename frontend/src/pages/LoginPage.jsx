@@ -148,27 +148,6 @@ const LoginPage = () => {
               Sync tasks, track progress, and communicate — all in one space.
             </p>
           </div>
-
-          {/* Avatars */}
-          <div className="relative z-10 flex items-center gap-2">
-            {[
-              ["A", "#a78bfa"],
-              ["M", "#60a5fa"],
-              ["S", "#f472b6"],
-              ["+", "#818cf8"],
-            ].map(([label, bg], i) => (
-              <div
-                key={i}
-                className="w-7 h-7 rounded-full border-2 border-indigo-400 flex items-center justify-center text-white text-[11px] font-medium"
-                style={{ background: bg, marginLeft: i ? "-8px" : 0 }}
-              >
-                {label}
-              </div>
-            ))}
-            <span className="text-indigo-200 text-[11px] ml-2">
-              2,400+ teams inside
-            </span>
-          </div>
         </div>
 
         {/* ── RIGHT PANEL ── */}
