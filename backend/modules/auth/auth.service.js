@@ -41,8 +41,6 @@ export const registerService = async ({
 
   const verificationUrl = `${process.env.CLIENT_URL}/verify-email/${verificationToken}`;
 
-  console.log(verificationUrl);
-  console.log("Sending email to:", newUser.email);
   await sendEmail({
     to: newUser.email,
     subject: "Verify your email",
@@ -151,4 +149,30 @@ export const resetPasswordService = async (token, newPassword) => {
   await user.save();
 
   return { success: true, message: "Password reset successfully" };
+};
+export const resendVerificationService = async (email) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  if (user.isEmailVerified) {
+    throw new AppError("User is already verified", 400);
+  }
+
+  const verificationToken = crypto.randomBytes(32).toString("hex");
+
+  user.verificationToken = verificationToken;
+  user.verificationTokenExpires = new Date(Date.now() + 1000 * 60 * 60);
+
+  await user.save();
+
+  const verificationUrl = `${process.env.CLIENT_URL}/verify-email/${verificationToken}`;
+
+  await sendEmail({
+    to: user.email,
+    subject: "Verify your email",
+    html: `Please verify your email by clicking the following link: ${verificationUrl}`,
+  });
 };

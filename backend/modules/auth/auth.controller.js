@@ -4,6 +4,7 @@ import {
   loginService,
   forgotPasswordService,
   resetPasswordService,
+  resendVerificationService,
 } from "./auth.service.js";
 import User from "../users/User.js";
 export const registerController = async (req, res) => {
@@ -77,4 +78,15 @@ export const resetPasswordController = async (req, res) => {
 
   const result = await resetPasswordService(token, newPassword);
   res.status(200).json(result);
+};
+
+export const resendVerificationController = async (req, res) => {
+  const { email } = req.body;
+
+  await resendVerificationService(email);
+
+  res.status(200).json({
+    success: true,
+    message: "Verification email sent successfully.",
+  });
 };

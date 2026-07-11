@@ -6,6 +6,7 @@ import {
   logout,
   forgotPasswordController,
   resetPasswordController,
+  resendVerificationController,
 } from "./auth.controller.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import auth from "../../middleware/auth.middleware.js";
@@ -45,4 +46,10 @@ Router.post(
 );
 
 Router.post("/logout", asyncHandler(logout));
+
+Router.post(
+  "/resend-verification",
+  verifyEmailLimiter,
+  asyncHandler(resendVerificationController),
+);
 export default Router;
