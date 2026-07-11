@@ -23,7 +23,7 @@ export const getAllMembersService = async (projectId) => {
 export const getMemberDetailsService = async (projectId, memberId) => {
   const project = await Project.findById(projectId).populate(
     "members.user",
-    "firstName lastName  email avatar",
+    "firstName lastName  email avatar bio",
   );
 
   if (!project) {
@@ -56,6 +56,7 @@ export const removeMemberService = async (projectId, memberId) => {
     throw new AppError("Owner cannot be removed", 400);
   }
 
+  const removedMember = project.members[memberIndex];
   project.members.splice(memberIndex, 1);
   await project.save();
 

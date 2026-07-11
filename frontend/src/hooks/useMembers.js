@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
-import { inviteMember, getMembers } from "../services/membersService.js";
+import {
+  inviteMember,
+  getMembers,
+  removeMember,
+} from "../services/membersService.js";
 import { toast } from "react-hot-toast";
+
 export const useMembers = (projectId) => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -10,7 +15,6 @@ export const useMembers = (projectId) => {
     try {
       setLoading(true);
       const response = await inviteMember(projectId, member.email, member.role);
-      console.log("Invite member response:", response);
       if (response.success) {
         toast.success("Member invited successfully!");
       }
@@ -20,21 +24,38 @@ export const useMembers = (projectId) => {
       setLoading(false);
     }
   };
+
+  const handleRemoveMember = async (memberId) => {
+    try {
+      const response = await removeMember(projectId, memberId);
+      setMembers((prev) => prev.filter((m) => m.id !== memberId));
+      if (response?.success !== false) {
+        toast.success("Member removed");
+      }
+      return response;
+    } catch (err) {
+      toast.error(err.message || "Failed to remove member");
+      throw err;
+    }
+  };
+
   useEffect(() => {
     if (!projectId) return;
-    console.log("useMembers effect fired", projectId);
     const fetchedMembers = async () => {
       try {
         const res = await getMembers(projectId);
-        console.log("members fetched", res);
         if (res.success) {
           const mapped = res.members.map((m) => ({
             id: m._id,
+            userId: m.user._id,
             name: `${m.user.firstName} ${m.user.lastName}`,
             firstName: m.user.firstName,
             lastName: m.user.lastName,
             position: m.role,
             avatar: m.user.avatar,
+            bio: m.user.bio,
+            phone: m.user.phone,
+            email: m.user.email,
             projects: 0,
             tasks: 0,
             completed: 0,
@@ -43,7 +64,6 @@ export const useMembers = (projectId) => {
           setMembers(mapped);
         }
       } catch (error) {
-        console.log("member fetch error:", error.message); // 👈 check exact message
         if (error.message === "Project not found") return;
         toast.error("Failed to fetch members");
       }
@@ -51,8 +71,6 @@ export const useMembers = (projectId) => {
 
     fetchedMembers();
   }, [projectId]);
-  useEffect(() => {
-    console.log("Members changed:", members);
-  }, [members]);
-  return { members, loading, error, handleInviteMember };
+
+  return { members, loading, error, handleInviteMember, handleRemoveMember };
 };

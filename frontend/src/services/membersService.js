@@ -26,3 +26,13 @@ export const acceptInvite = async (projectId, token) => {
     true,
   );
 };
+
+export const removeMember = async (projectId, memberId) => {
+  return request(
+    `/members/${projectId}/member/${memberId}`,
+    {
+      method: "DELETE",
+    },
+    true,
+  );
+};
