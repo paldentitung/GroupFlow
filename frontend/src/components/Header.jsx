@@ -1,5 +1,5 @@
 import React from "react";
-import { Search, Bell, Menu, User } from "lucide-react";
+import { Search, Bell, Menu, User, Settings } from "lucide-react";
 import MainButton from "./MainButton";
 import { useSidebar } from "../contexts/SidebarContext";
 import { useNotifications } from "../contexts/NotificationContext";
@@ -33,7 +33,7 @@ const Header = ({ title, buttonName, onClick, showButton = true }) => {
           onClick={() => navigate("/settings")}
           className="p-2 rounded-lg bg-[#f7f8fa] border border-[#e8eaed] text-[#6b7280] hover:bg-[#eef2ff] hover:text-[#4f46e5] hover:border-[#4f46e5] transition-all duration-150 hover:cursor-pointer"
         >
-          <User size={17} />
+          <Settings size={17} />
         </button>
 
         {showButton && <MainButton onClick={onClick}>{buttonName}</MainButton>}
