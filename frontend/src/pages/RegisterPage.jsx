@@ -276,23 +276,8 @@ const RegisterPage = () => {
               className="text-xs leading-relaxed"
               style={{ color: "var(--color-text-muted)" }}
             >
-              By creating an account you agree to our{" "}
-              <a
-                href="#"
-                className="font-medium hover:underline"
-                style={{ color: "var(--color-accent)" }}
-              >
-                Terms of Service
-              </a>{" "}
-              and{" "}
-              <a
-                href="#"
-                className="font-medium hover:underline"
-                style={{ color: "var(--color-accent)" }}
-              >
-                Privacy Policy
-              </a>
-              .
+              By creating an account you agree to our Terms of Service and
+              Privacy Policy.
             </p>
 
             <button
