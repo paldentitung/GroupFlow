@@ -10,7 +10,7 @@ const Header = ({ title, buttonName, onClick, showButton = true }) => {
   const { toggleNotification } = useNotifications();
   const navigate = useNavigate();
   return (
-    <header className="flex justify-between items-center px-6 py-4 ">
+    <header className="flex justify-between items-center px-6 py-4 bg-white ">
       <div className="flex items-center gap-3">
         <span className="block md:hidden p-1.5 rounded-lg text-[#6b7280] hover:bg-[#f7f8fa] cursor-pointer transition-colors">
           <Menu size={20} onClick={toggleSidebar} />
