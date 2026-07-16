@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import Header from "../components/Header";
 import { tasks } from "../data/tasks";
 import ProjectCard from "../components/ProjectCard";
@@ -6,13 +6,15 @@ import TaskTable from "../components/TaskTable";
 import { useProjects } from "../hooks/useProjects.js";
 import { formatDate } from "../utils/formatDate.js";
 import { useTasksContext } from "../contexts/TasksContext";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useUserTasks } from "../hooks/useUserTasks.js";
 import { useAddProject } from "../contexts/AddProjectContext.jsx";
 import ProjectListing from "../components/ProjectListing.jsx";
 import { useProjectTasks } from "../hooks/useProjectTasks.js";
 import { useMembers } from "../hooks/useMembers.js";
 import { User } from "lucide-react";
+import ConfirmModal from "../components/ConfirmModal";
+import { ProjectsContext } from "../contexts/ProjectsContext";
 
 const FolderIcon = () => (
   <svg
@@ -115,6 +117,15 @@ function Dashboard() {
     setSearch,
   } = useUserTasks();
   const { isModalOpen, setIsModalOpen } = useAddProject();
+  const { handleDeleteProject } = useContext(ProjectsContext);
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  const handleDeleteClick = (project) => {
+    setSelectedProject(project);
+    setDeleteModalOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-(--color-bg) text-(--color-text-primary) overflow-hidden ">
@@ -157,7 +168,11 @@ function Dashboard() {
 
         <h2 className="text-base font-bold mb-4 md:text-lg">My Projects</h2>
 
-        <ProjectListing projects={projects} loading={loading} />
+        <ProjectListing
+          projects={projects}
+          loading={loading}
+          onDeleteClick={handleDeleteClick}
+        />
 
         <h2 className="text-base font-bold mb-4 md:text-lg">Recent Tasks</h2>
         <TaskTable
@@ -168,6 +183,19 @@ function Dashboard() {
           setStatus={setStatus}
         />
       </div>
+
+      <ConfirmModal
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={async () => {
+          await handleDeleteProject(selectedProject._id);
+          setDeleteModalOpen(false);
+        }}
+        title="Delete Project"
+        message={`Are you sure you want to delete "${selectedProject?.name}"? This action cannot be undone.`}
+        confirmText="Delete Project"
+        danger
+      />
     </div>
   );
 }
